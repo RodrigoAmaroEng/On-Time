@@ -1,4 +1,10 @@
 .gradle/
 .idea/jarRepositories.xml
 .idea/misc.xml
+.idea/libraries
+.idea/modules
+.idea/modules.xml
+.idea/dbnavigator.xml
+.name
 build/
+src/main/resources/local.properties
