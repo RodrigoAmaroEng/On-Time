@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
-fun Theme(block: @Composable () -> Unit) {
+fun OnTimeTheme(block: @Composable () -> Unit) {
     MaterialTheme(
         typography = MaterialTheme.typography.copy(
             subtitle1 = MaterialTheme.typography.subtitle1.copy(
@@ -14,10 +14,14 @@ fun Theme(block: @Composable () -> Unit) {
             )
         ),
         colors = MaterialTheme.colors.copy(
-            surface = Color(0xD9D9D9),
-            background = Color(0xF0F0F0)
+            surface = OnTimeColors.surfaceColor,
+            background = OnTimeColors.backgroundColor
         )
     ) {
         block()
     }
+}
+object OnTimeColors {
+    val surfaceColor = Color(0xFFD9D9D9)
+    val backgroundColor =  Color(0xFFF0F0F0)
 }
