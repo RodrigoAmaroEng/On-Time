@@ -1,6 +1,5 @@
 package dev.amaro.on_time.network
 
-import dev.amaro.on_time.JiraResponse
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import kotlinx.serialization.decodeFromString
@@ -52,7 +51,7 @@ class JiraConnector(
 
     override fun getTasks(): List<Task> {
         val body =
-            "jql=project+%3D+%22CST%22+AND+resolution+%3D+Unresolved+ORDER+BY+priority+ASC%2C+updated+DESC&columnConfig=explicit&layoutKey=split-view&startIndex=0"
+            "jql=project+%3D+%22CST%22+AND+resolution+%3D+Unresolved+AND+Platform+%3D+Android+AND+assignee+IN+(EMPTY,currentUser())+ORDER+BY+priority+ASC%2C+updated+DESC&columnConfig=explicit&layoutKey=split-view&startIndex=0"
         return jira.send(path, body)?.let {
             json
                 .decodeFromString<JiraResponse>(it)
@@ -64,3 +63,11 @@ class JiraConnector(
         } ?: emptyList()
     }
 }
+@kotlinx.serialization.Serializable
+data class JiraTask(val key: String, val summary: String, val status: String)
+
+@kotlinx.serialization.Serializable
+data class JiraBody(val table: List<JiraTask>)
+
+@kotlinx.serialization.Serializable
+data class JiraResponse(val issueTable: JiraBody)
