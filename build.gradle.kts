@@ -20,6 +20,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     testImplementation(kotlin("test"))
+    testImplementation("io.mockk:mockk:1.12.4")
 }
 
 tasks.test {

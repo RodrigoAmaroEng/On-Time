@@ -50,8 +50,23 @@ class JiraConnector(
     private val json = Json { ignoreUnknownKeys = true }
 
     override fun getTasks(): List<Task> {
-        val body =
-            "jql=project+%3D+%22CST%22+AND+resolution+%3D+Unresolved+AND+Platform+%3D+Android+AND+assignee+IN+(EMPTY,currentUser())+ORDER+BY+priority+ASC%2C+updated+DESC&columnConfig=explicit&layoutKey=split-view&startIndex=0"
+        val body = withJql {
+            condition {
+                project().eq("CST")
+            }
+            and {
+                field("resolution").set("Unresolved")
+            }
+            and {
+                field("Platform").set("Android")
+            }
+            and {
+                assignee().any(Value.EMPTY, Value.USER)
+            }
+            orderBy("priority").asc()
+            orderBy("updated").desc()
+        }.queryString('+', true)
+
         return jira.send(path, body)?.let {
             json
                 .decodeFromString<JiraResponse>(it)

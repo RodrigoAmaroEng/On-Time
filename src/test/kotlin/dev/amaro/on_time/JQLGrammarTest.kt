@@ -6,10 +6,6 @@ import dev.amaro.on_time.network.withJql
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-
-//"jql=project+%3D+%22CST%22+AND+resolution+%3D+Unresolved+AND+Platform+%3D+Android+AND+assignee+IN+(EMPTY,currentUser())+ORDER+BY+priority+ASC%2C+updated+DESC&columnConfig=explicit&layoutKey=split-view&startIndex=0"
-
-
 class JQLGrammarTest {
 
     @Test
