@@ -20,6 +20,7 @@ import androidx.compose.ui.window.rememberWindowState
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.network.JiraConnector
 import dev.amaro.on_time.network.JiraRequester
+import dev.amaro.on_time.ui.CurrentTask
 import dev.amaro.on_time.ui.OnTimeColors
 import dev.amaro.on_time.ui.TaskUI
 import dev.amaro.on_time.ui.OnTimeTheme
@@ -40,11 +41,7 @@ fun main() = application {
             Surface(color = OnTimeColors.backgroundColor) {
                 Column {
                     AnimatedVisibility(current.value != null) {
-                        current.value?.apply {
-                            Row {
-                                Text(id)
-                            }
-                        }
+                        CurrentTask(current.value!!)
                     }
                     LazyColumn(
                         Modifier.fillMaxSize(),
