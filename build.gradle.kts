@@ -19,6 +19,7 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.12.4")
 }

@@ -20,10 +20,12 @@ import androidx.compose.ui.window.rememberWindowState
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.network.JiraConnector
 import dev.amaro.on_time.network.JiraRequester
+import dev.amaro.on_time.ui.ClockDisplay
 import dev.amaro.on_time.ui.OnTimeColors
 import dev.amaro.on_time.ui.TaskUI
 import dev.amaro.on_time.ui.OnTimeTheme
 import java.io.InputStream
+import java.time.LocalDateTime
 import java.util.*
 
 fun main() = application {
@@ -40,10 +42,13 @@ fun main() = application {
             Surface(color = OnTimeColors.backgroundColor) {
                 Column {
                     AnimatedVisibility(current.value != null) {
-                        current.value?.apply {
-                            Row {
-                                Text(id)
+                        Row {
+                            current.value?.apply {
+                                Row {
+                                    Text(id)
+                                }
                             }
+                            ClockDisplay(LocalDateTime.now())
                         }
                     }
                     LazyColumn(
