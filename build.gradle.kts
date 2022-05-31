@@ -28,8 +28,10 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     implementation("com.squareup.sqldelight:sqlite-driver:1.5.3")
+    implementation("dev.amaro:sonic:0.3.1")
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("com.appmattus.fixture:fixture:1.2.0")
 }
 
 tasks.test {

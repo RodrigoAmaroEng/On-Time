@@ -7,8 +7,6 @@ import kotlin.test.assertEquals
 
 class ClockTest {
 
-    fun Int.withZeros(n: Int) = this.toString().padStart(n, '0')
-
     @Test
     fun `Test the clock format`() {
         val now = LocalDateTime.now()

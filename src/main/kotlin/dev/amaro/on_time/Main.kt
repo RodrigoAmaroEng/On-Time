@@ -7,14 +7,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Surface
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import dev.amaro.on_time.models.Task
+import dev.amaro.on_time.core.Actions
+import dev.amaro.on_time.core.AppLogic
+import dev.amaro.on_time.core.AppState
+import dev.amaro.on_time.core.ServiceMiddleware
 import dev.amaro.on_time.network.JiraConnector
 import dev.amaro.on_time.network.JiraRequester
 import dev.amaro.on_time.ui.CurrentTask
@@ -27,27 +30,31 @@ import java.util.*
 fun main() = application {
     val requester = JiraRequester(getProperty("host"), getProperty("cookie"))
     val connector = JiraConnector(requester)
-    val tasks = connector.getTasks()
-    val current = remember { mutableStateOf<Task?>(null) }
-    Window(
-        onCloseRequest = ::exitApplication,
-        title = "On Time - Task Manager",
-        state = rememberWindowState(width = 500.dp, height = 300.dp),
-    ) {
-        OnTimeTheme {
-            Surface(color = OnTimeColors.backgroundColor) {
-                Column {
-                    AnimatedVisibility(current.value != null) {
-                        CurrentTask(current.value!!)
-                    }
-                    LazyColumn(
-                        Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(tasks) {
-                            TaskUI(it) { task ->
-                                println("Task: $task")
-                                current.value = task
+    val middleware = ServiceMiddleware(connector)
+//    val uiScope = rememberCoroutineScope()
+    val appLogic = AppLogic(middleware)
+    val stateHandler: State<AppState> = appLogic.listen().collectAsState()
+    appLogic.perform(Actions.Refresh)
+    stateHandler.value.apply {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "On Time - Task Manager",
+            state = rememberWindowState(width = 500.dp, height = 300.dp),
+        ) {
+            OnTimeTheme {
+                Surface(color = OnTimeColors.backgroundColor) {
+                    Column {
+                        currentTask?.let {
+                            AnimatedVisibility(true) { CurrentTask(it) }
+                        }
+                        LazyColumn(
+                            Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(tasks) {
+                                TaskUI(it) { task ->
+                                    appLogic.perform(Actions.StartTask(task))
+                                }
                             }
                         }
                     }
