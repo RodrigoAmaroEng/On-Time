@@ -3,13 +3,10 @@ package dev.amaro.on_time
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,8 +19,8 @@ import dev.amaro.on_time.network.JiraConnector
 import dev.amaro.on_time.network.JiraRequester
 import dev.amaro.on_time.ui.CurrentTask
 import dev.amaro.on_time.ui.OnTimeColors
-import dev.amaro.on_time.ui.TaskUI
 import dev.amaro.on_time.ui.OnTimeTheme
+import dev.amaro.on_time.ui.TaskUI
 import java.io.InputStream
 import java.util.*
 
@@ -34,7 +31,7 @@ fun main() = application {
     val current = remember { mutableStateOf<Task?>(null) }
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Compose for Desktop",
+        title = "On Time - Task Manager",
         state = rememberWindowState(width = 500.dp, height = 300.dp),
     ) {
         OnTimeTheme {
@@ -67,7 +64,7 @@ fun getProperty(name: String): String {
 }
 
 object Resources {
-    fun load(path: String): InputStream {
+    fun load(path: String): InputStream? {
         return Resources::class.java.getResourceAsStream(path)
     }
 }

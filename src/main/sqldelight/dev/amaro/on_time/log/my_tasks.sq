@@ -1,0 +1,13 @@
+CREATE TABLE logs (
+  key TEXT NOT NULL,
+  timestamp INTEGER NOT NULL,
+  kind TEXT NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM logs;
+
+insert:
+INSERT INTO logs(key, timestamp, kind)
+VALUES (?, ?, ?);

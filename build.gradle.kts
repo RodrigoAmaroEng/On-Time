@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.serialization") version "1.6.10"
     id("org.jetbrains.compose") version "1.1.0"
+    id("com.squareup.sqldelight") version "1.5.3"
 }
 
 group = "dev.amaro"
@@ -15,11 +16,18 @@ repositories {
     google()
 }
 
+sqldelight {
+    database("MyTasks") { // This will be the name of the generated database class.
+        packageName = "dev.amaro.on_time.log"
+    }
+}
+
+
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
-    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
+    implementation("com.squareup.sqldelight:sqlite-driver:1.5.3")
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.12.4")
 }

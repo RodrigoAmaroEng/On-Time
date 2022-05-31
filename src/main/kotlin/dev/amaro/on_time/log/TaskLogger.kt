@@ -4,8 +4,11 @@ import dev.amaro.on_time.models.Task
 
 class TaskLogger(private val storage: Storage, private val clock: Clock) {
 
-    fun logStarted(task: Task) {
+    fun logStarted(task: Task, previousTask: Task? = null) {
         val timestamp = clock.now()
+        previousTask?.apply {
+            logEnd(this)
+        }
         storage.include(LogEvent.TASK_START, task.id, timestamp)
     }
 
