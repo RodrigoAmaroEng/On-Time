@@ -1,13 +1,8 @@
 package dev.amaro.on_time
 
 
-import dev.amaro.on_time.models.Task
-import dev.amaro.on_time.models.TaskState
-import dev.amaro.on_time.network.JiraConnector
-import dev.amaro.on_time.network.JiraRequester
 import dev.amaro.on_time.network.Value
 import dev.amaro.on_time.network.withJql
-import dev.amaro.on_time.utilities.Resources
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -173,17 +168,17 @@ class JQLGrammarTest {
 
     @Test
     fun testRestApi() {
-        val configuration = Resources.getConfiguration()
-            val response = JiraRequester(
-                configuration.getProperty("host"),
-                configuration.getProperty("token")
-            ).post("/rest/api/2/issue/CST-505/transitions", """
-                {
-                    "transition": {
-                        "id": "31"
-                    }
-                }
-            """.trimIndent())
-        println("Response:\n'$response'")
+//        val configuration = Resources.getConfiguration()
+//            val response = JiraRequester(
+//                configuration.getProperty("host"),
+//                configuration.getProperty("token")
+//            ).post("/rest/api/2/issue/CST-505/transitions", """
+//                {
+//                    "transition": {
+//                        "id": "31"
+//                    }
+//                }
+//            """.trimIndent())
+//        println("Response:\n'$response'")
     }
 }
