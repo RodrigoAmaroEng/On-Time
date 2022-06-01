@@ -1,8 +1,13 @@
 package dev.amaro.on_time
 
 
+import dev.amaro.on_time.models.Task
+import dev.amaro.on_time.models.TaskState
+import dev.amaro.on_time.network.JiraConnector
+import dev.amaro.on_time.network.JiraRequester
 import dev.amaro.on_time.network.Value
 import dev.amaro.on_time.network.withJql
+import dev.amaro.on_time.utilities.Resources
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -160,6 +165,25 @@ class JQLGrammarTest {
             orderBy("priority").asc()
             orderBy("updated").desc()
         }.queryString('+', true)
-        assertEquals("jql=project+%3D+%22CST%22+AND+resolution+%3D+Unresolved+AND+Platform+%3D+Android+AND+assignee+IN+(EMPTY,currentUser())+ORDER+BY+priority+ASC%2C+updated+DESC", query)
+        assertEquals(
+            "jql=project+%3D+%22CST%22+AND+resolution+%3D+Unresolved+AND+Platform+%3D+Android+AND+assignee+IN+(EMPTY,currentUser())+ORDER+BY+priority+ASC%2C+updated+DESC",
+            query
+        )
+    }
+
+    @Test
+    fun testRestApi() {
+        val configuration = Resources.getConfiguration()
+            val response = JiraRequester(
+                configuration.getProperty("host"),
+                configuration.getProperty("token")
+            ).post("/rest/api/2/issue/CST-505/transitions", """
+                {
+                    "transition": {
+                        "id": "31"
+                    }
+                }
+            """.trimIndent())
+        println("Response:\n'$response'")
     }
 }

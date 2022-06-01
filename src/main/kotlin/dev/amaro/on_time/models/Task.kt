@@ -1,7 +1,7 @@
 package dev.amaro.on_time.models
 
 enum class TaskState {
-    UNASSIGNED,
+    NOT_STARTED,
     WORKING,
     ON_REVIEW,
     ON_QA,
@@ -9,11 +9,11 @@ enum class TaskState {
 
     companion object {
         fun fromJira(value: String): TaskState = when (value) {
-            "ToDo" -> UNASSIGNED
+            "ToDo" -> NOT_STARTED
             "IN PROGRESS" -> WORKING
             "IN CODE REVIEW" -> ON_REVIEW
             "In QA", "READY FOR QA" -> ON_QA
-            else -> UNASSIGNED
+            else -> NOT_STARTED
         }
     }
 }

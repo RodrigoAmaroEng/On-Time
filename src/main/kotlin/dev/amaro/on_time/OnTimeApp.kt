@@ -15,7 +15,7 @@ class OnTimeApp {
 
     init {
         val requester = Resources.getConfiguration().let {
-            JiraRequester(it.getProperty("host"), it.getProperty("cookie"))
+            JiraRequester(it.getProperty("host"), it.getProperty("token"))
         }
         val connector = JiraConnector(requester)
         val middleware = ServiceMiddleware(connector)

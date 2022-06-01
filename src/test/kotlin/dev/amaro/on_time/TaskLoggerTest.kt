@@ -17,7 +17,7 @@ class TaskLoggerTest {
     fun `Log task started`() {
         val currentDateTime = LocalDateTime.of(2022,5,20,13,52)
         every { clock.now() } returns currentDateTime
-        logger.logStarted(Task("CST-123", "", TaskState.UNASSIGNED))
+        logger.logStarted(Task("CST-123", "", TaskState.NOT_STARTED))
         verify { storage.include(LogEvent.TASK_START, "CST-123", currentDateTime) }
     }
 
@@ -25,7 +25,7 @@ class TaskLoggerTest {
     fun `Log task started but was working on another one`() {
         val currentDateTime = LocalDateTime.of(2022,5,20,13,52)
         every { clock.now() } returns currentDateTime
-        logger.logStarted(Task("CST-123", "", TaskState.UNASSIGNED), Task("CST-456", "", TaskState.UNASSIGNED))
+        logger.logStarted(Task("CST-123", "", TaskState.NOT_STARTED), Task("CST-456", "", TaskState.NOT_STARTED))
         verify {
             storage.include(LogEvent.TASK_END, "CST-456", currentDateTime)
             storage.include(LogEvent.TASK_START, "CST-123", currentDateTime)
@@ -36,7 +36,7 @@ class TaskLoggerTest {
     fun `Log task end`() {
         val currentDateTime = LocalDateTime.of(2022,5,20,13,52)
         every { clock.now() } returns currentDateTime
-        logger.logEnd(Task("CST-123", "", TaskState.UNASSIGNED))
+        logger.logEnd(Task("CST-123", "", TaskState.NOT_STARTED))
         verify { storage.include(LogEvent.TASK_END, "CST-123", currentDateTime) }
     }
 

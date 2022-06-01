@@ -38,7 +38,7 @@ class ServiceMiddlewareTest {
     @Test
     fun `Dispatch results to reducer`() {
         val connector: Connector = mockk(relaxed = true)
-        val response = listOf(Task("1", "Task 1", TaskState.UNASSIGNED))
+        val response = listOf(Task("1", "Task 1", TaskState.NOT_STARTED))
         every { connector.getTasks() } returns response
         val processor: IProcessor<AppState> = mockk(relaxed = true)
         val middleware = ServiceMiddleware(connector)

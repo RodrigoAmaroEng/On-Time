@@ -12,13 +12,9 @@ class SQLiteStorage : Storage {
         MyTasks.Schema.create(driver)
     }
 
-
     override fun include(event: LogEvent, taskId: String, timeStamp: LocalDateTime) {
         db.transaction {
             db.my_tasksQueries.insert(taskId, timeStamp.toEpochSecond(ZoneOffset.UTC), event.stamp.toString())
-            db.my_tasksQueries.selectAll().executeAsList().forEach {
-                println("$it")
-            }
         }
     }
 }
