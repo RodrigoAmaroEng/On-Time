@@ -1,8 +1,11 @@
 package dev.amaro.on_time
 
 
+import dev.amaro.on_time.network.JiraConnector
+import dev.amaro.on_time.network.JiraRequester
 import dev.amaro.on_time.network.Value
 import dev.amaro.on_time.network.withJql
+import dev.amaro.on_time.utilities.Resources
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -161,5 +164,17 @@ class JQLGrammarTest {
             orderBy("updated").desc()
         }.queryString('+', true)
         assertEquals("jql=project+%3D+%22CST%22+AND+resolution+%3D+Unresolved+AND+Platform+%3D+Android+AND+assignee+IN+(EMPTY,currentUser())+ORDER+BY+priority+ASC%2C+updated+DESC", query)
+    }
+
+    @Test
+    fun testRestApi(){
+        println(
+            JiraConnector(
+                JiraRequester(
+                    "jira.cardlytics.com",
+                    Resources.getConfiguration().getProperty("token")
+                )
+            ).getTasks()
+        )
     }
 }

@@ -14,14 +14,14 @@ class AppReducerTest {
 
     @Test
     fun `Select a task to work`() {
-        val someTask = Task("Task 1", "Description 1", TaskState.UNASSIGNED)
+        val someTask = Task("Task 1", "Description 1", TaskState.NOT_STARTED)
         val state = reducer.reduce(Actions.StartTask(someTask), AppState())
         assertEquals(someTask , state.currentTask)
     }
 
     @Test
     fun `Load results from query`() {
-        val someTasks = listOf(Task("Task 1", "Description 1", TaskState.UNASSIGNED))
+        val someTasks = listOf(Task("Task 1", "Description 1", TaskState.NOT_STARTED))
         val state = reducer.reduce(Actions.QueryResults(someTasks), AppState())
         assertEquals(someTasks , state.tasks)
     }

@@ -34,6 +34,6 @@ fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}) {
 @Composable
 fun previewTask() {
     OnTimeTheme {
-        TaskUI(Task("CST-504", "Flex Currency for OfferHub is a very long task title", TaskState.UNASSIGNED))
+        TaskUI(Task("CST-504", "Flex Currency for OfferHub is a very long task title", TaskState.NOT_STARTED))
     }
 }
