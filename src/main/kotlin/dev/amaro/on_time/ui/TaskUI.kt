@@ -18,7 +18,7 @@ import dev.amaro.on_time.models.TaskState
 
 @Composable
 fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}) {
-    Surface(Modifier.clickable { onSelect(task) }, color = OnTimeColors.surfaceColor) {
+    Surface(Modifier.clickable { onSelect(task) }, color = MaterialTheme.colors.surface) {
         Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(task.id, style = MaterialTheme.typography.subtitle1)
