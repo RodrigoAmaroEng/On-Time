@@ -6,8 +6,11 @@ import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppLogic
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.core.ServiceMiddleware
+import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.network.JiraConnector
+import dev.amaro.on_time.network.JiraMapper
 import dev.amaro.on_time.network.JiraRequester
+import dev.amaro.on_time.network.JiraStateDefinition
 import dev.amaro.on_time.utilities.Resources
 
 class OnTimeApp {
@@ -17,7 +20,15 @@ class OnTimeApp {
         val requester = Resources.getConfiguration().let {
             JiraRequester(it.getProperty("host"), it.getProperty("token"))
         }
-        val connector = JiraConnector(requester)
+        val jiraStateDefinition = buildMap {
+            put(TaskState.NOT_STARTED, JiraStateDefinition(41, listOf("ToDo", "READY FOR DEVELOPMENT")))
+            put(TaskState.WORKING, JiraStateDefinition(31, "IN PROGRESS"))
+            put(TaskState.ON_REVIEW, JiraStateDefinition(51, "IN CODE REVIEW"))
+            put(TaskState.ON_QA, JiraStateDefinition(101, listOf("READY FOR QA", "In QA")))
+            put(TaskState.DONE, JiraStateDefinition(91, "Done"))
+        }
+
+        val connector = JiraConnector(requester, JiraMapper(jiraStateDefinition))
         val middleware = ServiceMiddleware(connector)
         appLogic = AppLogic(middleware)
     }
@@ -37,3 +48,4 @@ class OnTimeApp {
     @Composable
     fun getState(): AppState = appLogic.listen().collectAsState().value
 }
+

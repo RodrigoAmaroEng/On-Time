@@ -7,4 +7,5 @@ interface Connector {
 
     fun assign(task: Task, userName: String)
 
+    fun changeStatus(task: Task)
 }
