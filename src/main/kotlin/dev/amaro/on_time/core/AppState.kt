@@ -4,5 +4,6 @@ import dev.amaro.on_time.models.Task
 
 data class AppState(
     val currentTask: Task? = null,
-    val tasks: List<Task> = emptyList()
+    val tasks: List<Task> = emptyList(),
+    val onlyMyTasks: Boolean = false,
 )

@@ -15,9 +15,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
 import dev.amaro.on_time.OnTimeApp
 import dev.amaro.on_time.core.Actions
-import dev.amaro.on_time.ui.CurrentTask
-import dev.amaro.on_time.ui.OnTimeTheme
-import dev.amaro.on_time.ui.TaskUI
+import dev.amaro.on_time.ui.*
 
 @Composable
 fun MainScreen(app: OnTimeApp, onExit : () -> Unit) = Window(
@@ -29,6 +27,9 @@ fun MainScreen(app: OnTimeApp, onExit : () -> Unit) = Window(
         OnTimeTheme {
             Surface(color = MaterialTheme.colors.background) {
                 Column {
+                    Toolbar(
+                        ButtonDef(Icons.USER_ASSIGN, onlyMyTasks) { app.perform(Actions.FilterMine) },
+                    )
                     currentTask?.let {
                         AnimatedVisibility(true) { CurrentTask(it) }
                     }

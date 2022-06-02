@@ -44,4 +44,6 @@ object DeclaredColors {
 
     val lightBlack = Color(0xFF474747)
     val darkBlack = Color(0xFF333333)
+
+    val transparent = Color(0x00000000)
 }

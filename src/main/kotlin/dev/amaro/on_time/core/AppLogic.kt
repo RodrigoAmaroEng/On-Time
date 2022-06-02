@@ -6,15 +6,18 @@ import kotlin.reflect.KClass
 class AppLogic(vararg middlewares: IMiddleware<AppState> ):
     StateManager<AppState>(
         AppState(),
-        middlewares.asList().plus(ConditionedDirectMiddleware(Actions.StartTask::class))
+        middlewares.asList().plus(ConditionedDirectMiddleware(
+            Actions.StartTask::class,
+            Actions.FilterMine::class
+        ))
     ) {
 
     override val reducer: IReducer<AppState> = AppReducer()
 
 }
 
-class ConditionedDirectMiddleware<T: Actions>(
-    private vararg val actions: KClass<T>
+class ConditionedDirectMiddleware(
+    private vararg val actions: KClass<*>
 ): IMiddleware<AppState> {
     override fun process(action: IAction, state: AppState, processor: IProcessor<AppState>) {
         if (actions.contains(action::class)) {

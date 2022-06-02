@@ -26,4 +26,15 @@ class AppReducerTest {
         assertEquals(someTasks , state.tasks)
     }
 
+    @Test
+    fun `Enable filter only my tasks`() {
+        val state = reducer.reduce(Actions.FilterMine, AppState())
+        assertEquals(true , state.onlyMyTasks)
+    }
+
+    @Test
+    fun `Disable filter only my tasks`() {
+        val state = reducer.reduce(Actions.FilterMine, AppState(onlyMyTasks = true))
+        assertEquals(false , state.onlyMyTasks)
+    }
 }
