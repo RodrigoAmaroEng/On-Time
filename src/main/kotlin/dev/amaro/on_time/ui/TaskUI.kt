@@ -1,6 +1,8 @@
 package dev.amaro.on_time.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -13,8 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
@@ -23,8 +27,14 @@ import dev.amaro.on_time.models.TaskState
 @Composable
 fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}) {
     val showActionsState = remember { mutableStateOf(false) }
+    val density = LocalDensity.current
     Surface(Modifier.clickable { onSelect(task) }, color = MaterialTheme.colors.surface) {
-        Box() {
+        Box(
+            Modifier.onHover(
+                Portion(Alignment.CenterEnd, IntSize(30,100)),
+                onHover = { isOver -> showActionsState.value = isOver }
+            )
+        ) {
             Row(
                 Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -41,23 +51,29 @@ fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}) {
                 }
                 Image(painterResource(Icons.UNASSIGNED), "")
             }
-            AnimatedVisibility(visible = showActionsState.value) {
-                SquareButton(
-                    Icons.USER_ASSIGN,
-                    ButtonState.HOVER,
-                    size = ButtonSize.ACTIONS,
-                    modifier = Modifier.align(Alignment.TopEnd)
-                )
-                SquareButton(
-                    Icons.USER_ASSIGN,
-                    ButtonState.PRESSED,
-                    size = ButtonSize.ACTIONS,
-                    modifier = Modifier.align(Alignment.BottomEnd)
-                )
+            AnimatedVisibility(
+                visible = showActionsState.value,
+                enter = slideInHorizontally { with(density) { 32.dp.roundToPx() } },
+                exit = slideOutHorizontally { with(density) { 32.dp.roundToPx() } },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                Column {
+                    SquareButton(
+                        Icons.USER_ASSIGN,
+                        ButtonState.HOVER,
+                        size = ButtonSize.ACTIONS,
+                    )
+                    SquareButton(
+                        Icons.USER_ASSIGN,
+                        ButtonState.PRESSED,
+                        size = ButtonSize.ACTIONS,
+                    )
+                }
             }
         }
     }
 }
+
 
 @Preview
 @Composable
