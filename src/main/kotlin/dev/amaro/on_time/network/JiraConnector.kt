@@ -8,9 +8,10 @@ class JiraConnector(
     private val mapper: JiraMapper
 ) : Connector {
 
-    override fun getTasks(): List<Task> {
-        val body = withJql {
-            condition {
+    override fun getTasks(conditions: Jql.Builder): List<Task> {
+
+        val body = conditions.apply {
+            and {
                 project().eq("CST")
             }
             and {
@@ -19,12 +20,9 @@ class JiraConnector(
             and {
                 field("Platform").set("Android")
             }
-            and {
-                assignee().any(Value.EMPTY, Value.USER)
-            }
             orderBy("priority").asc()
             orderBy("updated").desc()
-        }.queryString(encode = true)
+        }.build().queryString(encode = true)
 
         val path = "/rest/agile/1.0/board/596/backlog?$body&fields=key,assignee,summary,status"
 

@@ -1,5 +1,6 @@
 package dev.amaro.on_time.core
 
+import dev.amaro.on_time.utilities.takeIfInstance
 import dev.amaro.sonic.*
 import kotlin.reflect.KClass
 
@@ -13,6 +14,13 @@ class AppLogic(vararg middlewares: IMiddleware<AppState> ):
     ) {
 
     override val reducer: IReducer<AppState> = AppReducer()
+
+    override fun reduce(action: IAction) {
+        super.reduce(action)
+        action.takeIfInstance<Actions>()?.sideEffect?.run {
+            perform(this)
+        }
+    }
 
 }
 
