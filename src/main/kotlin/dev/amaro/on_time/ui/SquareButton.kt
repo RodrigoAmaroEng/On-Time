@@ -4,9 +4,7 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -24,15 +22,25 @@ import dev.amaro.on_time.utilities.Constants
 
 
 @Composable
-fun SquareButton(resource: String, initialState: ButtonState = ButtonState.NORMAL, onClick: () -> Unit = {}) {
+fun SquareButton(
+    resource: String,
+    initialState: ButtonState = ButtonState.NORMAL,
+    size: ButtonSize = ButtonSize.TOOLBAR,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
     val state = remember { mutableStateOf(initialState) }
 
-    Surface(color = getBackgroundColorForState(state.value)) {
+    Surface(color = getBackgroundColorForState(state.value), modifier = modifier) {
         Box(
-            Modifier.size(48.dp).onStateChange {
-                state.value =
-                    if (initialState != ButtonState.CHECKED || it == ButtonState.HOVER) it else ButtonState.CHECKED
-            }.clickable(onClick = onClick),
+            Modifier
+                .size(size.size.dp)
+                .padding(8.dp)
+                .onStateChange {
+                    state.value =
+                        if (initialState != ButtonState.CHECKED || it == ButtonState.HOVER) it else ButtonState.CHECKED
+                }
+                .clickable(onClick = onClick),
             contentAlignment = Alignment.Center
         )
         {
@@ -40,7 +48,7 @@ fun SquareButton(resource: String, initialState: ButtonState = ButtonState.NORMA
                 painterResource(resource),
                 Constants.EMPTY,
                 colorFilter = ColorFilter.tint(getForegroundColorForState(state.value)),
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.fillMaxSize()
             )
         }
     }
@@ -66,6 +74,11 @@ enum class ButtonState {
     HOVER,
     PRESSED,
     CHECKED
+}
+
+enum class ButtonSize(val size: Int) {
+    TOOLBAR(48),
+    ACTIONS(32)
 }
 
 @Composable

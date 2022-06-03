@@ -19,7 +19,7 @@ fun Toolbar(vararg buttons: ButtonDef) {
                     SquareButton(
                         imageResource,
                         if (checked) ButtonState.CHECKED else ButtonState.NORMAL,
-                        onClick
+                        onClick = onClick,
                     )
                 }
             }
@@ -40,7 +40,7 @@ fun previewToolbar() {
     OnTimeTheme {
         Toolbar(
             ButtonDef(Icons.USER_ASSIGN),
-            ButtonDef(Icons.TASK_DONE)
+            ButtonDef(Icons.TASK_DONE, checked = true)
         )
     }
 }
