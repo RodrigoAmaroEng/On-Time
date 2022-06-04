@@ -5,6 +5,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -20,18 +21,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 
 
 @Composable
-fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}) {
+fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}, onTaskAction: (Actions) -> Unit = {}) {
     val showActionsState = remember { mutableStateOf(false) }
     val density = LocalDensity.current
     Surface(Modifier.clickable { onSelect(task) }, color = MaterialTheme.colors.surface) {
         Box(
             Modifier.onHover(
-                Portion(Alignment.CenterEnd, IntSize(30,100)),
+                Portion(Alignment.CenterEnd, IntSize(30, 100)),
                 onHover = { isOver -> showActionsState.value = isOver }
             )
         ) {
@@ -58,17 +60,14 @@ fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}) {
                 exit = slideOutHorizontally { with(density) { 32.dp.roundToPx() } },
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
-                Column {
-                    SquareButton(
-                        Icons.USER_ASSIGN,
-                        ButtonState.HOVER,
-                        size = ButtonSize.ACTIONS,
-                    )
-                    SquareButton(
-                        Icons.USER_ASSIGN,
-                        ButtonState.PRESSED,
-                        size = ButtonSize.ACTIONS,
-                    )
+                Column(Modifier.background(MaterialTheme.colors.secondary)) {
+                    task.actionsAvailable.forEach {
+                        SquareButton(
+                            it.icon,
+                            size = ButtonSize.ACTIONS,
+                            onClick = { onTaskAction(it.action) }
+                        )
+                    }
                 }
             }
         }

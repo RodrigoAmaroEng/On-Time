@@ -18,7 +18,7 @@ import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.ui.*
 
 @Composable
-fun MainScreen(app: OnTimeApp, onExit : () -> Unit) = Window(
+fun MainScreen(app: OnTimeApp, onExit: () -> Unit) = Window(
     onCloseRequest = onExit,
     title = "On Time - Task Manager",
     state = rememberWindowState(width = 500.dp, height = 300.dp),
@@ -42,9 +42,11 @@ fun MainScreen(app: OnTimeApp, onExit : () -> Unit) = Window(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(tasks) {
-                            TaskUI(it) { task ->
-                                app.perform(Actions.StartTask(task))
-                            }
+                            TaskUI(
+                                it,
+                                onSelect = { task -> app.perform(Actions.StartTask(task)) },
+                                onTaskAction = { action -> app.perform(action) }
+                            )
                         }
                     }
                 }

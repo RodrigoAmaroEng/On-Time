@@ -1,5 +1,7 @@
 package dev.amaro.on_time.models
 
+import dev.amaro.on_time.core.Actions
+import dev.amaro.on_time.ui.ActionDef
 import dev.amaro.on_time.ui.Icons
 
 enum class TaskState(val icon: String) {
@@ -16,7 +18,17 @@ data class Task(
     val title: String,
     val status: TaskState,
     val isMine: Boolean = false
-)
+) {
+    val actionsAvailable: List<ActionDef> = mutableListOf<ActionDef>()
+        .apply {
+            if (!isMine) {
+                add(ActionDef(Icons.USER_ASSIGN, Actions.AssignToMe(this@Task)))
+            }
+            if (status !in arrayOf(TaskState.UNDEFINED, TaskState.ON_QA) ) {
+                add(ActionDef(Icons.NOT_STARTED, Actions.SetTaskState(this@Task)))
+            }
+        }
+}
 
 
 
