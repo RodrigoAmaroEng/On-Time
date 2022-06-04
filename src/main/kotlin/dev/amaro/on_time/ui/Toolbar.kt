@@ -1,9 +1,8 @@
 package dev.amaro.on_time.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -11,37 +10,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Toolbar(vararg buttons: ButtonDef) {
-    Surface(Modifier.fillMaxWidth().height(48.dp), color = MaterialTheme.colors.secondary) {
-        Row {
-            buttons.forEach {
-                it.apply {
-                    SquareButton(
-                        imageResource,
-                        if (checked) ButtonState.CHECKED else ButtonState.NORMAL,
-                        onClick = onClick,
-                    )
-                }
+fun Toolbar(body: @Composable() () -> Unit) {
+    Surface(Modifier.fillMaxWidth(), color = MaterialTheme.colors.secondary) {
+        Column {
+            Row(Modifier.height(48.dp)) {
+                body()
             }
+            Box(Modifier.height(2.dp).fillMaxWidth().background(MaterialTheme.colors.primary))
         }
     }
 }
-
-
-data class ButtonDef(
-    val imageResource: String,
-    val checked: Boolean = false,
-    val onClick: () -> Unit = {}
-)
 
 @Preview
 @Composable
 fun previewToolbar() {
     OnTimeTheme {
-        Toolbar(
-            ButtonDef(Icons.USER_ASSIGN),
-            ButtonDef(Icons.TASK_DONE, checked = true)
-        )
+        Toolbar {
+            SquareButton(Icons.USER_ASSIGN)
+            SquareButton(Icons.TASK_DONE, initialState = ButtonState.CHECKED)
+        }
     }
 }
 

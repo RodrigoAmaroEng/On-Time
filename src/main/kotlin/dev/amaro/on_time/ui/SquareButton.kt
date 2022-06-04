@@ -23,7 +23,7 @@ import dev.amaro.on_time.utilities.Constants
 
 @Composable
 fun SquareButton(
-    resource: String,
+    icon: String,
     initialState: ButtonState = ButtonState.NORMAL,
     size: ButtonSize = ButtonSize.TOOLBAR,
     modifier: Modifier = Modifier,
@@ -45,7 +45,7 @@ fun SquareButton(
         )
         {
             Image(
-                painterResource(resource),
+                painterResource(icon),
                 Constants.EMPTY,
                 colorFilter = ColorFilter.tint(getForegroundColorForState(state.value)),
                 modifier = Modifier.fillMaxSize()

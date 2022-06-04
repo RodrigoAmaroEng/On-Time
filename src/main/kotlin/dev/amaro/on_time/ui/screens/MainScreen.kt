@@ -27,9 +27,13 @@ fun MainScreen(app: OnTimeApp, onExit : () -> Unit) = Window(
         OnTimeTheme {
             Surface(color = MaterialTheme.colors.background) {
                 Column {
-                    Toolbar(
-                        ButtonDef(Icons.USER_ASSIGN, onlyMyTasks) { app.perform(Actions.FilterMine) },
-                    )
+                    Toolbar {
+                        SquareButton(
+                            Icons.USER_ASSIGN,
+                            initialState = if (onlyMyTasks) ButtonState.CHECKED else ButtonState.NORMAL,
+                            onClick = { app.perform(Actions.FilterMine) }
+                        )
+                    }
                     currentTask?.let {
                         AnimatedVisibility(true) { CurrentTask(it) }
                     }
