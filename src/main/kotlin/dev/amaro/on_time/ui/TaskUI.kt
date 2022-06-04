@@ -49,7 +49,8 @@ fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}) {
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                Image(painterResource(Icons.UNASSIGNED), "")
+                Spacer(Modifier.width(12.dp))
+                Image(painterResource(task.status.icon), "")
             }
             AnimatedVisibility(
                 visible = showActionsState.value,
