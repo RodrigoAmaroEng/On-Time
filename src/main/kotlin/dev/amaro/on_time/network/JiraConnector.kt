@@ -33,7 +33,8 @@ class JiraConnector(
                 Task(
                     issue.key,
                     issue.fields.summary,
-                    mapper.fromJiraState(issue.fields.status.name)
+                    mapper.fromJiraState(issue.fields.status.name),
+                    mapper.isFromCurrentUser(issue.fields.assignee?.name)
                 )
             } ?: emptyList()
     }

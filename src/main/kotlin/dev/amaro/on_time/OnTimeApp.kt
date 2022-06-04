@@ -17,7 +17,9 @@ class OnTimeApp {
     private val appLogic: AppLogic
 
     init {
+        lateinit var user: String
         val requester = Resources.getConfiguration().let {
+            user = it.getProperty("user")
             JiraRequester(it.getProperty("host"), it.getProperty("token"))
         }
         val jiraStateDefinition = buildMap {
@@ -28,7 +30,7 @@ class OnTimeApp {
             put(TaskState.DONE, JiraStateDefinition(91, "Done"))
         }
 
-        val connector = JiraConnector(requester, JiraMapper(jiraStateDefinition))
+        val connector = JiraConnector(requester, JiraMapper(jiraStateDefinition, user))
         val middleware = ServiceMiddleware(connector)
         appLogic = AppLogic(middleware)
     }

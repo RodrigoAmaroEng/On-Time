@@ -5,7 +5,10 @@ package dev.amaro.on_time.network
 data class JiraStatus(val name: String)
 
 @kotlinx.serialization.Serializable
-data class JiraFields(val summary: String, val status: JiraStatus)
+data class JiraAssignee(val name: String)
+
+@kotlinx.serialization.Serializable
+data class JiraFields(val summary: String, val status: JiraStatus, val assignee: JiraAssignee?)
 
 @kotlinx.serialization.Serializable
 data class JiraTask(val key: String, val fields: JiraFields)

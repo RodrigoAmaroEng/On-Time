@@ -39,9 +39,7 @@ class JiraRequester(
             .perform()
             .body
             ?.string()
-            ?.let {
-                json.decodeFromString(it)
-            }
+            ?.let { json.decodeFromString(it) }
     }
 
     fun put(path: String, body: Map<String, String>): String? {

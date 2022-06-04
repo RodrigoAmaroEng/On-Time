@@ -14,7 +14,8 @@ enum class TaskState(val icon: String) {
 data class Task(
     val id: String,
     val title: String,
-    val status: TaskState
+    val status: TaskState,
+    val isMine: Boolean = false
 )
 
 
