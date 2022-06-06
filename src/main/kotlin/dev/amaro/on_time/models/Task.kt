@@ -11,6 +11,16 @@ enum class TaskState(val icon: String) {
     ON_REVIEW(Icons.CODE_REVIEW),
     ON_QA(Icons.ON_QA),
     DONE(Icons.TASK_DONE);
+
+    fun nextState(): TaskState {
+        return when (this) {
+            UNDEFINED,
+            NOT_STARTED -> WORKING
+            WORKING -> ON_REVIEW
+            ON_REVIEW -> ON_QA
+            else -> this
+        }
+    }
 }
 
 data class Task(
@@ -23,9 +33,11 @@ data class Task(
         .apply {
             if (!isMine) {
                 add(ActionDef(Icons.USER_ASSIGN, Actions.AssignToMe(this@Task)))
+            } else {
+                add(ActionDef(Icons.TASK_DONE, Actions.SetTaskState(this@Task, TaskState.DONE)))
             }
             if (status !in arrayOf(TaskState.UNDEFINED, TaskState.ON_QA) ) {
-                add(ActionDef(Icons.NOT_STARTED, Actions.SetTaskState(this@Task)))
+                add(ActionDef(Icons.NOT_STARTED, Actions.SetTaskState(this@Task, status.nextState())))
             }
         }
 }
