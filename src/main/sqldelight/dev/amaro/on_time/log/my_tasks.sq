@@ -4,10 +4,41 @@ CREATE TABLE logs (
   kind TEXT NOT NULL
 );
 
-selectAll:
-SELECT *
-FROM logs;
+CREATE TABLE tasks (
+  key TEXT PRIMARY KEY NOT NULL,
+  minutes INTEGER NOT NULL,
+  current INTEGER NOT NULL DEFAULT 0
+);
 
-insert:
-INSERT INTO logs(key, timestamp, kind)
-VALUES (?, ?, ?);
+
+selectCurrent:
+SELECT l.key, l.timestamp, t.minutes
+FROM logs l
+INNER JOIN tasks t ON l.key = t.key
+WHERE t.current = 1;
+
+
+
+showAllLogs:
+SELECT * FROM logs;
+
+showAllTasks:
+SELECT * FROM tasks;
+
+startTask {
+    UPDATE tasks SET current = 0;
+    UPDATE tasks SET current = 1 WHERE key = :key;
+
+    INSERT OR IGNORE INTO tasks(key, minutes, current)
+    VALUES (:key, 0, 1);
+
+    INSERT INTO logs(key, timestamp, kind)
+    VALUES (:key, :timestamp, "S");
+}
+
+finishTask {
+    UPDATE tasks SET current = 0, minutes = minutes + :minutes WHERE key = :key;
+
+    INSERT INTO logs(key, timestamp, kind)
+    VALUES (:key, :timestamp, "F");
+}
