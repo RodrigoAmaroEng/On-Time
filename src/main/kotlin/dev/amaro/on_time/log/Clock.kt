@@ -4,11 +4,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class Clock {
-    companion object{
+    companion object {
         private const val FORMAT = "yyyy-MM-dd HH:mm"
     }
 
-    fun now() = LocalDateTime.now()
+    fun now(): LocalDateTime = LocalDateTime.now().withNano(0).withSecond(0)
 
-    fun nowStr() = now().format(DateTimeFormatter.ofPattern(FORMAT))
+    fun nowStr(): String = now().format(DateTimeFormatter.ofPattern(FORMAT))
 }
