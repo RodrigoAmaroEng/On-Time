@@ -10,21 +10,18 @@ class JiraConnector(
 
     override fun getTasks(conditions: Jql.Builder): List<Task> {
 
-        val body = conditions.apply {
-            and {
-                project().eq("CST")
+        val body = conditions
+            .apply {
+                and { project().eq("CST") }
+                and { field("resolution").set("Unresolved") }
+                and { field("Platform").set("Android") }
+                orderBy("priority").desc()
+                orderBy("updated").desc()
             }
-            and {
-                field("resolution").set("Unresolved")
-            }
-            and {
-                field("Platform").set("Android")
-            }
-            orderBy("priority").asc()
-            orderBy("updated").desc()
-        }.build().queryString(encode = true)
+            .build()
+            .queryString(encode = true)
 
-        val path = "/rest/agile/1.0/board/596/backlog?$body&fields=key,assignee,summary,status"
+        val path = "/rest/api/2/search?$body&fields=key,assignee,summary,status,epic"
 
         return requester
             .get<JiraResponse>(path)
