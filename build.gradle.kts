@@ -9,6 +9,9 @@ plugins {
 
 group = "dev.amaro"
 version = "1.0-SNAPSHOT"
+val mainClassName = "MainKt"
+val mainClassPath = "$group.on_time.$mainClassName"
+
 
 repositories {
     mavenCentral()
@@ -33,6 +36,18 @@ dependencies {
     testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("com.appmattus.fixture:fixture:1.2.0")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+}
+
+tasks.jar {
+    val classpath = configurations.runtimeClasspath
+    // Input declaration is needed for the proper up-to-date checks
+    inputs.files(classpath).withNormalizer(ClasspathNormalizer::class.java)
+    manifest {
+        attributes(
+            "Class-Path" to classpath.map { cp -> cp.joinToString(" ") { it.absolutePath } }
+        )
+        attributes( "Implementation-Title" to project.name, "Implementation-Version" to version, "Main-Class" to mainClassPath)
+    }
 }
 
 tasks.test {
