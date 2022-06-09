@@ -8,7 +8,6 @@ class AppLogic(vararg middlewares: IMiddleware<AppState> ):
     StateManager<AppState>(
         AppState(),
         middlewares.asList().plus(ConditionedDirectMiddleware(
-            Actions.StartTask::class,
             Actions.FilterMine::class
         ))
     ) {

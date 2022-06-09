@@ -32,6 +32,7 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("com.appmattus.fixture:fixture:1.2.0")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
 }
 
 tasks.test {

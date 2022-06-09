@@ -2,10 +2,10 @@ package dev.amaro.on_time
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import dev.amaro.on_time.core.Actions
-import dev.amaro.on_time.core.AppLogic
-import dev.amaro.on_time.core.AppState
-import dev.amaro.on_time.core.ServiceMiddleware
+import dev.amaro.on_time.core.*
+import dev.amaro.on_time.log.Clock
+import dev.amaro.on_time.log.SQLiteStorage
+import dev.amaro.on_time.log.TaskLogger
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.network.JiraConnector
 import dev.amaro.on_time.network.JiraMapper
@@ -31,8 +31,9 @@ class OnTimeApp {
         }
 
         val connector = JiraConnector(requester, JiraMapper(jiraStateDefinition, user))
-        val middleware = ServiceMiddleware(connector)
-        appLogic = AppLogic(middleware)
+        val serviceMiddleware = ServiceMiddleware(connector)
+        val storageMiddleware = StorageMiddleware(TaskLogger(SQLiteStorage(), Clock()))
+        appLogic = AppLogic(serviceMiddleware, storageMiddleware)
     }
 
     private var hasStarted = false

@@ -1,12 +1,15 @@
 package dev.amaro.on_time
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppReducer
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class AppReducerTest {
 
@@ -14,27 +17,27 @@ class AppReducerTest {
 
     @Test
     fun `Select a task to work`() {
-        val someTask = Task("Task 1", "Description 1", TaskState.NOT_STARTED)
-        val state = reducer.reduce(Actions.StartTask(someTask), AppState())
-        assertEquals(someTask , state.currentTask)
+        val someTask = Samples.workingTask1
+        val state = reducer.reduce(Actions.SetWorkingTask(someTask), AppState())
+        assertThat(state.currentTask).isEqualTo(someTask)
     }
 
     @Test
     fun `Load results from query`() {
         val someTasks = listOf(Task("Task 1", "Description 1", TaskState.NOT_STARTED))
         val state = reducer.reduce(Actions.QueryResults(someTasks), AppState())
-        assertEquals(someTasks , state.tasks)
+        assertThat(state.tasks).isEqualTo(someTasks)
     }
 
     @Test
     fun `Enable filter only my tasks`() {
         val state = reducer.reduce(Actions.FilterMine, AppState())
-        assertEquals(true , state.onlyMyTasks)
+        assertThat(state.onlyMyTasks).isTrue()
     }
 
     @Test
     fun `Disable filter only my tasks`() {
         val state = reducer.reduce(Actions.FilterMine, AppState(onlyMyTasks = true))
-        assertEquals(false , state.onlyMyTasks)
+        assertThat(state.onlyMyTasks).isFalse()
     }
 }

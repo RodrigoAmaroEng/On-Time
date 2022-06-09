@@ -8,7 +8,6 @@ import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.on_time.utilities.toDatabase
 import dev.amaro.on_time.utilities.toLocalDateTime
 import java.io.File
-import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 abstract class ISQLiteStorage : Storage {
@@ -52,8 +51,8 @@ open class SQLiteStorage : ISQLiteStorage() {
     }
 
     override fun getOpen(): WorkingTask? {
-        db.my_tasksQueries.selectCurrent().executeAsOne().let {
-            return WorkingTask(
+        return db.my_tasksQueries.selectCurrent().executeAsOneOrNull()?.let {
+            WorkingTask(
                 Task(
                     it.key,
                     it.title,

@@ -1,5 +1,7 @@
 package dev.amaro.on_time
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import dev.amaro.on_time.Samples.EMPTY
 import dev.amaro.on_time.Samples.FALSE
 import dev.amaro.on_time.Samples.KIND_END
@@ -14,8 +16,6 @@ import dev.amaro.on_time.Samples.task2
 import dev.amaro.on_time.Samples.workingTask1
 import dev.amaro.on_time.log.*
 import dev.amaro.on_time.models.Task
-import dev.amaro.on_time.models.TaskState
-import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.ontime.log.Logs
 import dev.amaro.ontime.log.Tasks
 import io.mockk.every
@@ -25,7 +25,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import kotlin.test.assertEquals
 
 class TaskLoggerTest {
 
@@ -70,8 +69,10 @@ class TaskLoggerTest {
             val logs = database.my_tasksQueries.showAllLogs().executeAsList()
             val tasks = database.my_tasksQueries.showAllTasks().executeAsList()
             val timestamp = clock.now().toEpochSecond(ZoneOffset.UTC)
-            assertEquals(listOf(Logs(TASK_ID_1, timestamp, KIND_START)), logs)
-            assertEquals(listOf(Tasks(TASK_ID_1, EMPTY, STATUS, FALSE, 0, TRUE)), tasks)
+            val expectedLogs = listOf(Logs(TASK_ID_1, timestamp, KIND_START))
+            val expectedTasks = listOf(Tasks(TASK_ID_1, EMPTY, STATUS, FALSE, 0, TRUE))
+            assertThat(logs).isEqualTo(expectedLogs)
+            assertThat(tasks).isEqualTo(expectedTasks)
         }
     }
 
@@ -85,21 +86,17 @@ class TaskLoggerTest {
             val logs = database.my_tasksQueries.showAllLogs().executeAsList()
             val tasks = database.my_tasksQueries.showAllTasks().executeAsList()
             val timestamp = clock.now().toEpochSecond(ZoneOffset.UTC)
-            assertEquals(
-                listOf(
-                    Logs(TASK_ID_1, timestamp, KIND_START),
-                    Logs(TASK_ID_1, timestamp, KIND_END),
-                    Logs(TASK_ID_2, timestamp, KIND_START)
-                ),
-                logs
+            val expectedLogs = listOf(
+                Logs(TASK_ID_1, timestamp, KIND_START),
+                Logs(TASK_ID_1, timestamp, KIND_END),
+                Logs(TASK_ID_2, timestamp, KIND_START)
             )
-            assertEquals(
-                listOf(
-                    Tasks(TASK_ID_1, EMPTY, STATUS, FALSE, 0,  FALSE),
-                    Tasks(TASK_ID_2, EMPTY, STATUS, FALSE, 0,  TRUE)
-                ),
-                tasks
+            val expectedTasks = listOf(
+                Tasks(TASK_ID_1, EMPTY, STATUS, FALSE, 0, FALSE),
+                Tasks(TASK_ID_2, EMPTY, STATUS, FALSE, 0, TRUE)
             )
+            assertThat(logs).isEqualTo(expectedLogs)
+            assertThat(tasks).isEqualTo(expectedTasks)
         }
     }
 
@@ -113,18 +110,14 @@ class TaskLoggerTest {
             val logs = database.my_tasksQueries.showAllLogs().executeAsList()
             val tasks = database.my_tasksQueries.showAllTasks().executeAsList()
             val timestamp = clock.now().toEpochSecond(ZoneOffset.UTC)
-            assertEquals(
-                listOf(
-                    Logs(TASK_ID_1, timestamp, KIND_START),
-                ),
-                logs
+            val expectedLogs = listOf(
+                Logs(TASK_ID_1, timestamp, KIND_START),
             )
-            assertEquals(
-                listOf(
-                    Tasks(TASK_ID_1, EMPTY, STATUS, FALSE, 0,  TRUE)
-                ),
-                tasks
+            val expectedTasks = listOf(
+                Tasks(TASK_ID_1, EMPTY, STATUS, FALSE, 0, TRUE)
             )
+            assertThat(logs).isEqualTo(expectedLogs)
+            assertThat(tasks).isEqualTo(expectedTasks)
         }
     }
 
@@ -141,19 +134,15 @@ class TaskLoggerTest {
             val logs = database.my_tasksQueries.showAllLogs().executeAsList()
             val tasks = database.my_tasksQueries.showAllTasks().executeAsList()
 
-            assertEquals(
-                listOf(
-                    Logs(TASK_ID_1, timestamp, KIND_START),
-                    Logs(TASK_ID_1, endTimestamp, KIND_END)
-                ),
-                logs
+            val expectedLogs = listOf(
+                Logs(TASK_ID_1, timestamp, KIND_START),
+                Logs(TASK_ID_1, endTimestamp, KIND_END)
             )
-            assertEquals(
-                listOf(
-                    Tasks(TASK_ID_1, EMPTY, STATUS, FALSE,  25, FALSE)
-                ),
-                tasks
+            val expectedTasks = listOf(
+                Tasks(TASK_ID_1, EMPTY, STATUS, FALSE, 25, FALSE)
             )
+            assertThat(logs).isEqualTo(expectedLogs)
+            assertThat(tasks).isEqualTo(expectedTasks)
         }
     }
 
@@ -171,21 +160,17 @@ class TaskLoggerTest {
             val logs = database.my_tasksQueries.showAllLogs().executeAsList()
             val tasks = database.my_tasksQueries.showAllTasks().executeAsList()
 
-            assertEquals(
-                listOf(
-                    Logs(TASK_ID_1, timestamp, KIND_START),
-                    Logs(TASK_ID_1, middleTimestamp, KIND_END),
-                    Logs(TASK_ID_1, middleTimestamp, KIND_START),
-                    Logs(TASK_ID_1, endTimestamp, KIND_END)
-                    ),
-                logs
+            val expectedLogs = listOf(
+                Logs(TASK_ID_1, timestamp, KIND_START),
+                Logs(TASK_ID_1, middleTimestamp, KIND_END),
+                Logs(TASK_ID_1, middleTimestamp, KIND_START),
+                Logs(TASK_ID_1, endTimestamp, KIND_END)
             )
-            assertEquals(
-                listOf(
-                    Tasks(TASK_ID_1, EMPTY, STATUS, FALSE, 40, FALSE)
-                ),
-                tasks
+            val expectedTasks = listOf(
+                Tasks(TASK_ID_1, EMPTY, STATUS, FALSE, 40, FALSE)
             )
+            assertThat(logs).isEqualTo(expectedLogs)
+            assertThat(tasks).isEqualTo(expectedTasks)
         }
     }
 
@@ -204,27 +189,10 @@ class TaskLoggerTest {
             val currentTask = TaskLogger(this, clock).apply {
                 logStarted(task1)
             }.getCurrentTask()
-            assertEquals(workingTask1.copy(startedAt = workingTask1.startedAt.withNano(0).withSecond(0)), currentTask)
+            val expectedTask = workingTask1.copy(startedAt = workingTask1.startedAt.withNano(0).withSecond(0))
+            assertThat(currentTask).isEqualTo(expectedTask)
         }
     }
 }
 
 
-object Samples {
-     val STATUS = TaskState.NOT_STARTED.name
-    const val TASK_ID_1 = "CST-123"
-    const val TASK_ID_2 = "CST-321"
-    const val TASK_ID_3 = "CST-456"
-    const val KIND_START = "S"
-    const val KIND_END = "F"
-    const val EMPTY = ""
-    const val TRUE = 1L
-    const val FALSE = 0L
-    val task1 = Task(TASK_ID_1, EMPTY, TaskState.NOT_STARTED)
-    val task2 = Task(TASK_ID_2, EMPTY, TaskState.NOT_STARTED)
-    val task3 = Task(TASK_ID_3, EMPTY, TaskState.NOT_STARTED)
-
-    val workingTask1 = asWorkingTask(task1)
-    fun asWorkingTask(task: Task, startedAt: LocalDateTime = LocalDateTime.now().withNano(0).withSecond(0), minutes: Int = 0) =
-        WorkingTask(task, startedAt, minutes)
-}

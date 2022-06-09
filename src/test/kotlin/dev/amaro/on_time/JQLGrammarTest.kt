@@ -1,17 +1,18 @@
 package dev.amaro.on_time
 
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import dev.amaro.on_time.network.Value
 import dev.amaro.on_time.network.withJql
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
 class JQLGrammarTest {
 
     @Test
     fun `Generate initial query`() {
         val query = withJql { }.toString()
-        assertEquals("jql=", query)
+        assertThat(query).isEqualTo("jql=")
     }
 
     @Test
@@ -21,7 +22,7 @@ class JQLGrammarTest {
                 field("name").eq("rodrigo")
             }
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+%22rodrigo%22", query)
+        assertThat(query).isEqualTo("jql=name+%3D+%22rodrigo%22")
     }
 
     @Test
@@ -34,7 +35,7 @@ class JQLGrammarTest {
                 field("project").eq("CST")
             }
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+%22rodrigo%22+AND+project+%3D+%22CST%22", query)
+        assertThat(query).isEqualTo("jql=name+%3D+%22rodrigo%22+AND+project+%3D+%22CST%22")
     }
 
     @Test
@@ -47,7 +48,7 @@ class JQLGrammarTest {
                 field("project").set("CST")
             }
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+%22rodrigo%22+AND+project+%3D+CST", query)
+        assertThat(query).isEqualTo("jql=name+%3D+%22rodrigo%22+AND+project+%3D+CST")
     }
 
     @Test
@@ -60,7 +61,7 @@ class JQLGrammarTest {
                 field("project").`in`("CST", "CAT")
             }
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+%22rodrigo%22+AND+project+IN+(%22CST%22,%22CAT%22)", query)
+        assertThat(query).isEqualTo("jql=name+%3D+%22rodrigo%22+AND+project+IN+(%22CST%22,%22CAT%22)")
     }
 
     @Test
@@ -73,7 +74,7 @@ class JQLGrammarTest {
                 field("project").any("CST", "CAT")
             }
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+%22rodrigo%22+AND+project+IN+(CST,CAT)", query)
+        assertThat(query).isEqualTo("jql=name+%3D+%22rodrigo%22+AND+project+IN+(CST,CAT)")
     }
 
     @Test
@@ -86,7 +87,7 @@ class JQLGrammarTest {
                 field("project").any(Value.EMPTY, Value.NULL)
             }
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+%22rodrigo%22+AND+project+IN+(EMPTY,NULL)", query)
+        assertThat(query).isEqualTo("jql=name+%3D+%22rodrigo%22+AND+project+IN+(EMPTY,NULL)")
     }
 
     @Test
@@ -97,7 +98,7 @@ class JQLGrammarTest {
             }
             orderBy("priority").asc()
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+%22rodrigo%22+ORDER+BY+priority+ASC", query)
+        assertThat(query).isEqualTo("jql=name+%3D+%22rodrigo%22+ORDER+BY+priority+ASC")
     }
 
     @Test
@@ -109,7 +110,7 @@ class JQLGrammarTest {
             orderBy("priority").asc()
             orderBy("updated").desc()
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+%22rodrigo%22+ORDER+BY+priority+ASC%2C+updated+DESC", query)
+        assertThat(query).isEqualTo("jql=name+%3D+%22rodrigo%22+ORDER+BY+priority+ASC%2C+updated+DESC")
     }
 
     @Test
@@ -119,7 +120,7 @@ class JQLGrammarTest {
                 field("name").empty()
             }
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+EMPTY", query)
+        assertThat(query).isEqualTo("jql=name+%3D+EMPTY")
     }
 
     @Test
@@ -129,7 +130,7 @@ class JQLGrammarTest {
                 field("name").`null`()
             }
         }.queryString('+', true)
-        assertEquals("jql=name+%3D+NULL", query)
+        assertThat(query).isEqualTo("jql=name+%3D+NULL")
     }
 
     @Test
@@ -139,7 +140,7 @@ class JQLGrammarTest {
                 field("assignee").user()
             }
         }.queryString('+', true)
-        assertEquals("jql=assignee+%3D+currentUser()", query)
+        assertThat(query).isEqualTo("jql=assignee+%3D+currentUser()")
     }
 
     @Test
@@ -160,10 +161,8 @@ class JQLGrammarTest {
             orderBy("priority").asc()
             orderBy("updated").desc()
         }.queryString('+', true)
-        assertEquals(
-            "jql=project+%3D+%22CST%22+AND+resolution+%3D+Unresolved+AND+Platform+%3D+Android+AND+assignee+IN+(EMPTY,currentUser())+ORDER+BY+priority+ASC%2C+updated+DESC",
-            query
-        )
+        assertThat(query)
+            .isEqualTo("jql=project+%3D+%22CST%22+AND+resolution+%3D+Unresolved+AND+Platform+%3D+Android+AND+assignee+IN+(EMPTY,currentUser())+ORDER+BY+priority+ASC%2C+updated+DESC")
     }
 
     @Test
