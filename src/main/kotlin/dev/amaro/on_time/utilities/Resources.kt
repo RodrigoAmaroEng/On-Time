@@ -8,9 +8,9 @@ object Resources {
         return Resources::class.java.getResourceAsStream(path)
     }
 
-    fun getConfiguration(): Properties {
+    fun getConfigurationFile(file: String): Properties {
         return Properties().apply {
-            load(load("/local.properties"))
+            load(load(file))
         }
     }
 }

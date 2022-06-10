@@ -5,6 +5,7 @@ import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.models.WorkingTask
+import dev.amaro.on_time.utilities.discardSecondsAndNanos
 import java.time.LocalDateTime
 import kotlin.reflect.KClass
 
@@ -32,6 +33,6 @@ object Samples {
     val task3 = Task(TASK_ID_3, EMPTY, TaskState.NOT_STARTED)
 
     val workingTask1 = asWorkingTask(task1)
-    fun asWorkingTask(task: Task, startedAt: LocalDateTime = LocalDateTime.now().withNano(0).withSecond(0), minutes: Int = 0) =
+    fun asWorkingTask(task: Task, startedAt: LocalDateTime = LocalDateTime.now().discardSecondsAndNanos(), minutes: Int = 0) =
         WorkingTask(task, startedAt, minutes)
 }

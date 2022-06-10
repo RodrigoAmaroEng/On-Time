@@ -16,12 +16,14 @@ import dev.amaro.on_time.Samples.task2
 import dev.amaro.on_time.Samples.workingTask1
 import dev.amaro.on_time.log.*
 import dev.amaro.on_time.models.Task
+import dev.amaro.on_time.utilities.discardSecondsAndNanos
 import dev.amaro.ontime.log.Logs
 import dev.amaro.ontime.log.Tasks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -31,6 +33,12 @@ class TaskLoggerTest {
     private val clock: Clock = spyk(Clock())
     private val storage: Storage = mockk(relaxed = true)
     private val logger = TaskLogger(storage, clock)
+
+    @BeforeEach
+    fun setUp() {
+        val fixedDateTime = LocalDateTime.now().discardSecondsAndNanos()
+        every { clock.now() } returns fixedDateTime
+    }
 
     @Test
     fun `Log task started`() {
@@ -81,7 +89,7 @@ class TaskLoggerTest {
         TestSQLiteStorage().run {
             TaskLogger(this, clock).apply {
                 logStarted(task1)
-                logStarted(task2, workingTask1)
+                logStarted(task2, asWorkingTask(task1, clock.now()))
             }
             val logs = database.my_tasksQueries.showAllLogs().executeAsList()
             val tasks = database.my_tasksQueries.showAllTasks().executeAsList()
@@ -186,10 +194,10 @@ class TaskLoggerTest {
     @Test
     fun `Get current working task`() {
         TestSQLiteStorage().run {
-            val currentTask = TaskLogger(this, clock).apply {
-                logStarted(task1)
-            }.getCurrentTask()
-            val expectedTask = workingTask1.copy(startedAt = workingTask1.startedAt.withNano(0).withSecond(0))
+            val currentTask = TaskLogger(this, clock)
+                .apply { logStarted(task1) }
+                .getCurrentTask()
+            val expectedTask = workingTask1.copy(startedAt = clock.now())
             assertThat(currentTask).isEqualTo(expectedTask)
         }
     }
