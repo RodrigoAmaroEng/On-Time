@@ -11,9 +11,9 @@ import dev.amaro.on_time.models.WorkingTask
 
 
 @Composable
-fun CurrentTask(task: WorkingTask) {
+fun CurrentTask(task: WorkingTask, modifier: Modifier = Modifier) {
     Surface(color = MaterialTheme.colors.primary) {
-        Column(Modifier.padding(12.dp).fillMaxWidth(1f)) {
+        Column(modifier.padding(12.dp).fillMaxWidth(1f)) {
             Row {
                 Text(task.task.id)
                 Spacer(Modifier.weight(1f))

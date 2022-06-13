@@ -9,7 +9,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 
-class OnTimeApp : KoinComponent {
+class OnTimeApp(vararg modules: org.koin.core.module.Module) : KoinComponent {
 
     private val appLogic by inject<AppLogic>()
 
@@ -17,7 +17,8 @@ class OnTimeApp : KoinComponent {
 
     init {
         startKoin {
-            modules(Modules.release)
+            modules(*modules)
+            allowOverride(true)
         }
     }
 

@@ -8,3 +8,4 @@
 .name
 build/
 src/main/resources/local.properties
+out/

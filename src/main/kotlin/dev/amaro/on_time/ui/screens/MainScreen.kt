@@ -10,47 +10,41 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.rememberWindowState
-import dev.amaro.on_time.OnTimeApp
 import dev.amaro.on_time.core.Actions
+import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.ui.*
+import dev.amaro.on_time.utilities.withTag
 
 @Composable
-fun MainScreen(app: OnTimeApp, onExit: () -> Unit) = Window(
-    onCloseRequest = onExit,
-    title = "On Time - Task Manager",
-    state = rememberWindowState(width = 500.dp, height = 300.dp),
-) {
-    app.getState().apply {
-        OnTimeTheme {
-            Surface(color = MaterialTheme.colors.background) {
-                Column {
-                    Toolbar {
-                        SquareButton(
-                            Icons.USER_ASSIGN,
-                            initialState = if (onlyMyTasks) ButtonState.CHECKED else ButtonState.NORMAL,
-                            onClick = { app.perform(Actions.FilterMine) }
-                        )
+fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
+
+    OnTimeTheme {
+        Surface(color = MaterialTheme.colors.background) {
+            Column(modifier = withTag("MainScreen")) {
+                Toolbar {
+                    SquareButton(
+                        Icons.USER_ASSIGN,
+                        initialState = if (state.onlyMyTasks) ButtonState.CHECKED else ButtonState.NORMAL,
+                        onClick = { onAction(Actions.FilterMine) },
+                        modifier = withTag("OnlyMyTasks")
+                    )
+                }
+                state.currentTask?.let {
+                    AnimatedVisibility(true) {
+                        CurrentTask(it, withTag("CurrentTask"))
                     }
-                    currentTask?.let {
-                        AnimatedVisibility(true) { CurrentTask(it) }
-                    }
-                    LazyColumn(
-                        Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(tasks) {
-                            TaskUI(
-                                it,
-                                onSelect = { task -> app.perform(Actions.StartTask(task)) },
-                                onTaskAction = { action -> app.perform(action) }
-                            )
-                        }
+                }
+                LazyColumn(
+                    Modifier.fillMaxSize().testTag("QueryResults"), verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(state.tasks) {
+                        TaskUI(it,
+                            onSelect = { task -> onAction(Actions.StartTask(task)) },
+                            onTaskAction = { action -> onAction(action) })
                     }
                 }
             }
         }
     }
-}
