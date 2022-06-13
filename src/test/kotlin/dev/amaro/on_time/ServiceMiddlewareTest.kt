@@ -13,7 +13,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import org.junit.jupiter.api.Test
+import org.junit.Test
 
 
 class ServiceMiddlewareTest {

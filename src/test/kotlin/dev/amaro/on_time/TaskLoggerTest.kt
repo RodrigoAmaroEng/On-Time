@@ -23,8 +23,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -34,7 +33,7 @@ class TaskLoggerTest {
     private val storage: Storage = mockk(relaxed = true)
     private val logger = TaskLogger(storage, clock)
 
-    @BeforeEach
+    @org.junit.Before
     fun setUp() {
         val fixedDateTime = LocalDateTime.now().discardSecondsAndNanos()
         every { clock.now() } returns fixedDateTime

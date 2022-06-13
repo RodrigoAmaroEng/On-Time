@@ -1,9 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.compose.compose
 
 plugins {
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.serialization") version "1.6.10"
-    id("org.jetbrains.compose") version "1.1.0"
+    id("org.jetbrains.compose") version "1.1.1"
     id("com.squareup.sqldelight") version "1.5.3"
 }
 
@@ -33,7 +34,13 @@ dependencies {
     implementation("com.squareup.sqldelight:sqlite-driver:1.5.3")
     implementation("dev.amaro:sonic:0.3.1")
     implementation("io.insert-koin:koin-core:3.2.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.2")
+
     testImplementation(kotlin("test"))
+    testImplementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
+    testImplementation("org.jetbrains.compose.ui:ui-test-desktop:1.1.1")
     testImplementation("io.insert-koin:koin-test:3.2.0")
     testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("com.appmattus.fixture:fixture:1.2.0")
@@ -53,11 +60,11 @@ tasks.jar {
 }
 
 tasks.test {
-    useJUnitPlatform()
+    useJUnit()
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "11"
 }
 
 compose.desktop {

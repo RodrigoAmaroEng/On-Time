@@ -12,7 +12,7 @@ import dev.amaro.sonic.IProcessor
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Test
+import org.junit.Test
 
 class StorageMiddlewareTest {
     private val otherActions: List<Actions> = listActions(

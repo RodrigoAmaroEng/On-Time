@@ -3,7 +3,7 @@ package dev.amaro.on_time
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import dev.amaro.on_time.log.Clock
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import java.time.LocalDateTime
 
 class ClockTest {
