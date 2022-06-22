@@ -9,3 +9,7 @@
 build/
 src/main/resources/local.properties
 out/
+target/
+on_time.db
+.DS_Store
+uiDesigner.xml

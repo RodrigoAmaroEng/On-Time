@@ -2,12 +2,15 @@ package dev.amaro.on_time.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -19,7 +22,6 @@ import dev.amaro.on_time.utilities.withTag
 
 @Composable
 fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
-
     OnTimeTheme {
         Surface(color = MaterialTheme.colors.background) {
             Column(modifier = withTag("MainScreen")) {
@@ -36,13 +38,20 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
                         CurrentTask(it, withTag("CurrentTask"))
                     }
                 }
-                LazyColumn(
-                    Modifier.fillMaxSize().testTag("QueryResults"), verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.tasks) {
-                        TaskUI(it,
-                            onSelect = { task -> onAction(Actions.StartTask(task)) },
-                            onTaskAction = { action -> onAction(action) })
+                if (state.configuration != null) {
+                    LazyColumn(
+                        Modifier.fillMaxSize().testTag("QueryResults"), verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.tasks) {
+                            TaskUI(it,
+                                onSelect = { task -> onAction(Actions.StartTask(task)) },
+                                onTaskAction = { action -> onAction(action) })
+                        }
+                    }
+                } else {
+                    Box {
+                        Text("No configuration was found")
+                        Button(modifier = Modifier.testTag("StartConfigurationButton"), onClick = {}) {}
                     }
                 }
             }

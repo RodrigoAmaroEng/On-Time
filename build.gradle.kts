@@ -41,10 +41,12 @@ dependencies {
     testImplementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
     testImplementation("org.jetbrains.compose.ui:ui-test-desktop:1.1.1")
+    testImplementation("org.jbehave:jbehave-core:5.0")
     testImplementation("io.insert-koin:koin-test:3.2.0")
     testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("com.appmattus.fixture:fixture:1.2.0")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+    testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
 }
 
 tasks.jar {

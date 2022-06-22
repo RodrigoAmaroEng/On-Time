@@ -1,8 +1,11 @@
-Feature: Task listing interface - Main Screen
+Task listing interface - Main Screen
 
-Show available tasks to work allowing the user filter results
+Narrative:
+After the app is initialized for the first time, the user needs to configure it providing the account to be
+used in order to communicate with Jira. Only then, he can see the list of tasks (if available) and interact with them.
 
-Scenario: User starts the aplication for the first time
+
+Scenario: User starts the application for the first time
 Given I have never started the App
 When I start the App
 Then it will show message explaining it needs to be configured

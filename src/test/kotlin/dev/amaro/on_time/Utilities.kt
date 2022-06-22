@@ -6,7 +6,14 @@ import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.on_time.utilities.discardSecondsAndNanos
+import org.jbehave.core.configuration.Configuration
+import org.jbehave.core.embedder.*
+import org.jbehave.core.steps.InjectableStepsFactory
+import java.lang.reflect.Field
+import java.lang.reflect.Method
 import java.time.LocalDateTime
+import java.util.concurrent.*
+import javax.swing.SwingUtilities
 import kotlin.reflect.KClass
 
 val fixture = kotlinFixture()
@@ -36,3 +43,49 @@ object Samples {
     fun asWorkingTask(task: Task, startedAt: LocalDateTime = LocalDateTime.now().discardSecondsAndNanos(), minutes: Int = 0) =
         WorkingTask(task, startedAt, minutes)
 }
+
+inline fun <reified T> instance(vararg arguments: Any?) : T {
+    val clazz: Class<T> = T::class.java
+    return clazz.constructors.first()
+        .apply { isAccessible = true }
+        .newInstance(*arguments)
+        .cast()
+}
+
+inline fun <reified T> instance(name: String, vararg arguments: Any?) : T {
+    val module = Thread.currentThread().contextClassLoader.unnamedModule
+    val clazz = Class.forName(name)
+    clazz.module.addOpens("org.jbehave.core", module)
+
+
+
+
+    val obj = clazz.constructors.first().apply { isAccessible = true }.newInstance(*arguments)
+    return obj.cast()
+}
+
+
+
+inline fun <reified T> T.onMethod(method: String) : Method {
+    return reflectSearch(T::class.java) { it.getDeclaredMethod(method) }.apply { isAccessible = true }
+}
+
+inline fun <reified T> T.onField(method: String) : Field {
+    return reflectSearch(T::class.java) { it.getDeclaredField(method) }.apply { isAccessible = true }
+}
+
+fun <T> reflectSearch(rootClazz: Class<*>, operation: (Class<*>) -> T): T {
+    var clazz : Class<*>? = rootClazz
+    while (clazz != null) {
+        try {
+            return operation(clazz)
+        } catch (e: NoSuchFieldException) {
+            clazz = clazz.superclass
+        }
+    }
+    throw NoSuchFieldException("Field d not found in class ${rootClazz.name}")
+}
+
+inline fun <reified T> Any.cast() : T = this as T
+
+
