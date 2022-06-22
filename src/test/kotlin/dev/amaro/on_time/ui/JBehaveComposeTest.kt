@@ -14,6 +14,9 @@ import org.jbehave.core.configuration.Configuration
 import org.jbehave.core.configuration.MostUsefulConfiguration
 import org.jbehave.core.io.LoadFromRelativeFile
 import org.jbehave.core.junit.JUnitStories
+import org.jbehave.core.parsers.RegexStoryParser
+import org.jbehave.core.reporters.Format
+import org.jbehave.core.reporters.StoryReporterBuilder
 import org.jbehave.core.steps.InjectableStepsFactory
 import org.jbehave.core.steps.InstanceStepsFactory
 import org.junit.Before
@@ -25,7 +28,12 @@ abstract class JBehaveComposeTest: JUnitStories() {
 
     override fun configuration(): Configuration {
         return MostUsefulConfiguration()
+            .useStoryParser(RegexStoryParser())
             .useStoryLoader(MyStoryLoader())
+            .useStoryReporterBuilder(
+                StoryReporterBuilder()
+                .withDefaultFormats()
+                .withFormats(Format.CONSOLE, Format.TXT))
     }
 
     override fun stepsFactory(): InjectableStepsFactory {

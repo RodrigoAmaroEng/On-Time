@@ -6,6 +6,8 @@ import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.sonic.IAction
 
 sealed class Actions(val sideEffect: Actions? = null) : IAction {
+
+    object NoAction : Actions()
     object Refresh : Actions()
     object FilterMine: Actions(Refresh)
     data class QueryResults(val tasks: List<Task>) : Actions()

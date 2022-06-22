@@ -49,10 +49,11 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
                         }
                     }
                 } else {
-                    Box {
-                        Text("No configuration was found")
-                        Button(modifier = Modifier.testTag("StartConfigurationButton"), onClick = {}) {}
-                    }
+                    MessageBox(
+                        Icons.ON_QA,
+                        message = "No configuration was found",
+                        modifier = Modifier.testTag("StartConfigurationButton")
+                    )
                 }
             }
         }

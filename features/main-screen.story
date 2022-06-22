@@ -1,4 +1,4 @@
-Task listing interface - Main Screen
+Meta: Task listing interface - Main Screen
 
 Narrative:
 After the app is initialized for the first time, the user needs to configure it providing the account to be

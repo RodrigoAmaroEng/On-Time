@@ -1,4 +1,4 @@
-Time Control
+Meta: Time Control
 
 Narrative:
 To help the user on track the time spent on a task, he can select the task he is going to work on and later inform
