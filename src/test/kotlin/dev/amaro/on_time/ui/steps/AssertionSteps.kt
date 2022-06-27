@@ -4,7 +4,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import org.jbehave.core.annotations.Then
 
-class AssertionStepsForJ : Step {
+class AssertionSteps : Step {
 
     @Then("it will show message explaining it needs to be configured")
     fun step1() = onScenarioContext {

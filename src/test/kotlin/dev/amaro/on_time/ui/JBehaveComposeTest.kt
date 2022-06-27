@@ -3,16 +3,18 @@ package dev.amaro.on_time.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
+import com.github.valfirst.jbehave.junit.monitoring.JUnitReportingRunner
 import dev.amaro.on_time.Modules
 import dev.amaro.on_time.OnTimeApp
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppState
-import dev.amaro.on_time.ui.steps.ActionStepsForJ
-import dev.amaro.on_time.ui.steps.AssertionStepsForJ
-import dev.amaro.on_time.ui.steps.ContextStepsForJ
+import dev.amaro.on_time.ui.steps.ActionSteps
+import dev.amaro.on_time.ui.steps.AssertionSteps
+import dev.amaro.on_time.ui.steps.ContextSteps
 import org.jbehave.core.configuration.Configuration
 import org.jbehave.core.configuration.MostUsefulConfiguration
 import org.jbehave.core.io.LoadFromRelativeFile
+import org.jbehave.core.junit.JUnit4StoryRunner
 import org.jbehave.core.junit.JUnitStories
 import org.jbehave.core.parsers.RegexStoryParser
 import org.jbehave.core.reporters.Format
@@ -21,8 +23,9 @@ import org.jbehave.core.steps.InjectableStepsFactory
 import org.jbehave.core.steps.InstanceStepsFactory
 import org.junit.Before
 import org.junit.Rule
+import org.junit.runner.RunWith
 import java.net.URL
-
+@RunWith(JUnitReportingRunner::class)
 abstract class JBehaveComposeTest: JUnitStories() {
     abstract val storyFile: String
 
@@ -37,7 +40,7 @@ abstract class JBehaveComposeTest: JUnitStories() {
     }
 
     override fun stepsFactory(): InjectableStepsFactory {
-        return InstanceStepsFactory(configuration(), ContextStepsForJ(), AssertionStepsForJ(), ActionStepsForJ())
+        return InstanceStepsFactory(configuration(), ContextSteps(), AssertionSteps(), ActionSteps())
     }
 
     companion object {
