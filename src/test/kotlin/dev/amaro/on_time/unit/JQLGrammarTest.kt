@@ -1,4 +1,4 @@
-package dev.amaro.on_time
+package dev.amaro.on_time.unit
 
 
 import assertk.assertThat

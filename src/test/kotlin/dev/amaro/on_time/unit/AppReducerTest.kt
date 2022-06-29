@@ -1,9 +1,10 @@
-package dev.amaro.on_time
+package dev.amaro.on_time.unit
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
+import dev.amaro.on_time.Samples
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppReducer
 import dev.amaro.on_time.core.AppState
