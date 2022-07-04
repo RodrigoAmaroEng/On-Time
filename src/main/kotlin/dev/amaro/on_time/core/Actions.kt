@@ -14,7 +14,9 @@ sealed class Actions : IAction {
     object FilterMine : Actions(), ISideEffectAction {
         override val sideEffect: IAction = Refresh
     }
-    data class QueryResults(val tasks: List<Task>) : Actions()
+    data class QueryResults(val tasks: List<Task>) : Actions(), ISideEffectAction {
+        override val sideEffect: IAction = UpdateLastResult(Results.Idle)
+    }
     data class StartTask(val task: Task) : Actions()
     data class SetWorkingTask(val task: WorkingTask) : Actions()
     data class SetTaskState(val task: Task, val state: TaskState) : Actions(), ISideEffectAction {
