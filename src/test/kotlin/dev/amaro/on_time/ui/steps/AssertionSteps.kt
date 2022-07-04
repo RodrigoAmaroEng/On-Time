@@ -2,6 +2,7 @@ package dev.amaro.on_time.ui.steps
 
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import dev.amaro.on_time.Samples
 import org.jbehave.core.annotations.Then
 
 class AssertionSteps : Step {
@@ -43,7 +44,9 @@ class AssertionSteps : Step {
 
     @Then("it will show all tasks")
     fun step8() = onScenarioContext {
-        onNodeWithTag("QueryResults").assertExists()
+        onNodeWithText(Samples.TASK_ID_1).assertExists()
+        onNodeWithTag(Samples.TASK_ID_2).assertDoesNotExist()
+        onNodeWithTag(Samples.TASK_ID_3).assertDoesNotExist()
     }
 
 }

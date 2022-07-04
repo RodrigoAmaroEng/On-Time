@@ -57,10 +57,12 @@ abstract class JBehaveComposeTest : JUnitStories() {
 
         fun startApp(screen: ScreenConstructor) {
             app = OnTimeApp(initialState, Modules.release, *debugModules.toTypedArray())
+            println(" # Initial State: $initialState")
             app!!.initialize()
             composer?.apply {
                 setContent {
                     val composeApp = remember { mutableStateOf(app) }
+                    println(" # Compose State: ${composeApp.value!!.getState()}")
                     screen(composeApp.value!!.getState()) { app!!.perform(it) }
                 }
                 waitForIdle()
@@ -100,3 +102,4 @@ abstract class JBehaveComposeTest : JUnitStories() {
 class MyStoryLoader : LoadFromRelativeFile(MyStoryLoader::class.java.classLoader.getResource("features"))
 
 typealias ScreenConstructor = @Composable (AppState, (Actions) -> Unit) -> Unit
+

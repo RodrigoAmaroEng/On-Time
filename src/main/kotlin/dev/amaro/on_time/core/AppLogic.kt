@@ -11,7 +11,8 @@ class AppLogic(
     StateManager<AppState>(
         initialState,
         middlewares.asList().plus(ConditionedDirectMiddleware(
-            Actions.FilterMine::class
+            Actions.FilterMine::class,
+            Actions.UpdateLastResult::class
         ))
     ) {
 

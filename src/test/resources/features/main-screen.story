@@ -33,15 +33,16 @@ Then it will present a message informing it wasn't able to retrieve the tasks
 Scenario: User filter only his tasks
 Given I already configured the application
 And there are available tasks to work
-And the Only Assigned To me option is not activated
-When I press the Filter Assigned to Me button
+And the 'Only Assigned To Me' option is not activated
+When I start the App
+And I press the Filter Assigned to Me button
 Then it will show only my task
 
 Scenario: User filter only his tasks but has none
 Given I already configured the application
 And there are available tasks to work
 And none of the tasks are assigned to me
-And the Only Assigned To me option is not activated
+And the 'Only Assigned To Me' option is not activated
 When I press the Filter Assigned to Me button
 Then it will present a message telling there are no tasks available
 
