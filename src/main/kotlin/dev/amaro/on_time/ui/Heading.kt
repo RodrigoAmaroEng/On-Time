@@ -16,7 +16,7 @@ fun Heading(title: String) {
     Box(Modifier
         .fillMaxWidth()
         .background(MaterialTheme.colors.secondaryVariant)
-        .padding(12.dp, 6.dp)
+        .padding(12.dp, 8.dp)
     ) {
         Text(
             text = title,

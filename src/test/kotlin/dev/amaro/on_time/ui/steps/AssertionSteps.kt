@@ -12,8 +12,38 @@ class AssertionSteps : Step {
     }
 
     @Then("show a button to start the configuration")
-    fun step2()  = onScenarioContext {
+    fun step2() = onScenarioContext {
         onNodeWithTag("StartConfigurationButton").assertExists()
+    }
+
+    @Then("it will display the list of tasks available")
+    fun step3() = onScenarioContext {
+        onNodeWithTag("QueryResults").assertExists()
+    }
+
+    @Then("the filter options will be visible")
+    fun step4() = onScenarioContext {
+        onNodeWithTag("TaskFilters").assertExists()
+    }
+
+    @Then("it will present a message telling there are no tasks available")
+    fun step5() = onScenarioContext {
+        onNodeWithTag("NoTasksAvailableMessage").assertExists()
+    }
+
+    @Then("it will present a message informing it wasn't able to retrieve the tasks")
+    fun step6() = onScenarioContext {
+        onNodeWithTag("NetworkFailureMessage").assertExists()
+    }
+
+    @Then("it will show only my task")
+    fun step7() = onScenarioContext {
+        onNodeWithTag("QueryResults").assertExists()
+    }
+
+    @Then("it will show all tasks")
+    fun step8() = onScenarioContext {
+        onNodeWithTag("QueryResults").assertExists()
     }
 
 }

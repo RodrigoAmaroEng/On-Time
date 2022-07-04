@@ -4,9 +4,12 @@ import dev.amaro.on_time.utilities.takeIfInstance
 import dev.amaro.sonic.*
 import kotlin.reflect.KClass
 
-class AppLogic(vararg middlewares: IMiddleware<AppState> ):
+class AppLogic(
+    initialState: AppState = AppState(),
+    vararg middlewares: IMiddleware<AppState>
+):
     StateManager<AppState>(
-        AppState(),
+        initialState,
         middlewares.asList().plus(ConditionedDirectMiddleware(
             Actions.FilterMine::class
         ))
@@ -16,7 +19,7 @@ class AppLogic(vararg middlewares: IMiddleware<AppState> ):
 
     override fun reduce(action: IAction) {
         super.reduce(action)
-        action.takeIfInstance<Actions>()?.sideEffect?.run {
+        action.takeIfInstance<ISideEffectAction>()?.sideEffect?.run {
             perform(this)
         }
     }

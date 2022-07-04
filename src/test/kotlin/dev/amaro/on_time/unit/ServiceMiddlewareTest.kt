@@ -2,6 +2,7 @@ package dev.amaro.on_time.unit
 
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppState
+import dev.amaro.on_time.core.Results
 import dev.amaro.on_time.core.ServiceMiddleware
 import dev.amaro.on_time.listActions
 import dev.amaro.on_time.models.Task
@@ -15,6 +16,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import org.junit.Test
+import java.net.SocketException
 
 
 class ServiceMiddlewareTest {
@@ -50,7 +52,29 @@ class ServiceMiddlewareTest {
         val processor: IProcessor<AppState> = mockk(relaxed = true)
         val middleware = ServiceMiddleware(connector)
         middleware.process(Actions.Refresh, AppState(), processor)
-        coVerify { processor.reduce(Actions.QueryResults(response)) }
+        coVerify {
+            processor.reduce(Actions.UpdateLastResult(Results.Processing))
+            processor.reduce(Actions.QueryResults(response))
+        }
+    }
+
+    @Test
+    fun `Dispatch error action when having a network error`() {
+        val connector: Connector = mockk(relaxed = true)
+        every { connector.getTasks(any()) } throws SocketException()
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = ServiceMiddleware(connector)
+        middleware.process(Actions.Refresh, AppState(), processor)
+        coVerify { processor.reduce(Actions.UpdateLastResult(Results.NetworkError)) }
+    }
+    @Test
+    fun `Dispatch 'Processing' before making a network request`() {
+        val connector: Connector = mockk(relaxed = true)
+        every { connector.getTasks(any()) } throws SocketException()
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = ServiceMiddleware(connector)
+        middleware.process(Actions.Refresh, AppState(), processor)
+        coVerify { processor.reduce(Actions.UpdateLastResult(Results.Processing)) }
     }
 
 }

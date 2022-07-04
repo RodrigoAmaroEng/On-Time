@@ -9,6 +9,7 @@ class AppReducer: IReducer<AppState> {
             is Actions.FilterMine -> currentState.copy(onlyMyTasks = currentState.onlyMyTasks.not())
             is Actions.SetWorkingTask -> currentState.copy(currentTask = action.task)
             is Actions.QueryResults -> currentState.copy(tasks = action.tasks)
+            is Actions.UpdateLastResult -> currentState.copy(lastResult = action.result)
             else -> currentState
         }
     }

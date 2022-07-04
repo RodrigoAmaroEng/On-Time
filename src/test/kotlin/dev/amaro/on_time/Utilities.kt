@@ -5,15 +5,12 @@ import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.models.WorkingTask
+import dev.amaro.on_time.network.Connector
+import dev.amaro.on_time.network.Jql
 import dev.amaro.on_time.utilities.discardSecondsAndNanos
-import org.jbehave.core.configuration.Configuration
-import org.jbehave.core.embedder.*
-import org.jbehave.core.steps.InjectableStepsFactory
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.time.LocalDateTime
-import java.util.concurrent.*
-import javax.swing.SwingUtilities
 import kotlin.reflect.KClass
 
 val fixture = kotlinFixture()
@@ -89,3 +86,18 @@ fun <T> reflectSearch(rootClazz: Class<*>, operation: (Class<*>) -> T): T {
 inline fun <reified T> Any.cast() : T = this as T
 
 
+class ReportConnector : Connector {
+    override fun getTasks(conditions: Jql.Builder): List<Task> {
+        println("##### GetTasks:  ${conditions.build().queryString()}")
+        return emptyList()
+    }
+
+    override fun assign(task: Task, userName: String) {
+        println("##### Assign $task to '$userName")
+    }
+
+    override fun changeStatus(task: Task) {
+        println("##### Change status $task")
+    }
+
+}

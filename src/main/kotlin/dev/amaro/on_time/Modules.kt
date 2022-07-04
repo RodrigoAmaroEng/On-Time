@@ -54,6 +54,6 @@ object Modules {
                 StorageMiddleware(get())
             )
         }
-        single { AppLogic(*get<Array<IMiddleware<AppState>>>()) }
+        single { params ->  AppLogic(params.get(), *get<Array<IMiddleware<AppState>>>()) }
     }
 }

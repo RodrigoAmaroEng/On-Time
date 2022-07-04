@@ -4,16 +4,24 @@ import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.sonic.IAction
+import dev.amaro.sonic.ISideEffectAction
 
-sealed class Actions(val sideEffect: Actions? = null) : IAction {
+sealed class Actions : IAction {
 
     object NoAction : Actions()
     object Refresh : Actions()
-    object FilterMine: Actions(Refresh)
+    data class UpdateLastResult(val result: Results): Actions()
+    object FilterMine : Actions(), ISideEffectAction {
+        override val sideEffect: IAction = Refresh
+    }
     data class QueryResults(val tasks: List<Task>) : Actions()
     data class StartTask(val task: Task) : Actions()
     data class SetWorkingTask(val task: WorkingTask) : Actions()
-    data class SetTaskState(val task: Task, val state: TaskState) : Actions(Refresh)
-    data class AssignToMe(val task: Task) : Actions(Refresh)
+    data class SetTaskState(val task: Task, val state: TaskState) : Actions(), ISideEffectAction {
+        override val sideEffect: IAction = Refresh
+    }
+    data class AssignToMe(val task: Task) : Actions(), ISideEffectAction {
+        override val sideEffect: IAction = Refresh
+    }
 
 }

@@ -14,7 +14,9 @@ interface Step {
         } ?: throw AssertionError("Compose Rule not available")
     }
 
-    fun setInitialState(state: AppState) {
-        JBehaveComposeTest.initialState = state
-    }
+    var initialState: AppState
+        get() = JBehaveComposeTest.initialState
+        set(value) {
+            JBehaveComposeTest.initialState = value
+        }
 }

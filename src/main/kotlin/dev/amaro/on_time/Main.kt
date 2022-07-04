@@ -6,11 +6,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.ui.screens.MainScreen
 
 
 fun main() = application {
-    val app = remember { mutableStateOf(OnTimeApp(Modules.release)) }
+    val app = remember { mutableStateOf(OnTimeApp(AppState(), Modules.release)) }
     app.value.apply {
         initialize()
         Window(

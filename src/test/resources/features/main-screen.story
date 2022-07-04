@@ -15,8 +15,8 @@ Scenario: User starts the application after having it configured
 Given I already configured the application
 And there are available tasks to work
 When I start the App
-Then it will the list of tasks available
-And the filter options
+Then it will display the list of tasks available
+And the filter options will be visible
 
 Scenario: User has no tasks for work
 Given I already configured the application

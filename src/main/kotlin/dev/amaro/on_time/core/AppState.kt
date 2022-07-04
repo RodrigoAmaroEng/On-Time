@@ -5,8 +5,15 @@ import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.WorkingTask
 
 data class AppState(
+    val lastResult: Results = Results.Idle,
     val currentTask: WorkingTask? = null,
     val tasks: List<Task> = emptyList(),
     val onlyMyTasks: Boolean = false,
     val configuration: Configuration? = null
 )
+
+sealed interface Results {
+    object Idle: Results
+    object NetworkError: Results
+    object Processing:  Results
+}
