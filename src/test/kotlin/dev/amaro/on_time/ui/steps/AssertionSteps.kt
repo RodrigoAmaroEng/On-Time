@@ -1,7 +1,6 @@
 package dev.amaro.on_time.ui.steps
 
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.*
 import dev.amaro.on_time.Samples
 import org.jbehave.core.annotations.Then
 
@@ -29,7 +28,6 @@ class AssertionSteps : Step {
 
     @Then("it will present a message telling there are no tasks available")
     fun step5() = onScenarioContext {
-        println(" --> Asserting no tasks")
         onNodeWithTag("NoTasksAvailableMessage").assertExists()
     }
 
@@ -54,4 +52,10 @@ class AssertionSteps : Step {
         onNodeWithText(Samples.TASK_ID_3).assertExists()
     }
 
+    @Then("it will show as current task")
+    fun step9() = onScenarioContext {
+        onNodeWithTag("CurrentTask").apply {
+            assert(hasAnyDescendant(hasText(Samples.TASK_ID_1)))
+        }
+    }
 }

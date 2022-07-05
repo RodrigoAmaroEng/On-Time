@@ -1,6 +1,8 @@
 package dev.amaro.on_time.ui.steps
 
 import dev.amaro.on_time.Samples
+import dev.amaro.on_time.log.Storage
+import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.on_time.network.Connector
 import dev.amaro.on_time.network.Jql
 import dev.amaro.on_time.network.Value
@@ -10,6 +12,7 @@ import io.mockk.mockk
 import org.jbehave.core.annotations.Given
 import org.koin.dsl.module
 import java.net.SocketException
+import java.util.concurrent.atomic.AtomicReference
 
 class ContextSteps : Step {
 
@@ -28,29 +31,21 @@ class ContextSteps : Step {
         val connector: Connector = mockk(relaxed = true)
         every { connector.getTasks(allTasksFilter) } returns listOf(Samples.task1, Samples.task2, Samples.task3)
         every { connector.getTasks(myTasksFilter) } returns listOf(Samples.task1)
-        applyConnector(connector)
+        overrideOnDI(connector)
     }
 
     @Given("there are no available tasks to work")
     fun givenThereAreNoAvailableTasks() {
         val connector: Connector = mockk(relaxed = true)
         every { connector.getTasks(any()) } returns emptyList()
-        applyConnector(connector)
+        overrideOnDI(connector)
     }
 
     @Given("there is no internet connection")
     fun givenThereIsNoInternetConnection() {
         val connector: Connector = mockk(relaxed = true)
         every { connector.getTasks(any()) } throws SocketException()
-        applyConnector(connector)
-    }
-
-    private fun applyConnector(connector: Connector) {
-        JBehaveComposeTest.debugModules.add(
-            module {
-                single<Connector> { connector }
-            }
-        )
+        overrideOnDI(connector)
     }
 
     @Given("the 'Only Assigned To Me' option is not activated")
@@ -63,12 +58,37 @@ class ContextSteps : Step {
         val connector: Connector = mockk(relaxed = true)
         every { connector.getTasks(allTasksFilter) } returns listOf(Samples.task2, Samples.task3)
         every { connector.getTasks(myTasksFilter) } returns emptyList()
-        applyConnector(connector)
+        overrideOnDI(connector)
     }
 
     @Given("the 'Only Assigned To Me' option is activated")
     fun step56() {
         initialState = initialState.copy(onlyMyTasks = true)
+    }
+
+    @Given("I have no current task")
+    fun step67() {
+        val storage: Storage = mockk(relaxed = true)
+        val response = AtomicReference<WorkingTask>(null)
+        every { storage.include(any()) } answers {
+            response.set(Samples.workingTask1)
+        }
+        every { storage.getOpen() } answers { response.get() }
+        overrideOnDI(storage)
+    }
+    @Given("I have a current task")
+    fun step74() {
+        val storage: Storage = mockk(relaxed = true)
+        every { storage.getOpen() } returns Samples.workingTask1
+        overrideOnDI(storage)
+    }
+
+    private inline fun <reified T> overrideOnDI(objectInstance: T) {
+        JBehaveComposeTest.debugModules.add(
+            module {
+                single<T> { objectInstance }
+            }
+        )
     }
 
     private val allTasksFilter = Jql.Builder().condition {
