@@ -38,18 +38,17 @@ When I start the App
 And I press the Filter Assigned to Me button
 Then it will show only my task
 
-Scenario: User filter only his tasks but has none
-Given I already configured the application
-And there are available tasks to work
-And none of the tasks are assigned to me
-And the 'Only Assigned To Me' option is not activated
-When I press the Filter Assigned to Me button
-Then it will present a message telling there are no tasks available
+!-- Scenario: User filter only his tasks but has none
+!-- Given I already configured the application
+!-- And none of the available tasks are assigned to me
+!-- And the 'Only Assigned To Me' option is not activated
+!-- When I press the Filter Assigned to Me button
+!-- Then it will present a message telling there are no tasks available
 
 Scenario: User removes the assignation filter
 Given I already configured the application
 And there are available tasks to work
-And the Only Assigned To me option is activated
+And the 'Only Assigned To Me' option is activated
 When I press the Filter Assigned to Me button
 Then it will show all tasks
 

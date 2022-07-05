@@ -2,6 +2,8 @@ package dev.amaro.on_time.ui.steps
 
 import dev.amaro.on_time.Samples
 import dev.amaro.on_time.network.Connector
+import dev.amaro.on_time.network.Jql
+import dev.amaro.on_time.network.Value
 import dev.amaro.on_time.ui.JBehaveComposeTest
 import io.mockk.every
 import io.mockk.mockk
@@ -24,7 +26,8 @@ class ContextSteps : Step {
     @Given("there are available tasks to work")
     fun givenThereAreAvailableTasks() {
         val connector: Connector = mockk(relaxed = true)
-        every { connector.getTasks(any()) } returns listOf(Samples.task1, Samples.task2, Samples.task3)
+        every { connector.getTasks(allTasksFilter) } returns listOf(Samples.task1, Samples.task2, Samples.task3)
+        every { connector.getTasks(myTasksFilter) } returns listOf(Samples.task1)
         applyConnector(connector)
     }
 
@@ -55,13 +58,24 @@ class ContextSteps : Step {
         initialState = initialState.copy(onlyMyTasks = false)
     }
 
-    @Given("none of the tasks are assigned to me")
+    @Given("none of the available tasks are assigned to me")
     fun step51() {
-        initialState = initialState.copy(tasks = listOf(Samples.task1, Samples.task2, Samples.task3))
+        val connector: Connector = mockk(relaxed = true)
+        every { connector.getTasks(allTasksFilter) } returns listOf(Samples.task2, Samples.task3)
+        every { connector.getTasks(myTasksFilter) } returns emptyList()
+        applyConnector(connector)
     }
 
-    @Given("the Only Assigned To me option is activated")
+    @Given("the 'Only Assigned To Me' option is activated")
     fun step56() {
-        initialState = initialState.copy(currentTask = Samples.workingTask1)
+        initialState = initialState.copy(onlyMyTasks = true)
+    }
+
+    private val allTasksFilter = Jql.Builder().condition {
+        assignee().any(Value.USER, Value.EMPTY)
+    }
+
+    private val myTasksFilter = Jql.Builder().condition {
+        assignee().any(Value.USER)
     }
 }

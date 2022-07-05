@@ -9,8 +9,6 @@ import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.on_time.network.Connector
 import dev.amaro.on_time.network.Jql
 import dev.amaro.on_time.utilities.discardSecondsAndNanos
-import java.lang.reflect.Field
-import java.lang.reflect.Method
 import java.time.LocalDateTime
 import kotlin.reflect.KClass
 
@@ -49,7 +47,7 @@ object Samples {
 
 class ReportConnector : Connector {
     override fun getTasks(conditions: Jql.Builder): List<Task> {
-        println("##### GetTasks:  ${conditions.build().queryString()}")
+        println("##### GetTasks: ${conditions.build().queryString()}")
         return emptyList()
     }
 
