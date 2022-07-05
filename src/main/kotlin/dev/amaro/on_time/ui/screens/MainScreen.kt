@@ -27,8 +27,8 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
         },
         content = {
             state.currentTask?.let {
-                AnimatedVisibility(true) {
-                    CurrentTask(it, withTag("CurrentTask"))
+                AnimatedVisibility(true, modifier = withTag("CurrentTask")) {
+                    CurrentTask(it)
                 }
             }
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
