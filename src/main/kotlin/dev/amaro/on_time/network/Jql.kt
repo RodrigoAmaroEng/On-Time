@@ -2,6 +2,7 @@ package dev.amaro.on_time.network
 
 
 import dev.amaro.on_time.network.Jql.Companion.SPACE
+import dev.amaro.on_time.utilities.takeIfInstance
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -50,6 +51,10 @@ open class Jql private constructor(
         }
 
         fun build() = Jql(conditions, orderBy)
+
+        override fun equals(other: Any?): Boolean {
+            return (other?.takeIfInstance<Builder>()?.build()?.queryString() == build().queryString())
+        }
     }
 
     fun queryString(space: Char = SPACE, encode: Boolean = false): String {

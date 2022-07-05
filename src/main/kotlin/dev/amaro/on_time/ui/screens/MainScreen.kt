@@ -64,7 +64,7 @@ private fun taskFilters(
             Icons.USER_ASSIGN,
             initialState = if (state.onlyMyTasks) ButtonState.CHECKED else ButtonState.NORMAL,
             onClick = { onAction(Actions.FilterMine) },
-            modifier = withTag("OnlyMyTasks")
+            modifier = withTag("FilterMineButton")
         )
     }
 }

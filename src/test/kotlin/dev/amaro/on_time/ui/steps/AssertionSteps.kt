@@ -29,6 +29,7 @@ class AssertionSteps : Step {
 
     @Then("it will present a message telling there are no tasks available")
     fun step5() = onScenarioContext {
+        println(" --> Asserting no tasks")
         onNodeWithTag("NoTasksAvailableMessage").assertExists()
     }
 
@@ -40,13 +41,17 @@ class AssertionSteps : Step {
     @Then("it will show only my task")
     fun step7() = onScenarioContext {
         onNodeWithTag("QueryResults").assertExists()
+        onNodeWithText(Samples.TASK_ID_1).assertExists()
+        onNodeWithText(Samples.TASK_ID_2).assertDoesNotExist()
+        onNodeWithText(Samples.TASK_ID_3).assertDoesNotExist()
     }
 
     @Then("it will show all tasks")
     fun step8() = onScenarioContext {
+        onNodeWithTag("QueryResults").assertExists()
         onNodeWithText(Samples.TASK_ID_1).assertExists()
-        onNodeWithTag(Samples.TASK_ID_2).assertDoesNotExist()
-        onNodeWithTag(Samples.TASK_ID_3).assertDoesNotExist()
+        onNodeWithText(Samples.TASK_ID_2).assertExists()
+        onNodeWithText(Samples.TASK_ID_3).assertExists()
     }
 
 }
