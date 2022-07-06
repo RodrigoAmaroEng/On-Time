@@ -28,12 +28,12 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
         content = {
             state.currentTask?.let {
                 AnimatedVisibility(true, modifier = withTag("CurrentTask")) {
-                    CurrentTask(it)
+                    CurrentTask(it, { onAction(Actions.StopTask) })
                 }
             }
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 if (state.configuration != null) {
-                    when(state.lastResult) {
+                    when (state.lastResult) {
                         Results.Idle -> {
                             if (state.tasks.isNotEmpty()) {
                                 displayTasks(state, onAction)
@@ -50,8 +50,6 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
             }
         }
     )
-
-
 
 
 @Composable
@@ -95,6 +93,7 @@ object Messages {
             modifier = Modifier.testTag("StartConfigurationButton")
         )
     }
+
     @Composable
     fun networkErrorMessage() {
         MessageBox(

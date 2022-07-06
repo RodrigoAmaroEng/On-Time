@@ -19,7 +19,7 @@ fun main() = application {
             title = "On Time - Task Manager",
             state = rememberWindowState(width = 500.dp, height = 300.dp),
         ) {
-            MainScreen(getState(), { perform(it) })
+            MainScreen(getState()) { perform(it) }
         }
     }
 }

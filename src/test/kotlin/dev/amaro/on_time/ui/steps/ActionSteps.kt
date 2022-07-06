@@ -16,13 +16,22 @@ class ActionSteps : Step {
     }
 
     @When("I press the Filter Assigned to Me button")
-    fun step15() = onScenarioContext{
+    fun step2() = onScenarioContext{
         onNodeWithTag("FilterMineButton").performClick()
     }
 
     @When("I select a task")
-    fun step22() = onScenarioContext {
+    fun step3() = onScenarioContext {
         onNodeWithText(Samples.TASK_ID_1).performClick()
     }
 
+    @When("I select another task")
+    fun step4() = onScenarioContext {
+        onNodeWithText(Samples.TASK_ID_2).performClick()
+    }
+
+    @When("I press the task finish button")
+    fun step34() = onScenarioContext {
+        onNodeWithTag("StopWorkingButton").performClick()
+    }
 }

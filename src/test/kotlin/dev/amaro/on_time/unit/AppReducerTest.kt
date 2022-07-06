@@ -3,6 +3,7 @@ package dev.amaro.on_time.unit
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import dev.amaro.on_time.Samples
 import dev.amaro.on_time.core.Actions
@@ -46,5 +47,11 @@ class AppReducerTest {
     fun `Change last result action`() {
         val state = reducer.reduce(Actions.UpdateLastResult(Results.NetworkError), AppState(onlyMyTasks = true))
         assertThat(state.lastResult).isEqualTo(Results.NetworkError)
+    }
+
+    @Test
+    fun `Stop task action clears the current task`() {
+        val state = reducer.reduce(Actions.StopTask, AppState(currentTask = Samples.workingTask1))
+        assertThat(state.currentTask).isNull()
     }
 }
