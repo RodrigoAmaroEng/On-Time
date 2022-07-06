@@ -25,20 +25,20 @@ fun MessageBox(
 ) {
 
     Row(
-        modifier.border(1.dp, MaterialTheme.colors.secondary, RectangleShape)
-            .padding(12.dp),
+        modifier.border(Theme.Dimens.BORDER, MaterialTheme.colors.secondary, RectangleShape)
+            .padding(Theme.Dimens.Margins.MEDIUM),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(painter = painterResource(icon), "", modifier = Modifier.size(64.dp))
-        Spacer(Modifier.width(12.dp))
+        Image(painter = painterResource(icon), "", modifier = Modifier.size(Theme.Dimens.Icons.LARGE))
+        Spacer(Modifier.width(Theme.Dimens.Spacing.LARGE))
         Column {
             title?.let {
                 Text(it, style = MaterialTheme.typography.subtitle1)
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(Theme.Dimens.Spacing.MEDIUM))
             }
             Text(message, style = MaterialTheme.typography.body2)
             action?.let {
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(Theme.Dimens.Spacing.MEDIUM))
                 Text(it, style = MaterialTheme.typography.button, modifier = Modifier.clickable { onAction() })
             }
         }
