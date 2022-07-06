@@ -14,6 +14,7 @@ sealed class Actions : IAction {
 
     object NoAction : Actions()
     object Refresh : Actions()
+    object StopTask: Actions()
     data class UpdateLastResult(val result: Results): Actions()
     object FilterMine : Actions(), ISideEffectAction {
         override val sideEffect: IAction = Refresh

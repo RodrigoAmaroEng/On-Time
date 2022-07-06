@@ -19,7 +19,8 @@ class StorageMiddlewareTest {
     private val otherActions: List<Actions> = listActions(
         listOf(
             Actions.Refresh::class,
-            Actions.StartTask::class
+            Actions.StartTask::class,
+            Actions.StopTask::class
         )
     )
 
@@ -34,15 +35,6 @@ class StorageMiddlewareTest {
         coVerify { processor.reduce(Actions.SetWorkingTask(workingTask)) }
     }
 
-    @Test
-    fun `Refresh action does not fire if there is no current task`() {
-        val logger: TaskLogger = mockk(relaxed = true)
-        every { logger.getCurrentTask() } returns null
-        val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
-        middleware.process(Actions.Refresh, AppState(), processor)
-        coVerify (exactly = 0) { processor.reduce(any()) }
-    }
 
     @Test
     fun `Start task action register it on logger`() {
@@ -76,5 +68,24 @@ class StorageMiddlewareTest {
             logger.logEnd(any())
             logger.getCurrentTask()
         }
+    }
+
+    @Test
+    fun `Stop task action register it on logger`() {
+        val logger: TaskLogger = mockk(relaxed = true)
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = StorageMiddleware(logger)
+        middleware.process(Actions.StopTask, AppState(currentTask = workingTask1), processor)
+        coVerify { logger.logEnd(workingTask1) }
+    }
+
+    @Test
+    fun `If there's no current task should update the state`() {
+        val logger: TaskLogger = mockk(relaxed = true)
+        every{ logger.getCurrentTask() } returns null
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = StorageMiddleware(logger)
+        middleware.process(Actions.StopTask, AppState(currentTask = workingTask1), processor)
+        coVerify { processor.reduce(Actions.StopTask) }
     }
 }

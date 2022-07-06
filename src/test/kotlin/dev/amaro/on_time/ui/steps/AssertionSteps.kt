@@ -1,8 +1,17 @@
 package dev.amaro.on_time.ui.steps
 
 import androidx.compose.ui.test.*
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import dev.amaro.on_time.Samples
+import dev.amaro.on_time.log.LogEvent
+import dev.amaro.on_time.log.Storage
+import dev.amaro.on_time.log.StoreItemTask
+import io.mockk.CapturingSlot
+import io.mockk.slot
+import io.mockk.verify
 import org.jbehave.core.annotations.Then
+import org.koin.java.KoinJavaComponent.inject
 
 class AssertionSteps : Step {
 
@@ -57,5 +66,53 @@ class AssertionSteps : Step {
         onNodeWithTag("CurrentTask").apply {
             assert(hasAnyDescendant(hasText(Samples.TASK_ID_1)))
         }
+    }
+
+    @Then("register the task start time")
+    fun step10() = onScenarioContext {
+        val storage: Storage by inject(Storage::class.java)
+        val slot: CapturingSlot<StoreItemTask> = slot()
+        verify { storage.include(capture(slot)) }
+        assertThat(slot.captured.event).isEqualTo(LogEvent.TASK_START)
+        assertThat(slot.captured.task).isEqualTo(Samples.task1)
+    }
+
+    @Then("the new task will be shown as current task")
+    fun step11() = onScenarioContext {
+        onNodeWithTag("CurrentTask").apply {
+            assert(hasAnyDescendant(hasText(Samples.TASK_ID_2)))
+        }
+    }
+
+    @Then("register the previous task end time")
+    fun step12() = onScenarioContext {
+        val storage: Storage by inject(Storage::class.java)
+        val slots = mutableListOf<StoreItemTask>()
+        verify { storage.include(capture(slots)) }
+        assertThat(slots[0].event).isEqualTo(LogEvent.TASK_END)
+        assertThat(slots[0].task).isEqualTo(Samples.task1)
+    }
+
+    @Then("register the new task start time")
+    fun step13() = onScenarioContext {
+        val storage: Storage by inject(Storage::class.java)
+        val slots = mutableListOf<StoreItemTask>()
+        verify { storage.include(capture(slots)) }
+        assertThat(slots[1].event).isEqualTo(LogEvent.TASK_START)
+        assertThat(slots[1].task).isEqualTo(Samples.task2)
+    }
+
+    @Then("I will see no current task")
+    fun step14() = onScenarioContext {
+        onNodeWithTag("CurrentTask").assertDoesNotExist()
+    }
+
+    @Then("register the task end time")
+    fun step15() = onScenarioContext {
+        val storage: Storage by inject(Storage::class.java)
+        val slots = mutableListOf<StoreItemTask>()
+        verify { storage.include(capture(slots)) }
+        assertThat(slots[0].event).isEqualTo(LogEvent.TASK_END)
+        assertThat(slots[0].task).isEqualTo(Samples.task1)
     }
 }

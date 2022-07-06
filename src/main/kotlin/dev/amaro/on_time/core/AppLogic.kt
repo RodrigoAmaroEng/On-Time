@@ -5,7 +5,7 @@ import dev.amaro.sonic.*
 
 class AppLogic(
     initialState: AppState = AppState(),
-    debugMode: Boolean = false,
+    private val debugMode: Boolean = false,
     vararg middlewares: IMiddleware<AppState>
 ) :
     StateManager<AppState>(
@@ -25,6 +25,12 @@ class AppLogic(
         action.takeIfInstance<ISideEffectAction>()?.sideEffect?.run {
             perform(this)
         }
+    }
+
+    override fun perform(action: IAction) {
+        if (debugMode)
+            println(" # Action to Perform: $action")
+        super.perform(action)
     }
 
 }

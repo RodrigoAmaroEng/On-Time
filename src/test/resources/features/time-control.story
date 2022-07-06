@@ -10,7 +10,6 @@ Scope: SCENARIO
 Given I already configured the application
 And there are available tasks to work
 
-
 Scenario: Start the app with a working task
 Given I have a current task
 When I start the App
@@ -21,19 +20,19 @@ Given I have no current task
 When I start the App
 And I select a task
 Then it will show as current task
-!-- And register the task start time
+And register the task start time
 
-!-- Scenario: Start another task
-!-- Given I have a current task
-!-- When I start the App
-!-- And I select another task
-!-- Then the new task will replace the previous one as the current task
-!-- And register the previous task end time
-!-- And register the new task start time
+Scenario: Start another task
+Given I have a current task
+When I start the App
+And I select another task
+Then the new task will be shown as current task
+And register the previous task end time
+And register the new task start time
 
-!-- Scenario: Finish current task
-!-- Given I have a current task
-!-- When I start the App
-!-- And I press the task finish button
-!-- Then I will see no current task
-!-- And register the task end time
+Scenario: Finish current task
+Given I have a current task
+When I start the App
+And I press the task finish button
+Then I will see no current task
+And register the task end time
