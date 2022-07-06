@@ -35,7 +35,7 @@ fun SquareButton(
         Box(
             Modifier
                 .size(size.size.dp)
-                .padding(8.dp)
+                .padding(Theme.Dimens.Margins.SMALL)
                 .onStateChange {
                     state.value =
                         if (initialState != ButtonState.CHECKED || it == ButtonState.HOVER) it else ButtonState.CHECKED
@@ -83,7 +83,7 @@ enum class ButtonSize(val size: Int) {
 
 @Composable
 private fun getBackgroundColorForState(state: ButtonState) = when (state) {
-    ButtonState.NORMAL -> DeclaredColors.transparent
+    ButtonState.NORMAL -> Theme.Colors.transparent
     ButtonState.HOVER -> MaterialTheme.colors.secondaryVariant
     ButtonState.CHECKED,
     ButtonState.PRESSED -> MaterialTheme.colors.surface

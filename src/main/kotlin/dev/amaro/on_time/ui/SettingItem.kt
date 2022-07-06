@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun SettingItem(name: String, key: String, value: String, onChange: (String) -> Unit) {
@@ -18,14 +17,18 @@ fun SettingItem(name: String, key: String, value: String, onChange: (String) -> 
             Box(
                 modifier = Modifier.fillMaxWidth(0.3f)
                     .background(MaterialTheme.colors.surface)
-                    .padding(12.dp, 6.dp),
+                    .padding(Theme.Dimens.Margins.MEDIUM, Theme.Dimens.Margins.SMALL),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Text(name, style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold))
             }
-            Text(value, style = MaterialTheme.typography.body2, modifier = Modifier.padding(12.dp, 6.dp))
+            Text(
+                text = value,
+                style = MaterialTheme.typography.body2,
+                modifier = Modifier.padding(Theme.Dimens.Margins.MEDIUM, Theme.Dimens.Margins.SMALL)
+            )
         }
-        Box(Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colors.secondaryVariant))
+        Box(Modifier.fillMaxWidth().height(Theme.Dimens.BORDER).background(MaterialTheme.colors.secondaryVariant))
     }
 }
 

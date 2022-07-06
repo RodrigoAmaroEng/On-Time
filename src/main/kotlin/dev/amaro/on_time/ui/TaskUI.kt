@@ -38,12 +38,12 @@ fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}, onTaskAction: (Actions) ->
             )
         ) {
             Row(
-                Modifier.padding(12.dp),
+                Modifier.padding(Theme.Dimens.Margins.MEDIUM),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(Modifier.weight(1f)) {
+                Column(Modifier.weight(Theme.Dimens.FULL)) {
                     Text(task.id, style = MaterialTheme.typography.subtitle1)
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(Theme.Dimens.Spacing.SMALL))
                     Text(
                         task.title,
                         style = MaterialTheme.typography.body2,
@@ -51,7 +51,7 @@ fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}, onTaskAction: (Actions) ->
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(Theme.Dimens.Spacing.LARGE))
                 Image(painterResource(task.status.icon), "")
             }
             AnimatedVisibility(

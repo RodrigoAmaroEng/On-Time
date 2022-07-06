@@ -9,14 +9,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun Heading(title: String) {
     Box(Modifier
         .fillMaxWidth()
         .background(MaterialTheme.colors.secondaryVariant)
-        .padding(12.dp, 8.dp)
+        .padding(Theme.Dimens.Margins.MEDIUM, Theme.Dimens.Margins.SMALL)
     ) {
         Text(
             text = title,
