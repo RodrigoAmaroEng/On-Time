@@ -3,8 +3,6 @@ package dev.amaro.on_time.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.test.junit4.ComposeContentTestRule
-import androidx.compose.ui.test.junit4.createComposeRule
 import dev.amaro.on_time.Modules
 import dev.amaro.on_time.OnTimeApp
 import dev.amaro.on_time.core.Actions
@@ -28,11 +26,13 @@ import org.jbehave.core.reporters.Format
 import org.jbehave.core.reporters.StoryReporterBuilder
 import org.jbehave.core.steps.InjectableStepsFactory
 import org.jbehave.core.steps.InstanceStepsFactory
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.koin.dsl.module
 
+@ExtendWith(ComposeRuleExtension::class)
 abstract class JBehaveComposeTest : JUnitStories() {
     abstract val storyFile: String
 
@@ -48,12 +48,21 @@ abstract class JBehaveComposeTest : JUnitStories() {
             )
     }
 
+    override fun run() {
+//        super.run()
+    }
+    @Test
+    fun test(runner: ComposeRuleRunner) {
+        composer = runner
+        super.run()
+    }
+
     override fun stepsFactory(): InjectableStepsFactory {
         return InstanceStepsFactory(configuration(), ContextSetup(), ContextSteps(), AssertionSteps(), ActionSteps())
     }
 
     companion object {
-        var composer: ComposeContentTestRule? = null
+        var composer: ComposeRuleRunner? = null
         var initialState: AppState = AppState()
         val debugModules: MutableList<org.koin.core.module.Module> = mutableListOf()
         var app: OnTimeApp? = null
@@ -63,7 +72,7 @@ abstract class JBehaveComposeTest : JUnitStories() {
             app = OnTimeApp(initialState, Modules.release, *debugModules.toTypedArray())
             println(" # Initial State: $initialState")
             app!!.initialize()
-            composer?.apply {
+            composer?.run {
                 setContent {
                     val composeApp = remember { mutableStateOf(app) }
                     println(" # Compose State: ${composeApp.value!!.getState()}")
@@ -77,17 +86,12 @@ abstract class JBehaveComposeTest : JUnitStories() {
     override fun storyPaths(): MutableList<String> {
         return mutableListOf(storyFile)
     }
-
-    @get:Rule
-    val composeRule = createComposeRule()
-
-    @Before
+    @BeforeEach
     fun setUp() {
         Dispatchers.setMain(Dispatchers.Unconfined)
-        composer = composeRule
     }
 
-    @After
+    @AfterEach
     fun dispose() {
         Dispatchers.resetMain()
     }

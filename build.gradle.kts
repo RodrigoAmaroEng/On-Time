@@ -26,6 +26,11 @@ sqldelight {
     }
 }
 
+object Deps {
+    const val Kotest = "5.3.1"
+    const val Kotlin = "1.6.2"
+}
+
 
 dependencies {
     implementation(compose.desktop.currentOs)
@@ -34,15 +39,17 @@ dependencies {
     implementation("com.squareup.sqldelight:sqlite-driver:1.5.3")
     implementation("dev.amaro:sonic:0.4.1")
     implementation("io.insert-koin:koin-core:3.2.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Deps.Kotlin}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${Deps.Kotlin}")
 
     testImplementation(kotlin("test"))
     testImplementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Deps.Kotlin}")
     testImplementation("org.jetbrains.compose.ui:ui-test-desktop:1.1.1")
     testImplementation("org.jbehave:jbehave-core:5.0")
-    testImplementation("io.insert-koin:koin-test:3.2.0")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation ("io.kotest:kotest-runner-junit5:${Deps.Kotest}")
+    testImplementation("io.kotest.extensions:kotest-extensions-gherkin:0.1.0")
     testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("com.appmattus.fixture:fixture:1.2.0")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
@@ -62,7 +69,7 @@ tasks.jar {
 }
 
 tasks.test {
-    useJUnit()
+    useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile> {

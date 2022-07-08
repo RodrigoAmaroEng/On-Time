@@ -17,7 +17,7 @@ fun Screen(
 ) {
     OnTimeTheme {
         Surface(color = MaterialTheme.colors.background, modifier = modifier) {
-            Column(modifier = withTag("MainScreen")) {
+            Column {
                 Toolbar {
                     toolbarContent()
                 }
