@@ -12,7 +12,8 @@ class AppLogic(
         initialState,
         middlewares.asList().plus(ConditionedDirectMiddleware(
             Actions.FilterMine::class,
-            Actions.UpdateLastResult::class
+            Actions.UpdateLastResult::class,
+            Actions.Navigation.GoToConfiguration::class
         ))
     ) {
 

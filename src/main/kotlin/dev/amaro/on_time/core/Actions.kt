@@ -8,6 +8,10 @@ import dev.amaro.sonic.ISideEffectAction
 
 sealed class Actions : IAction {
 
+    sealed class Navigation: Actions() {
+        object GoToConfiguration: Navigation()
+    }
+
     object NoAction : Actions()
     object Refresh : Actions()
     data class UpdateLastResult(val result: Results): Actions()

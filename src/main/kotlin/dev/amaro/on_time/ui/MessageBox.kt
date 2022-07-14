@@ -3,6 +3,7 @@ package dev.amaro.on_time.ui
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -12,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import dev.amaro.on_time.core.Actions
 
 @Composable
 fun MessageBox(
@@ -21,7 +21,7 @@ fun MessageBox(
     title: String? = null,
     action: String? = null,
     modifier: Modifier = Modifier,
-    onAction: () -> Actions = { Actions.NoAction }
+    onAction: () -> Unit = {}
 ) {
 
     Row(
@@ -39,7 +39,7 @@ fun MessageBox(
             Text(message, style = MaterialTheme.typography.body2)
             action?.let {
                 Spacer(Modifier.height(8.dp))
-                Text(it, style = MaterialTheme.typography.button)
+                Text(it, style = MaterialTheme.typography.button, modifier = Modifier.clickable { onAction() })
             }
         }
     }

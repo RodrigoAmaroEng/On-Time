@@ -10,6 +10,7 @@ class AppReducer(private val debug: Boolean = false): IReducer<AppState> {
             is Actions.SetWorkingTask -> currentState.copy(currentTask = action.task)
             is Actions.QueryResults -> currentState.copy(tasks = action.tasks)
             is Actions.UpdateLastResult -> currentState.copy(lastResult = action.result)
+            is Actions.Navigation.GoToConfiguration -> currentState.copy(screen = Navigation.Configuration)
             else -> currentState
         }
         if (debug) {

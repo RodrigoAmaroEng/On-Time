@@ -5,10 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import dev.amaro.on_time.Samples
-import dev.amaro.on_time.core.Actions
-import dev.amaro.on_time.core.AppReducer
-import dev.amaro.on_time.core.AppState
-import dev.amaro.on_time.core.Results
+import dev.amaro.on_time.core.*
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import kotlin.test.Test
@@ -46,5 +43,11 @@ class AppReducerTest {
     fun `Change last result action`() {
         val state = reducer.reduce(Actions.UpdateLastResult(Results.NetworkError), AppState(onlyMyTasks = true))
         assertThat(state.lastResult).isEqualTo(Results.NetworkError)
+    }
+
+    @Test
+    fun `Navigate to configuration screen action`() {
+        val state = reducer.reduce(Actions.Navigation.GoToConfiguration, AppState(onlyMyTasks = true))
+        assertThat(state.screen).isEqualTo(Navigation.Configuration)
     }
 }

@@ -9,11 +9,17 @@ data class AppState(
     val currentTask: WorkingTask? = null,
     val tasks: List<Task> = emptyList(),
     val onlyMyTasks: Boolean = false,
-    val configuration: Configuration? = null
+    val configuration: Configuration? = null,
+    val screen: Navigation = Navigation.Main
 )
 
 sealed interface Results {
-    object Idle: Results
-    object NetworkError: Results
-    object Processing:  Results
+    object Idle : Results
+    object NetworkError : Results
+    object Processing : Results
+}
+
+sealed interface Navigation {
+    object Main : Navigation
+    object Configuration : Navigation
 }
