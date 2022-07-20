@@ -33,7 +33,7 @@ object Deps {
 
 
 dependencies {
-    implementation(compose.desktop.currentOs)
+    implementation(compose.desktop.macos_arm64)
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     implementation("com.squareup.sqldelight:sqlite-driver:1.5.3")
@@ -46,34 +46,58 @@ dependencies {
     testImplementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Deps.Kotlin}")
     testImplementation("org.jetbrains.compose.ui:ui-test-desktop:1.1.1")
-    testImplementation("org.jbehave:jbehave-core:5.0")
+    testImplementation("io.cucumber:cucumber-java:7.4.1")
+    testImplementation("io.cucumber:cucumber-junit-platform-engine:7.4.1")
+    testImplementation("org.junit.platform:junit-platform-console:1.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation ("io.kotest:kotest-runner-junit5:${Deps.Kotest}")
+
+    testImplementation("org.jbehave:jbehave-core:5.0")
+    testImplementation("io.kotest:kotest-runner-junit5:${Deps.Kotest}")
     testImplementation("io.kotest.extensions:kotest-extensions-gherkin:0.1.0")
+
     testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("com.appmattus.fixture:fixture:1.2.0")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
 }
 
-tasks.jar {
-    val classpath = configurations.runtimeClasspath
-    // Input declaration is needed for the proper up-to-date checks
-    inputs.files(classpath).withNormalizer(ClasspathNormalizer::class.java)
-    manifest {
-        attributes(
-            "Class-Path" to classpath.map { cp -> cp.joinToString(" ") { it.absolutePath } }
-        )
-        attributes( "Implementation-Title" to project.name, "Implementation-Version" to version, "Main-Class" to mainClassPath)
+tasks {
+    jar {
+        val classpath = configurations.runtimeClasspath
+        // Input declaration is needed for the proper up-to-date checks
+        inputs.files(classpath).withNormalizer(ClasspathNormalizer::class.java)
+        manifest {
+            attributes(
+                "Class-Path" to classpath.map { cp -> cp.joinToString(" ") { it.absolutePath } }
+            )
+            attributes(
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to archiveVersion,
+                "Main-Class" to mainClassPath
+            )
+        }
     }
-}
 
-tasks.test {
-    useJUnitPlatform()
-}
+//    val consoleLauncherTest by creating(JavaExec::class) {
+//        dependsOn(classes, testClasses)
+//        val reportsDir = file("$buildDir/test-results")
+//        outputs.dir(reportsDir)
+//        classpath = sourceSets["test"].runtimeClasspath.plus(sourceSets["main"].runtimeClasspath)
+//        main = "org.junit.platform.console.ConsoleLauncher"
+//        args("--select-file", "/Users/amaro/Projects/OnTime/src/test/resources/features/simple.feature")
+//        args("--include-engine", "cucumber")
+//        args("--details", "tree")
+//        args("--reports-dir", reportsDir)
+//    }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+    test {
+        useJUnitPlatform()
+        systemProperty("cucumber.junit-platform.naming-strategy", "long")
+    }
+
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "11"
+    }
 }
 
 compose.desktop {

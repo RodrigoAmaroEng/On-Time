@@ -7,10 +7,10 @@ import dev.amaro.on_time.Samples
 import dev.amaro.on_time.log.LogEvent
 import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
+import io.cucumber.java.en.Then
 import io.mockk.CapturingSlot
 import io.mockk.slot
 import io.mockk.verify
-import org.jbehave.core.annotations.Then
 import org.koin.java.KoinJavaComponent.inject
 
 class AssertionSteps : Step {
@@ -47,18 +47,23 @@ class AssertionSteps : Step {
 
     @Then("it will show only my task")
     fun step7() = onScenarioContext {
-        onNodeWithTag("QueryResults").assertExists()
-        onNodeWithText(Samples.TASK_ID_1).assertExists()
+        onNodeWithTag("QueryResults").apply {
+            assertExists()
+            onChildren().filterToOne(hasText(Samples.TASK_ID_1)).assertExists()
+        }
+
         onNodeWithText(Samples.TASK_ID_2).assertDoesNotExist()
         onNodeWithText(Samples.TASK_ID_3).assertDoesNotExist()
     }
 
     @Then("it will show all tasks")
     fun step8() = onScenarioContext {
-        onNodeWithTag("QueryResults").assertExists()
-        onNodeWithText(Samples.TASK_ID_1).assertExists()
-        onNodeWithText(Samples.TASK_ID_2).assertExists()
-        onNodeWithText(Samples.TASK_ID_3).assertExists()
+        onNodeWithTag("QueryResults").apply {
+            assertExists()
+            onChildren().filterToOne(hasText(Samples.TASK_ID_1)).assertExists()
+            onChildren().filterToOne(hasText(Samples.TASK_ID_2)).assertExists()
+            onChildren().filterToOne(hasText(Samples.TASK_ID_3)).assertExists()
+        }
     }
 
     @Then("it will show as current task")

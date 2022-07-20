@@ -4,15 +4,16 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import dev.amaro.on_time.Samples
-import dev.amaro.on_time.ui.JBehaveComposeTest
+import dev.amaro.on_time.ui.RunCucumberTest
 import dev.amaro.on_time.ui.screens.MainScreen
-import org.jbehave.core.annotations.When
+import io.cucumber.java.en.When
+
 
 class ActionSteps : Step {
 
     @When("I start the App")
-    fun step1() = onScenarioContext {
-        JBehaveComposeTest.startApp { state, dispatcher -> MainScreen(state, dispatcher) }
+    fun step1()  {
+        RunCucumberTest.startApp { state, dispatcher -> MainScreen(state, dispatcher) }
     }
 
     @When("I press the Filter Assigned to Me button")
