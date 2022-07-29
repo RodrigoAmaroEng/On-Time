@@ -5,7 +5,6 @@ Feature: Task listing interface - Main Screen
   Background:
     Given the OnTime app environment
 
-
   Scenario: User starts the application for the first time
     Given I have never started the App
     When I start the App
@@ -54,3 +53,4 @@ Feature: Task listing interface - Main Screen
     When I start the App
     And I press the Filter Assigned to Me button
     Then it will show all tasks
+
