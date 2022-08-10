@@ -88,6 +88,13 @@ class ContextSteps : Step {
         overrideOnDI(storage)
     }
 
+    @Given("a task that is Unassigned")
+    fun step11() {
+        val connector: Connector = mockk(relaxed = true)
+        every { connector.getTasks(allTasksFilter) } returns listOf(Samples.task1)
+        overrideOnDI(connector)
+    }
+
     private inline fun <reified T> overrideOnDI(objectInstance: T) {
         RunCucumberTest.debugModules.add(
             module {
@@ -103,4 +110,6 @@ class ContextSteps : Step {
     private val myTasksFilter = Jql.Builder().condition {
         assignee().any(Value.USER)
     }
+
+
 }

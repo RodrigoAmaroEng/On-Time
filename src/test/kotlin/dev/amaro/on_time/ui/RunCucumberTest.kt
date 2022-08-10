@@ -16,17 +16,22 @@ import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppLogic
 import dev.amaro.on_time.core.AppState
 import dev.amaro.sonic.IMiddleware
+import io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.swing.Swing
 import kotlinx.coroutines.test.setMain
+import org.junit.platform.suite.api.ConfigurationParameter
 import org.junit.platform.suite.api.IncludeEngines
+import org.junit.platform.suite.api.SelectClasspathResource
 import org.junit.platform.suite.api.Suite
 import org.koin.dsl.module
 
 
 @Suite
 @IncludeEngines("cucumber")
+@SelectClasspathResource("dev/amaro/on_time/ui")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "dev.amaro.on_time.ui")
 class RunCucumberTest {
 
     companion object {

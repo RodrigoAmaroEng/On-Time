@@ -120,4 +120,21 @@ class AssertionSteps : Step {
         assertThat(slots[0].event).isEqualTo(LogEvent.TASK_END)
         assertThat(slots[0].task).isEqualTo(Samples.task1)
     }
+
+    @Then("it will show the assign button")
+    fun step16() = onScenarioContext {
+        onNodeWithTag("Task-CST-123").apply {
+            assert(hasAnyDescendant(hasTestTag("ASSIGN-BUTTON")))
+        }
+    }
+
+    @Then("the task will have an icon showing it's NOT assigned")
+    fun step17() = onScenarioContext {
+        onNodeWithTag("Task-CST-123").apply {
+            assert(hasAnyDescendant(hasTestTag("NOT-ASSIGNED-ICON")))
+        }
+    }
+
+
+
 }
