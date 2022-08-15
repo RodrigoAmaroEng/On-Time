@@ -21,6 +21,7 @@ Feature: Time Control
 
   Scenario: Start another task
     Given I have a current task
+    And the 'Only Assigned To Me' option is not activated
     When I start the App
     And I select another task
     Then the new task will be shown as current task

@@ -1,4 +1,4 @@
-@file:OptIn(InternalTestApi::class, ExperimentalCoroutinesApi::class)
+@file:OptIn(InternalTestApi::class, ExperimentalCoroutinesApi::class, ExperimentalTestApi::class)
 
 package dev.amaro.on_time.ui
 
@@ -6,10 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ComposeScene
+import androidx.compose.ui.test.DesktopComposeUiTest
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.InternalTestApi
-import androidx.compose.ui.test.junit4.ComposeContentTestRule
-import androidx.compose.ui.test.junit4.DesktopComposeTestRule
-import androidx.compose.ui.test.junit4.createComposeRule
 import dev.amaro.on_time.Modules
 import dev.amaro.on_time.OnTimeApp
 import dev.amaro.on_time.core.Actions
@@ -20,6 +19,8 @@ import io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.swing.Swing
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.platform.suite.api.ConfigurationParameter
 import org.junit.platform.suite.api.IncludeEngines
@@ -35,7 +36,7 @@ import org.koin.dsl.module
 class RunCucumberTest {
 
     companion object {
-        var composer: ComposeContentTestRule? = null
+        var composer: DesktopComposeUiTest? = null
         var initialState: AppState = AppState()
         val debugModules: MutableList<org.koin.core.module.Module> = mutableListOf()
         var app: OnTimeApp? = null
@@ -44,7 +45,7 @@ class RunCucumberTest {
             Dispatchers.setMain(Dispatchers.Swing)
             composer?.stop()
             app?.kill()
-            composer = createComposeRule().apply { start() }
+            composer = DesktopComposeUiTest().apply { start() }
         }
 
         fun startApp(screen: ScreenConstructor) {
@@ -77,29 +78,18 @@ val TestModule = module {
 }
 
 
-fun DesktopComposeTestRule.start() {
+fun DesktopComposeUiTest.start() {
     val createUi = javaClass.getDeclaredMethod("createUi").apply { isAccessible = true }
     scene = runOnUiThread { createUi.invoke(this@start) as ComposeScene }
 }
 
-fun DesktopComposeTestRule.stop() {
-    val coroutineDispatcher =
-        javaClass.getDeclaredField("coroutineDispatcher").apply { isAccessible = true }
-            .get(this)
-    val cleanupTestCoroutines =coroutineDispatcher.javaClass.getDeclaredMethod("cleanupTestCoroutines")
+fun DesktopComposeUiTest.stop() {
+    val testScope: TestScope =
+        javaClass.getDeclaredField("testScope").apply { isAccessible = true }.get(this) as TestScope
     val uncaughtExceptionHandler =
         javaClass.getDeclaredField("uncaughtExceptionHandler").apply { isAccessible = true }.get(this)
     val throwUncaught = uncaughtExceptionHandler.javaClass.getDeclaredMethod("throwUncaught")
+    testScope.runTest { }
     runOnUiThread(scene::close)
-    cleanupTestCoroutines.invoke(coroutineDispatcher)
     throwUncaught.invoke(uncaughtExceptionHandler)
-}
-
-
-fun ComposeContentTestRule.stop() {
-    return (this as DesktopComposeTestRule).stop()
-}
-
-fun ComposeContentTestRule.start() {
-    return (this as DesktopComposeTestRule).start()
 }

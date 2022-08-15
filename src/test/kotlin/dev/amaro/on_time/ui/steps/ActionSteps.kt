@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTestApi::class)
+
 package dev.amaro.on_time.ui.steps
 
 import androidx.compose.ui.geometry.Offset
@@ -41,7 +43,7 @@ class ActionSteps : Step {
     fun step6() = onScenarioContext {
         onNodeWithTag("Task-CST-123").apply {
             performMouseInput {
-                moveTo(Offset.Infinite, 100)
+                enter(Offset(0.8f, 0.5f))
             }
         }
     }

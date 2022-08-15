@@ -5,12 +5,13 @@ Feature: Task Actions
   Background:
     Given the OnTime app environment
 
-  Scenario: Assign action is available
-    Given a task that is Unassigned
-    When this task is rendered
-    And I move the cursor over the task options
-    Then it will show the assign button
-    And the task will have an icon showing it's NOT assigned
+#  Scenario: Assign action is available
+#    Given a task that is Unassigned
+#    And the 'Only Assigned To Me' option is not activated
+#    When this task is rendered
+#    And I move the cursor over the task options
+#    Then it will show the assign button
+#    And the task will have an icon showing it's NOT assigned
 
 #  Scenario: Assign action is unavailable
 #    Given a task that is assigned to the user

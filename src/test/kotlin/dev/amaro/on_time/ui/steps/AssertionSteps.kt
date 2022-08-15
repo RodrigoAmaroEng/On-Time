@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTestApi::class)
+
 package dev.amaro.on_time.ui.steps
 
 import androidx.compose.ui.test.*
@@ -22,7 +24,7 @@ class AssertionSteps : Step {
 
     @Then("show a button to start the configuration")
     fun step2() = onScenarioContext {
-        onNodeWithTag("StartConfigurationButton").assertExists()
+        onNodeWithText("Start configuration").assertExists()
     }
 
     @Then("it will display the list of tasks available")

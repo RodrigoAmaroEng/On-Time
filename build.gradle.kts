@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.compose.compose
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.serialization") version "1.6.10"
-    id("org.jetbrains.compose") version "1.1.1"
+    kotlin("jvm") version "1.7.0"
+    kotlin("plugin.serialization") version "1.7.0"
+    id("org.jetbrains.compose") version "1.2.0-alpha01-dev755"
     id("com.squareup.sqldelight") version "1.5.3"
 }
 
@@ -27,7 +27,7 @@ sqldelight {
 }
 
 object Deps {
-    const val Kotlin = "1.6.2"
+    const val Kotlin = "1.6.4"
     const val JUnitJupiterVersion = "5.9.0"
     const val JUnitPlatformSuiteVersion = "1.9.0"
     const val CucumberVersion = "7.4.1"
@@ -54,7 +54,7 @@ dependencies {
     testImplementation("io.cucumber:cucumber-java:${Deps.CucumberVersion}")
     testImplementation("io.cucumber:cucumber-junit-platform-engine:${Deps.CucumberVersion}")
 
-    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("io.mockk:mockk:1.12.5")
     testImplementation("com.appmattus.fixture:fixture:1.2.0")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")

@@ -45,7 +45,9 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
                         Results.Processing -> Messages.loading()
                     }
                 } else {
-                    Messages.noConfigurationMessage()
+                    Messages.noConfigurationMessage {
+                        onAction(Actions.Navigation.GoToSettings)
+                    }
                 }
             }
         }
@@ -86,11 +88,13 @@ private fun displayTasks(
 
 object Messages {
     @Composable
-    fun noConfigurationMessage() {
+    fun noConfigurationMessage(onRequestSetup: () -> Unit) {
         MessageBox(
             Icons.ON_QA,
             message = "No configuration was found",
-            modifier = Modifier.testTag("StartConfigurationButton")
+            modifier = Modifier.testTag("StartConfigurationButton"),
+            action = "Start configuration",
+            onAction = onRequestSetup
         )
     }
 
