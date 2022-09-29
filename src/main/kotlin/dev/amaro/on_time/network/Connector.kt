@@ -9,3 +9,11 @@ interface Connector {
 
     fun changeStatus(task: Task)
 }
+
+object VoidConnector : Connector {
+    override fun getTasks(conditions: Jql.Builder): List<Task> = emptyList()
+
+    override fun assign(task: Task, userName: String) = Unit
+
+    override fun changeStatus(task: Task) = Unit
+}
