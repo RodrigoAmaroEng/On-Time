@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.compose.compose
 
 plugins {
-    kotlin("jvm") version "1.7.0"
-    kotlin("plugin.serialization") version "1.7.0"
-    id("org.jetbrains.compose") version "1.2.0-alpha01-dev755"
+    kotlin("jvm") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.10"
+    id("org.jetbrains.compose") version "1.2.0-beta01"
     id("com.squareup.sqldelight") version "1.5.3"
 }
 
@@ -27,7 +27,7 @@ sqldelight {
 }
 
 object Deps {
-    const val Kotlin = "1.6.4"
+    const val Kotlin = "1.6.2"
     const val JUnitJupiterVersion = "5.9.0"
     const val JUnitPlatformSuiteVersion = "1.9.0"
     const val CucumberVersion = "7.4.1"
