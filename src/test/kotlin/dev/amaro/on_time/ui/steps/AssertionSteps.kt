@@ -9,6 +9,7 @@ import dev.amaro.on_time.Samples
 import dev.amaro.on_time.log.LogEvent
 import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
+import dev.amaro.on_time.ui.TextResources
 import io.cucumber.java.en.Then
 import io.mockk.CapturingSlot
 import io.mockk.slot
@@ -21,12 +22,12 @@ class AssertionSteps : Step {
     @OptIn(ExperimentalTestApi::class)
     @Then("it will show message explaining it needs to be configured")
     fun step1() = onScenarioContext {
-        onNodeWithText("No configuration was found").assertExists()
+        onNodeWithText(TextResources.Errors.NoConfiguration).assertExists()
     }
 
     @Then("show a button to start the configuration")
     fun step2() = onScenarioContext {
-        onNodeWithText("Start configuration").assertExists()
+        onNodeWithText(TextResources.Actions.StartConfiguration).assertExists()
     }
 
     @Then("it will display the list of tasks available")

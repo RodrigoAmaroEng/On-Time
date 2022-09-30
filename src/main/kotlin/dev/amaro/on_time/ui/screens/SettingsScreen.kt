@@ -9,6 +9,7 @@ import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.ui.Heading
 import dev.amaro.on_time.ui.SettingItem
+import dev.amaro.on_time.ui.TextResources
 import dev.amaro.on_time.utilities.withTag
 
 @Composable
@@ -18,10 +19,10 @@ fun SettingsScreen(state: AppState, onAction: (Actions) -> Unit) = Screen(
     content = {
         Surface(color = MaterialTheme.colors.background) {
             Column(modifier = withTag("MainScreen")) {
-                Heading("Main Settings")
-                SettingItem("Host", "on-time:host", "", {})
-                SettingItem("Username", "on-time:username", "", {})
-                SettingItem("API Key", "on-time:api-key", "", {})
+                Heading(TextResources.Screens.Settings.Title)
+                SettingItem(TextResources.Screens.Settings.SettingHost, "on-time:host", "") {}
+                SettingItem(TextResources.Screens.Settings.SettingUsername, "on-time:username", "") {}
+                SettingItem(TextResources.Screens.Settings.SettingApiKey, "on-time:api-key", "") {}
             }
         }
     })

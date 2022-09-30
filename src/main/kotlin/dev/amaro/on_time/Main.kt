@@ -8,6 +8,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.core.Navigation
+import dev.amaro.on_time.ui.TextResources
 import dev.amaro.on_time.ui.screens.MainScreen
 import dev.amaro.on_time.ui.screens.SettingsScreen
 
@@ -18,14 +19,14 @@ fun main() = application {
         initialize()
         Window(
             onCloseRequest = ::exitApplication,
-            title = "On Time - Task Manager",
+            title = TextResources.Title,
             state = rememberWindowState(width = 500.dp, height = 300.dp),
         ) {
             val state = getState()
             if (state.screen == Navigation.Main) {
-                MainScreen(state, { perform(it) })
+                MainScreen(state) { perform(it) }
             } else if (state.screen == Navigation.Configuration) {
-                SettingsScreen(state, { perform(it) })
+                SettingsScreen(state) { perform(it) }
             }
         }
     }

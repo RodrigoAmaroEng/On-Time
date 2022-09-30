@@ -88,14 +88,13 @@ private fun displayTasks(
 
 object Messages {
     @Composable
-    fun noConfigurationMessage(onRequestSetup: () -> Unit) {
     fun noConfigurationMessage(onAction: (Actions) -> Unit) {
         MessageBox(
             Icons.ON_QA,
-            message = "No configuration was found",
+            message = TextResources.Errors.NoConfiguration,
             modifier = Modifier.testTag("StartConfigurationButton"),
-            action = "Start Configuration",
-            onAction = { onAction(Actions.Navigation.GoToConfiguration) }
+            action = TextResources.Actions.StartConfiguration,
+            onAction = { onAction(Actions.Navigation.GoToSettings) }
         )
     }
 
@@ -103,7 +102,7 @@ object Messages {
     fun networkErrorMessage() {
         MessageBox(
             Icons.ON_QA,
-            message = "Network error",
+            message = TextResources.Errors.NetworkError,
             modifier = Modifier.testTag("NetworkFailureMessage")
         )
     }
@@ -112,7 +111,7 @@ object Messages {
     fun noItemsToShow() {
         MessageBox(
             Icons.ON_QA,
-            message = "No tasks are available",
+            message = TextResources.Errors.NoTasksAvailable,
             modifier = Modifier.testTag("NoTasksAvailableMessage")
         )
     }
@@ -121,7 +120,7 @@ object Messages {
     fun loading() {
         MessageBox(
             Icons.ON_QA,
-            message = "Loading data..",
+            message = TextResources.Loading,
             modifier = Modifier.testTag("LoadingMessage")
         )
     }
