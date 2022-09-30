@@ -8,25 +8,30 @@ import dev.amaro.on_time.log.TestSQLiteStorage
 import dev.amaro.on_time.network.Connector
 import dev.amaro.on_time.network.Jql
 import dev.amaro.on_time.network.Value
-import dev.amaro.on_time.ui.JBehaveComposeTest
+import dev.amaro.on_time.ui.RunCucumberTest
+import io.cucumber.java.en.Given
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
-import org.jbehave.core.annotations.Given
+
 import org.koin.dsl.module
 import java.net.SocketException
 import java.time.LocalDateTime
 
 class ContextSteps : Step {
+    @Given("the OnTime app environment")
+    fun step0() {
+        RunCucumberTest.createEnvironment()
+    }
 
     @Given("I have never started the App")
-    fun step1() = onScenarioContext {
+    fun step1() {
         initialState = initialState.copy(configuration = null)
     }
 
     @Given("I already configured the application")
-    fun step2() = onScenarioContext {
+    fun step2()  {
         initialState = initialState.copy(configuration = Samples.configuration)
     }
 
@@ -84,8 +89,15 @@ class ContextSteps : Step {
         overrideOnDI(storage)
     }
 
+    @Given("a task that is Unassigned")
+    fun step11() {
+        val connector: Connector = mockk(relaxed = true)
+        every { connector.getTasks(allTasksFilter) } returns listOf(Samples.task1)
+        overrideOnDI(connector)
+    }
+
     private inline fun <reified T> overrideOnDI(objectInstance: T) {
-        JBehaveComposeTest.debugModules.add(
+        RunCucumberTest.debugModules.add(
             module {
                 single<T> { objectInstance }
             }
@@ -99,4 +111,6 @@ class ContextSteps : Step {
     private val myTasksFilter = Jql.Builder().condition {
         assignee().any(Value.USER)
     }
+
+
 }

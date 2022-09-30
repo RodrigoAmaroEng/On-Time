@@ -1,22 +1,25 @@
+@file:OptIn(ExperimentalTestApi::class)
+
 package dev.amaro.on_time.ui.steps
 
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.test.*
 import dev.amaro.on_time.Samples
-import dev.amaro.on_time.ui.JBehaveComposeTest
+import dev.amaro.on_time.ui.RunCucumberTest
 import dev.amaro.on_time.ui.screens.MainScreen
-import org.jbehave.core.annotations.When
+import io.cucumber.java.en.When
+
 
 class ActionSteps : Step {
 
     @When("I start the App")
-    fun step1() = onScenarioContext {
-        JBehaveComposeTest.startApp { state, dispatcher -> MainScreen(state, dispatcher) }
+    @When("this task is rendered")
+    fun step1() {
+        RunCucumberTest.startApp { state, dispatcher -> MainScreen(state, dispatcher) }
     }
 
     @When("I press the Filter Assigned to Me button")
-    fun step2() = onScenarioContext{
+    fun step2() = onScenarioContext {
         onNodeWithTag("FilterMineButton").performClick()
     }
 
@@ -31,7 +34,17 @@ class ActionSteps : Step {
     }
 
     @When("I press the task finish button")
-    fun step34() = onScenarioContext {
+    fun step5() = onScenarioContext {
         onNodeWithTag("StopWorkingButton").performClick()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @When("I move the cursor over the task options")
+    fun step6() = onScenarioContext {
+        onNodeWithTag("Task-CST-123").apply {
+            performMouseInput {
+                enter(Offset(0.8f, 0.5f))
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
@@ -30,7 +31,10 @@ import dev.amaro.on_time.models.TaskState
 fun TaskUI(task: Task, onSelect: (Task) -> Unit = {}, onTaskAction: (Actions) -> Unit = {}) {
     val showActionsState = remember { mutableStateOf(false) }
     val density = LocalDensity.current
-    Surface(Modifier.clickable { onSelect(task) }, color = MaterialTheme.colors.surface) {
+    Surface(
+        modifier = Modifier.clickable { onSelect(task) }.testTag("Task-${task.id}"),
+        color = MaterialTheme.colors.surface
+    ) {
         Box(
             Modifier.onHover(
                 Portion(Alignment.CenterEnd, IntSize(30, 100)),

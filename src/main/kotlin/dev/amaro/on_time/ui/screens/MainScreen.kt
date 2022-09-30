@@ -45,7 +45,9 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
                         Results.Processing -> Messages.loading()
                     }
                 } else {
-                    Messages.noConfigurationMessage(onAction)
+                    Messages.noConfigurationMessage {
+                        onAction(Actions.Navigation.GoToSettings)
+                    }
                 }
             }
         }
@@ -86,6 +88,7 @@ private fun displayTasks(
 
 object Messages {
     @Composable
+    fun noConfigurationMessage(onRequestSetup: () -> Unit) {
     fun noConfigurationMessage(onAction: (Actions) -> Unit) {
         MessageBox(
             Icons.ON_QA,

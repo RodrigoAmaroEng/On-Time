@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTestApi::class)
+
 package dev.amaro.on_time.ui.steps
 
 import androidx.compose.ui.test.*
@@ -7,10 +9,10 @@ import dev.amaro.on_time.Samples
 import dev.amaro.on_time.log.LogEvent
 import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
+import io.cucumber.java.en.Then
 import io.mockk.CapturingSlot
 import io.mockk.slot
 import io.mockk.verify
-import org.jbehave.core.annotations.Then
 import org.koin.java.KoinJavaComponent.inject
 
 class AssertionSteps : Step {
@@ -22,7 +24,7 @@ class AssertionSteps : Step {
 
     @Then("show a button to start the configuration")
     fun step2() = onScenarioContext {
-        onNodeWithTag("StartConfigurationButton").assertExists()
+        onNodeWithText("Start configuration").assertExists()
     }
 
     @Then("it will display the list of tasks available")
@@ -47,18 +49,23 @@ class AssertionSteps : Step {
 
     @Then("it will show only my task")
     fun step7() = onScenarioContext {
-        onNodeWithTag("QueryResults").assertExists()
-        onNodeWithText(Samples.TASK_ID_1).assertExists()
+        onNodeWithTag("QueryResults").apply {
+            assertExists()
+            onChildren().filterToOne(hasText(Samples.TASK_ID_1)).assertExists()
+        }
+
         onNodeWithText(Samples.TASK_ID_2).assertDoesNotExist()
         onNodeWithText(Samples.TASK_ID_3).assertDoesNotExist()
     }
 
     @Then("it will show all tasks")
     fun step8() = onScenarioContext {
-        onNodeWithTag("QueryResults").assertExists()
-        onNodeWithText(Samples.TASK_ID_1).assertExists()
-        onNodeWithText(Samples.TASK_ID_2).assertExists()
-        onNodeWithText(Samples.TASK_ID_3).assertExists()
+        onNodeWithTag("QueryResults").apply {
+            assertExists()
+            onChildren().filterToOne(hasText(Samples.TASK_ID_1)).assertExists()
+            onChildren().filterToOne(hasText(Samples.TASK_ID_2)).assertExists()
+            onChildren().filterToOne(hasText(Samples.TASK_ID_3)).assertExists()
+        }
     }
 
     @Then("it will show as current task")
@@ -115,4 +122,21 @@ class AssertionSteps : Step {
         assertThat(slots[0].event).isEqualTo(LogEvent.TASK_END)
         assertThat(slots[0].task).isEqualTo(Samples.task1)
     }
+
+    @Then("it will show the assign button")
+    fun step16() = onScenarioContext {
+        onNodeWithTag("Task-CST-123").apply {
+            assert(hasAnyDescendant(hasTestTag("ASSIGN-BUTTON")))
+        }
+    }
+
+    @Then("the task will have an icon showing it's NOT assigned")
+    fun step17() = onScenarioContext {
+        onNodeWithTag("Task-CST-123").apply {
+            assert(hasAnyDescendant(hasTestTag("NOT-ASSIGNED-ICON")))
+        }
+    }
+
+
+
 }
