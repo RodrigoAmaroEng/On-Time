@@ -15,8 +15,10 @@ import io.mockk.slot
 import io.mockk.verify
 import org.koin.java.KoinJavaComponent.inject
 
+
 class AssertionSteps : Step {
 
+    @OptIn(ExperimentalTestApi::class)
     @Then("it will show message explaining it needs to be configured")
     fun step1() = onScenarioContext {
         onNodeWithText("No configuration was found").assertExists()
@@ -136,7 +138,5 @@ class AssertionSteps : Step {
             assert(hasAnyDescendant(hasTestTag("NOT-ASSIGNED-ICON")))
         }
     }
-
-
 
 }

@@ -54,7 +54,7 @@ class AppReducerTest {
 
     @Test
     fun `Navigate to configuration screen action`() {
-        val state = reducer.reduce(Actions.Navigation.GoToConfiguration, AppState(onlyMyTasks = true))
+        val state = reducer.reduce(Actions.Navigation.GoToSettings, AppState(onlyMyTasks = true))
         assertThat(state.screen).isEqualTo(Navigation.Configuration)
     }
 }

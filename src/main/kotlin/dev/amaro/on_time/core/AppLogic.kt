@@ -14,7 +14,8 @@ class AppLogic(
             ConditionedDirectMiddleware(
                 Actions.FilterMine::class,
                 Actions.UpdateLastResult::class,
-            Actions.Navigation.GoToConfiguration::class)
+                Actions.Navigation.GoToSettings::class
+            )
         )
     ) {
 
