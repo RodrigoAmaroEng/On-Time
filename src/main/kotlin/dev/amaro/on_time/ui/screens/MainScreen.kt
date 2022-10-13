@@ -21,13 +21,13 @@ import dev.amaro.on_time.utilities.withTag
 @Composable
 fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
     Screen(
-        modifier = withTag("MainScreen"),
+        modifier = withTag(Tags.MainScreen),
         toolbarContent = {
             taskFilters(state, onAction)
         },
         content = {
             state.currentTask?.let {
-                AnimatedVisibility(true, modifier = withTag("CurrentTask")) {
+                AnimatedVisibility(true, modifier = withTag(Tags.CurrentTask)) {
                     CurrentTask(it, { onAction(Actions.StopTask) })
                 }
             }
@@ -59,12 +59,12 @@ private fun taskFilters(
     state: AppState,
     onAction: (Actions) -> Unit
 ) {
-    Row(withTag("TaskFilters")) {
+    Row(withTag(Tags.TaskFilters)) {
         SquareButton(
             Icons.USER_ASSIGN,
             initialState = if (state.onlyMyTasks) ButtonState.CHECKED else ButtonState.NORMAL,
             onClick = { onAction(Actions.FilterMine) },
-            modifier = withTag("FilterMineButton")
+            modifier = withTag(Tags.FilterMineButton)
         )
     }
 }

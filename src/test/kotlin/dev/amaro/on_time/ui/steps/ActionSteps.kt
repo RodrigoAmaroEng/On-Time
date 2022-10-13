@@ -6,6 +6,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.*
 import dev.amaro.on_time.Samples
 import dev.amaro.on_time.ui.RunCucumberTest
+import dev.amaro.on_time.ui.Tags
 import dev.amaro.on_time.ui.screens.MainScreen
 import io.cucumber.java.en.When
 
@@ -20,7 +21,7 @@ class ActionSteps : Step {
 
     @When("I press the Filter Assigned to Me button")
     fun step2() = onScenarioContext {
-        onNodeWithTag("FilterMineButton").performClick()
+        onNodeWithTag(Tags.FilterMineButton).performClick()
     }
 
     @When("I select a task")
@@ -35,7 +36,7 @@ class ActionSteps : Step {
 
     @When("I press the task finish button")
     fun step5() = onScenarioContext {
-        onNodeWithTag("StopWorkingButton").performClick()
+        onNodeWithTag(Tags.StopWorkingButton).performClick()
     }
 
     @OptIn(ExperimentalTestApi::class)

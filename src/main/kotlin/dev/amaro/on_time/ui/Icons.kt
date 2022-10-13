@@ -8,5 +8,5 @@ object Icons {
     const val TASK_DONE = "images/ic_done.svg"
     const val CODE_REVIEW = "images/ic_code_review.svg"
     const val ON_QA = "images/ic_qa.svg"
-
+    const val SAVE = "images/ic_save.svg"
 }

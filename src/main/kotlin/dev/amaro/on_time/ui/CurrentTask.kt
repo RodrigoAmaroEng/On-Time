@@ -36,7 +36,7 @@ fun CurrentTask(task: WorkingTask, onStop: () -> Unit, modifier: Modifier = Modi
         SquareButton(
             Icons.TASK_DONE,
             size = ButtonSize.ACTIONS,
-            modifier = withTag("StopWorkingButton"),
+            modifier = withTag(Tags.StopWorkingButton),
             onClick = { onStop() })
     }
 }

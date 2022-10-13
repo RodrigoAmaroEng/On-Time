@@ -65,6 +65,7 @@ object Theme  {
             val LARGE = 16.dp
         }
         object Height {
+            val SMALL = 32.dp
             val REGULAR = 48.dp
             val X_REGULAR = 56.dp
             val XX_REGULAR = 64.dp

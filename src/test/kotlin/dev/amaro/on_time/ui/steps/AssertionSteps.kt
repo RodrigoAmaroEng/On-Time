@@ -9,6 +9,7 @@ import dev.amaro.on_time.Samples
 import dev.amaro.on_time.log.LogEvent
 import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
+import dev.amaro.on_time.ui.Tags
 import dev.amaro.on_time.ui.TextResources
 import io.cucumber.java.en.Then
 import io.mockk.CapturingSlot
@@ -32,12 +33,12 @@ class AssertionSteps : Step {
 
     @Then("it will display the list of tasks available")
     fun step3() = onScenarioContext {
-        onNodeWithTag("QueryResults").assertExists()
+        onNodeWithTag(Tags.QueryResults).assertExists()
     }
 
     @Then("the filter options will be visible")
     fun step4() = onScenarioContext {
-        onNodeWithTag("TaskFilters").assertExists()
+        onNodeWithTag(Tags.TaskFilters).assertExists()
     }
 
     @Then("it will present a message telling there are no tasks available")
@@ -52,7 +53,7 @@ class AssertionSteps : Step {
 
     @Then("it will show only my task")
     fun step7() = onScenarioContext {
-        onNodeWithTag("QueryResults").apply {
+        onNodeWithTag(Tags.QueryResults).apply {
             assertExists()
             onChildren().filterToOne(hasText(Samples.TASK_ID_1)).assertExists()
         }
@@ -63,7 +64,7 @@ class AssertionSteps : Step {
 
     @Then("it will show all tasks")
     fun step8() = onScenarioContext {
-        onNodeWithTag("QueryResults").apply {
+        onNodeWithTag(Tags.QueryResults).apply {
             assertExists()
             onChildren().filterToOne(hasText(Samples.TASK_ID_1)).assertExists()
             onChildren().filterToOne(hasText(Samples.TASK_ID_2)).assertExists()
@@ -73,7 +74,7 @@ class AssertionSteps : Step {
 
     @Then("it will show as current task")
     fun step9() = onScenarioContext {
-        onNodeWithTag("CurrentTask").apply {
+        onNodeWithTag(Tags.CurrentTask).apply {
             assert(hasAnyDescendant(hasText(Samples.TASK_ID_1)))
         }
     }
@@ -89,7 +90,7 @@ class AssertionSteps : Step {
 
     @Then("the new task will be shown as current task")
     fun step11() = onScenarioContext {
-        onNodeWithTag("CurrentTask").apply {
+        onNodeWithTag(Tags.CurrentTask).apply {
             assert(hasAnyDescendant(hasText(Samples.TASK_ID_2)))
         }
     }
@@ -114,7 +115,7 @@ class AssertionSteps : Step {
 
     @Then("I will see no current task")
     fun step14() = onScenarioContext {
-        onNodeWithTag("CurrentTask").assertDoesNotExist()
+        onNodeWithTag(Tags.CurrentTask).assertDoesNotExist()
     }
 
     @Then("register the task end time")
