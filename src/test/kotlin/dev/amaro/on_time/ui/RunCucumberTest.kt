@@ -2,7 +2,6 @@
 
 package dev.amaro.on_time.ui
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ComposeScene
@@ -11,9 +10,9 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.InternalTestApi
 import dev.amaro.on_time.Modules
 import dev.amaro.on_time.OnTimeApp
-import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppLogic
 import dev.amaro.on_time.core.AppState
+import dev.amaro.on_time.defineCurrentScreen
 import dev.amaro.sonic.IMiddleware
 import io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME
 import kotlinx.coroutines.Dispatchers
@@ -48,7 +47,7 @@ class RunCucumberTest {
             composer = DesktopComposeUiTest().apply { start() }
         }
 
-        fun startApp(screen: ScreenConstructor) {
+        fun startApp() {
             debugModules.add(TestModule)
             app = OnTimeApp(initialState, Modules.release, *debugModules.toTypedArray())
             println(" # Initial State: $initialState")
@@ -56,16 +55,13 @@ class RunCucumberTest {
             composer?.run{
                 setContent {
                     val composeApp = remember { mutableStateOf(app) }
-                    println(" # Compose State: ${composeApp.value!!.getState()}")
-                    screen(composeApp.value!!.getState()) { app!!.perform(it) }
+                    app?.defineCurrentScreen(composeApp.value!!.getState())
                 }
                 waitForIdle()
             }
         }
     }
 }
-
-typealias ScreenConstructor = @Composable (AppState, (Actions) -> Unit) -> Unit
 
 val TestModule = module {
     single { params ->

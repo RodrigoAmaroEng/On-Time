@@ -1,15 +1,8 @@
 Feature: Task listing interface - Main Screen
-  After the app is initialized for the first time, the user needs to configure it providing the account to be
-  used in order to communicate with Jira. Only then, he can see the list of tasks (if available) and interact with them.
+  After configuring the application the user sees all his available tasks accordingly with the active filters
 
   Background:
     Given the OnTime app environment
-
-  Scenario: User starts the application for the first time
-    Given I have never started the App
-    When I start the App
-    Then it will show message explaining it needs to be configured
-    And show a button to start the configuration
 
   Scenario: User starts the application after having it configured
     Given I already configured the application

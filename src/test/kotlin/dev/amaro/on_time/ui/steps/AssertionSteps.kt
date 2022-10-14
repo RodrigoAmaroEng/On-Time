@@ -9,6 +9,7 @@ import dev.amaro.on_time.Samples
 import dev.amaro.on_time.log.LogEvent
 import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
+import dev.amaro.on_time.takeScreenshot
 import dev.amaro.on_time.ui.Tags
 import dev.amaro.on_time.ui.TextResources
 import io.cucumber.java.en.Then
@@ -43,12 +44,12 @@ class AssertionSteps : Step {
 
     @Then("it will present a message telling there are no tasks available")
     fun step5() = onScenarioContext {
-        onNodeWithTag("NoTasksAvailableMessage").assertExists()
+        onNodeWithText(TextResources.Errors.NoTasksAvailable).assertExists()
     }
 
     @Then("it will present a message informing it wasn't able to retrieve the tasks")
     fun step6() = onScenarioContext {
-        onNodeWithTag("NetworkFailureMessage").assertExists()
+        onNodeWithText(TextResources.Errors.NetworkError).assertExists()
     }
 
     @Then("it will show only my task")
@@ -140,5 +141,11 @@ class AssertionSteps : Step {
             assert(hasAnyDescendant(hasTestTag("NOT-ASSIGNED-ICON")))
         }
     }
+    @Then("it will show Settings Screen")
+    fun step18() = onScenarioContext {
+        takeScreenshot("SettingsScreen.png")
+        onNodeWithTag(Tags.SettingsScreen).assertExists()
+    }
+
 
 }

@@ -92,7 +92,6 @@ object Messages {
         MessageBox(
             Icons.ON_QA,
             message = TextResources.Errors.NoConfiguration,
-            modifier = Modifier.testTag("StartConfigurationButton"),
             action = TextResources.Actions.StartConfiguration,
             onAction = { onAction(Actions.Navigation.GoToSettings) }
         )
@@ -102,8 +101,7 @@ object Messages {
     fun networkErrorMessage() {
         MessageBox(
             Icons.ON_QA,
-            message = TextResources.Errors.NetworkError,
-            modifier = Modifier.testTag("NetworkFailureMessage")
+            message = TextResources.Errors.NetworkError
         )
     }
 
@@ -111,8 +109,7 @@ object Messages {
     fun noItemsToShow() {
         MessageBox(
             Icons.ON_QA,
-            message = TextResources.Errors.NoTasksAvailable,
-            modifier = Modifier.testTag("NoTasksAvailableMessage")
+            message = TextResources.Errors.NoTasksAvailable
         )
     }
 
@@ -120,8 +117,7 @@ object Messages {
     fun loading() {
         MessageBox(
             Icons.ON_QA,
-            message = TextResources.Loading,
-            modifier = Modifier.testTag("LoadingMessage")
+            message = TextResources.Loading
         )
     }
 }

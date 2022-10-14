@@ -1,5 +1,4 @@
 @file:OptIn(ExperimentalTestApi::class)
-
 package dev.amaro.on_time.ui.steps
 
 import androidx.compose.ui.geometry.Offset
@@ -7,7 +6,7 @@ import androidx.compose.ui.test.*
 import dev.amaro.on_time.Samples
 import dev.amaro.on_time.ui.RunCucumberTest
 import dev.amaro.on_time.ui.Tags
-import dev.amaro.on_time.ui.screens.MainScreen
+import dev.amaro.on_time.ui.TextResources
 import io.cucumber.java.en.When
 
 
@@ -16,7 +15,7 @@ class ActionSteps : Step {
     @When("I start the App")
     @When("this task is rendered")
     fun step1() {
-        RunCucumberTest.startApp { state, dispatcher -> MainScreen(state, dispatcher) }
+        RunCucumberTest.startApp()
     }
 
     @When("I press the Filter Assigned to Me button")
@@ -47,5 +46,10 @@ class ActionSteps : Step {
                 enter(Offset(0.8f, 0.5f))
             }
         }
+    }
+
+    @When("I press the Start Configuration button")
+    fun step7() = onScenarioContext {
+        onNodeWithText(TextResources.Actions.StartConfiguration).performClick()
     }
 }

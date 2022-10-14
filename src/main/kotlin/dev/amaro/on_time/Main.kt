@@ -1,5 +1,6 @@
 package dev.amaro.on_time
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
@@ -22,12 +23,15 @@ fun main() = application {
             title = TextResources.Title,
             state = rememberWindowState(width = 500.dp, height = 300.dp),
         ) {
-            val state = getState()
-            if (state.screen == Navigation.Main) {
-                MainScreen(state) { perform(it) }
-            } else if (state.screen == Navigation.Configuration) {
-                SettingsScreen(state) { perform(it) }
-            }
+            defineCurrentScreen(getState())
         }
+    }
+}
+@Composable
+fun OnTimeApp.defineCurrentScreen(state: AppState) {
+    if (state.screen == Navigation.Main) {
+        MainScreen(state) { perform(it) }
+    } else if (state.screen == Navigation.Configuration) {
+        SettingsScreen(state) { perform(it) }
     }
 }
