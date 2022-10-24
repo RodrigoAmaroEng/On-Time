@@ -5,7 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import dev.amaro.on_time.network.Value
 import dev.amaro.on_time.network.withJql
-import org.junit.Test
+import kotlin.test.Test
 
 class JQLGrammarTest {
 

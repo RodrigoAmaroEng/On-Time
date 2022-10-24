@@ -7,6 +7,7 @@ import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import dev.amaro.on_time.Samples
 import dev.amaro.on_time.core.*
+import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import kotlin.test.Test
@@ -56,5 +57,18 @@ class AppReducerTest {
     fun `Navigate to configuration screen action`() {
         val state = reducer.reduce(Actions.Navigation.GoToSettings, AppState(onlyMyTasks = true))
         assertThat(state.screen).isEqualTo(Navigation.Configuration)
+    }
+
+    @Test
+    fun `Navigate to main screen action`() {
+        val state = reducer.reduce(Actions.Navigation.GoToMain, AppState(onlyMyTasks = true))
+        assertThat(state.screen).isEqualTo(Navigation.Main)
+    }
+
+    @Test
+    fun `Save new configuration action`() {
+        val configuration = Configuration()
+        val state = reducer.reduce(Actions.SaveConfiguration(configuration), AppState(onlyMyTasks = true))
+        assertThat(state.configuration).isEqualTo(configuration)
     }
 }

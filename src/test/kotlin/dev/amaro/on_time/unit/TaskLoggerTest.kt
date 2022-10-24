@@ -23,7 +23,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.Test
+import kotlin.test.Test
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 

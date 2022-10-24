@@ -4,7 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import dev.amaro.on_time.log.Clock
 import dev.amaro.on_time.withZeros
-import org.junit.Test
+import kotlin.test.Test
 import java.time.LocalDateTime
 
 class ClockTest {

@@ -15,7 +15,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import org.junit.Test
+import kotlin.test.Test
 import java.net.SocketException
 
 
