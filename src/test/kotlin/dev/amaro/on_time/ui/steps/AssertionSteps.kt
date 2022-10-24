@@ -141,11 +141,22 @@ class AssertionSteps : Step {
             assert(hasAnyDescendant(hasTestTag("NOT-ASSIGNED-ICON")))
         }
     }
+
     @Then("it will show Settings Screen")
     fun step18() = onScenarioContext {
-        takeScreenshot("SettingsScreen.png")
+        //takeScreenshot("SettingsScreen.png")
         onNodeWithTag(Tags.SettingsScreen).assertExists()
     }
+    @Then("it will show the Main Screen")
+    fun step19() = onScenarioContext {
+        onNodeWithTag(Tags.MainScreen).assertExists()
+    }
+
+    @Then("it will present an error message informing that the user should provide all settings")
+    fun step20() = onScenarioContext {
+        onNodeWithText(TextResources.Errors.NotAllSettingsWereInformed).assertExists()
+    }
+
 
 
 }

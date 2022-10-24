@@ -4,6 +4,9 @@ package dev.amaro.on_time.ui.steps
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.*
 import dev.amaro.on_time.Samples
+import dev.amaro.on_time.Samples.HOST
+import dev.amaro.on_time.Samples.TOKEN
+import dev.amaro.on_time.Samples.USER
 import dev.amaro.on_time.ui.RunCucumberTest
 import dev.amaro.on_time.ui.Tags
 import dev.amaro.on_time.ui.TextResources
@@ -52,4 +55,16 @@ class ActionSteps : Step {
     fun step7() = onScenarioContext {
         onNodeWithText(TextResources.Actions.StartConfiguration).performClick()
     }
+
+    @When("I fill all settings")
+    fun step8() = onScenarioContext {
+        onNodeWithTag(Tags.Settings_Prop_Host).performTextInput(HOST)
+        onNodeWithTag(Tags.Settings_Prop_User).performTextInput(USER)
+        onNodeWithTag(Tags.Settings_Prop_Token).performTextInput(TOKEN)
+    }
+    @When("I press the save button")
+    fun step9() = onScenarioContext {
+        onNodeWithTag(Tags.SaveButton).performClick()
+    }
+
 }
