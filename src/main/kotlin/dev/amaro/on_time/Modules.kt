@@ -1,9 +1,6 @@
 package dev.amaro.on_time
 
-import dev.amaro.on_time.core.AppLogic
-import dev.amaro.on_time.core.AppState
-import dev.amaro.on_time.core.ServiceMiddleware
-import dev.amaro.on_time.core.StorageMiddleware
+import dev.amaro.on_time.core.*
 import dev.amaro.on_time.log.Clock
 import dev.amaro.on_time.log.SQLiteStorage
 import dev.amaro.on_time.log.Storage
@@ -18,7 +15,7 @@ import org.koin.dsl.module
 import java.util.*
 
 object Modules {
-    private const val CONFIGURATION_FILE = "/local.properties"
+    const val CONFIGURATION_FILE = "/local.properties"
     val release = module {
         single<JiraStateMap> {
             buildMap {
@@ -29,7 +26,7 @@ object Modules {
                 put(TaskState.DONE, JiraStateDefinition(91, "Done"))
             }
         }
-        factory { Resources.getConfigurationFile(CONFIGURATION_FILE) }
+        factory { Resources.loadConfigurationFile(CONFIGURATION_FILE) }
         factory {
             val properties: Properties = get()
             Configuration(
@@ -52,7 +49,8 @@ object Modules {
         factory {
             arrayOf<IMiddleware<AppState>>(
                 ServiceMiddleware(get()),
-                StorageMiddleware(get())
+                StorageMiddleware(get()),
+                SettingsMiddleware()
             )
         }
         single { params -> AppLogic(initialState = params.get(), false, *get<Array<IMiddleware<AppState>>>()) }

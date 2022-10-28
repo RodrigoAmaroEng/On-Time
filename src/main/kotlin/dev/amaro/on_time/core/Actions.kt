@@ -1,5 +1,6 @@
 package dev.amaro.on_time.core
 
+import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.models.WorkingTask
@@ -11,6 +12,9 @@ sealed interface Actions : IAction {
     object NoAction : Actions
     object Refresh : Actions
     object StopTask: Actions
+    data class SaveConfiguration(val configuration: Configuration): Actions
+    data class ProvideFeedback(val feedback: Feedback): Actions
+
     data class UpdateLastResult(val result: Results) : Actions
     object FilterMine : Actions, ISideEffectAction {
         override val sideEffect: IAction = Refresh
@@ -32,6 +36,7 @@ sealed interface Actions : IAction {
 
     sealed interface Navigation : Actions {
         object GoToSettings : Navigation
+        object GoToMain: Navigation
     }
 
 }

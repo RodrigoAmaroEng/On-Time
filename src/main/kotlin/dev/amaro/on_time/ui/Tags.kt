@@ -6,6 +6,10 @@ object Tags {
     const val StopWorkingButton = "StopWorkingButton"
     const val SettingsScreen = "SettingsScreen"
     const val FilterMineButton = "FilterMineButton"
+    const val SaveButton = "SaveButton"
     const val CurrentTask = "CurrentTask"
     const val QueryResults = "QueryResults"
+    const val Settings_Prop_Host = "SettingsPropertyHost"
+    const val Settings_Prop_User = "SettingsPropertyUser"
+    const val Settings_Prop_Token = "SettingsPropertyToken"
 }

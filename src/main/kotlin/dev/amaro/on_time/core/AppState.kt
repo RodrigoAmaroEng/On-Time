@@ -10,8 +10,20 @@ data class AppState(
     val tasks: List<Task> = emptyList(),
     val onlyMyTasks: Boolean = false,
     val configuration: Configuration? = null,
-    val screen: Navigation = Navigation.Main
+    val screen: Navigation = Navigation.Main,
+    val feedback: Feedback? = null
 )
+
+data class Feedback(
+    val body: String,
+    val type: FeedbackType = FeedbackType.Info,
+    val title: String? = null
+)
+enum class FeedbackType {
+    Info,
+    Error
+}
+
 
 sealed interface Results {
     object Idle : Results

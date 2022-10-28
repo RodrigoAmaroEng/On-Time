@@ -10,6 +10,7 @@ import dev.amaro.on_time.core.*
 import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
+import dev.amaro.on_time.ui.TextResources
 import kotlin.test.Test
 
 class AppReducerTest {
@@ -61,7 +62,7 @@ class AppReducerTest {
 
     @Test
     fun `Navigate to main screen action`() {
-        val state = reducer.reduce(Actions.Navigation.GoToMain, AppState(onlyMyTasks = true))
+        val state = reducer.reduce(Actions.Navigation.GoToMain, AppState(onlyMyTasks = true, screen = Navigation.Configuration))
         assertThat(state.screen).isEqualTo(Navigation.Main)
     }
 
@@ -70,5 +71,12 @@ class AppReducerTest {
         val configuration = Configuration()
         val state = reducer.reduce(Actions.SaveConfiguration(configuration), AppState(onlyMyTasks = true))
         assertThat(state.configuration).isEqualTo(configuration)
+    }
+
+    @Test
+    fun `Incomplete configuration action`() {
+        val feedback = Feedback(TextResources.Errors.NotAllSettingsWereInformed, FeedbackType.Error)
+        val state = reducer.reduce(Actions.ProvideFeedback(feedback), AppState(onlyMyTasks = true))
+        assertThat(state.feedback).isEqualTo(feedback)
     }
 }

@@ -9,6 +9,7 @@ object TextResources {
         const val NetworkError = "Network error"
         const val NoConfiguration = "No configuration was found"
         const val NoTasksAvailable = "No tasks are available"
+        const val NotAllSettingsWereInformed = "You need to fill in all settings to proceed"
     }
     const val Loading = "Loading..."
     object Screens {

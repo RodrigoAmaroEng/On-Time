@@ -21,6 +21,7 @@ import dev.amaro.on_time.utilities.withTag
 @Composable
 fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
     Screen(
+        state,
         modifier = withTag(Tags.MainScreen),
         toolbarContent = {
             taskFilters(state, onAction)

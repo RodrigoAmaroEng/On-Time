@@ -1,6 +1,7 @@
 package dev.amaro.on_time.unit
 
 import dev.amaro.on_time.Modules
+import dev.amaro.on_time.Samples
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.core.SettingsMiddleware
@@ -19,7 +20,7 @@ class SettingsMiddlewareTest {
         mockkObject(Resources)
         every { Resources.saveConfigurationFile(any(), any()) } returns Unit
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val settings = Configuration()
+        val settings = Configuration(Samples.HOST, Samples.USER, Samples.TOKEN)
         val action = Actions.SaveConfiguration(settings)
         val middleware = SettingsMiddleware()
         middleware.process(action, AppState(), processor)
@@ -29,6 +30,23 @@ class SettingsMiddlewareTest {
         verify {
             processor.reduce(eq(action))
             processor.reduce(eq(Actions.Navigation.GoToMain))
+        }
+    }
+
+    @Test
+    fun `Error message if the configuration was not fully informed`() {
+        mockkObject(Resources)
+        every { Resources.saveConfigurationFile(any(), any()) } returns Unit
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val settings = Configuration()
+        val action = Actions.SaveConfiguration(settings)
+        val middleware = SettingsMiddleware()
+        middleware.process(action, AppState(), processor)
+        verify(exactly = 0) {
+            Resources.saveConfigurationFile(eq(Modules.CONFIGURATION_FILE), any())
+        }
+        verify {
+            processor.reduce(any<Actions.ProvideFeedback>())
         }
     }
 }

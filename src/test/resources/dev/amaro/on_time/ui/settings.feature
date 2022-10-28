@@ -17,12 +17,13 @@ Feature: First run
     Then it will show Settings Screen
 
   Scenario: User fills the configuration and save
+    Given there are available tasks to work
     When I start the App
     And I press the Start Configuration button
     And I fill all settings
     And I press the save button
     Then it will show the Main Screen
-    And it will show all tasks
+    And it will display the list of tasks available
 
   Scenario: User tries to save without informing all settings
     When I start the App
