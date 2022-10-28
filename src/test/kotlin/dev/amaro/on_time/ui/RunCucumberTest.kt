@@ -68,7 +68,7 @@ val TestModule = module {
         AppLogic(
             initialState = params.get(),
             debugMode = true,
-            *get<Array<IMiddleware<AppState>>>()
+            middlewares = get<Array<IMiddleware<AppState>>>()
         )
     }
 }

@@ -22,6 +22,7 @@ import dev.amaro.on_time.utilities.withTag
 fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
     Screen(
         state,
+        onAction,
         modifier = withTag(Tags.MainScreen),
         toolbarContent = {
             taskFilters(state, onAction)
@@ -93,7 +94,7 @@ object Messages {
         MessageBox(
             Icons.ON_QA,
             message = TextResources.Errors.NoConfiguration,
-            action = TextResources.Actions.StartConfiguration,
+            actionText = TextResources.Actions.StartConfiguration,
             onAction = { onAction(Actions.Navigation.GoToSettings) }
         )
     }

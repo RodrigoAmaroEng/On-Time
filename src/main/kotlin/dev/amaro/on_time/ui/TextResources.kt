@@ -3,6 +3,7 @@ package dev.amaro.on_time.ui
 object TextResources {
     const val Title = "On Time - Task Manager"
     object Actions {
+        const val Dismiss = "Dismiss"
         const val StartConfiguration = "Start Configuration"
     }
     object Errors {

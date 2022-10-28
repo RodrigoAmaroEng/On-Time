@@ -79,4 +79,11 @@ class AppReducerTest {
         val state = reducer.reduce(Actions.ProvideFeedback(feedback), AppState(onlyMyTasks = true))
         assertThat(state.feedback).isEqualTo(feedback)
     }
+    @Test
+    fun `Clear current feedback`() {
+        val feedback = Feedback(TextResources.Errors.NotAllSettingsWereInformed, FeedbackType.Error)
+        val state = reducer.reduce(Actions.DismissFeedback, AppState(onlyMyTasks = true, feedback = feedback))
+        assertThat(state.feedback).isEqualTo(null)
+    }
+
 }

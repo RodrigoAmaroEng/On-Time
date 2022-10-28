@@ -23,6 +23,7 @@ fun SettingsScreen(state: AppState, onAction: (Actions) -> Unit) {
     val configuration = remember { mutableStateOf(state.configuration ?: Configuration()) }
     return Screen(
         state,
+        onAction,
         modifier = withTag(Tags.SettingsScreen),
         toolbarContent = {
             Column(

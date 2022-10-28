@@ -15,6 +15,7 @@ class AppReducer(private val debug: Boolean = false): IReducer<AppState> {
             is Actions.Navigation.GoToSettings -> currentState.copy(screen = Navigation.Configuration)
             is Actions.Navigation.GoToMain -> currentState.copy(screen = Navigation.Main)
             is Actions.ProvideFeedback -> currentState.copy(feedback = action.feedback)
+            is Actions.DismissFeedback -> currentState.copy(feedback = null)
             else -> currentState
         }
         if (debug) {

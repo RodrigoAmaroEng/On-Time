@@ -53,6 +53,10 @@ object Modules {
                 SettingsMiddleware()
             )
         }
-        single { params -> AppLogic(initialState = params.get(), false, *get<Array<IMiddleware<AppState>>>()) }
+        single { params -> AppLogic(
+            initialState = params.get(),
+            debugMode = false,
+            middlewares = get<Array<IMiddleware<AppState>>>())
+        }
     }
 }

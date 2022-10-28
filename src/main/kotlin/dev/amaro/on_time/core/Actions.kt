@@ -14,6 +14,7 @@ sealed interface Actions : IAction {
     object StopTask: Actions
     data class SaveConfiguration(val configuration: Configuration): Actions
     data class ProvideFeedback(val feedback: Feedback): Actions
+    object DismissFeedback: Actions
 
     data class UpdateLastResult(val result: Results) : Actions
     object FilterMine : Actions, ISideEffectAction {
