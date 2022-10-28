@@ -15,7 +15,10 @@ import dev.amaro.on_time.ui.screens.SettingsScreen
 
 
 fun main() = application {
-    val app = remember { mutableStateOf(OnTimeApp(AppState(), Modules.release)) }
+    val appInstance = OnTimeApp(AppState(), Modules.release)
+    val app = remember {
+        mutableStateOf(appInstance)
+    }
     app.value.apply {
         initialize()
         Window(
