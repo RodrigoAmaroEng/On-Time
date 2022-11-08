@@ -14,6 +14,11 @@ import dev.amaro.on_time.ui.screens.MainScreen
 import dev.amaro.on_time.ui.screens.SettingsScreen
 
 
+object WindowSetup {
+    const val width = 500
+    const val height = 300
+}
+
 fun main() = application {
     val appInstance = OnTimeApp(AppState(), Modules.release)
     val app = remember {
@@ -24,7 +29,7 @@ fun main() = application {
         Window(
             onCloseRequest = ::exitApplication,
             title = TextResources.Title,
-            state = rememberWindowState(width = 500.dp, height = 300.dp),
+            state = rememberWindowState(width = WindowSetup.width.dp, height = WindowSetup.height.dp),
         ) {
             defineCurrentScreen(getState())
         }

@@ -10,6 +10,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.InternalTestApi
 import dev.amaro.on_time.Modules
 import dev.amaro.on_time.OnTimeApp
+import dev.amaro.on_time.WindowSetup
 import dev.amaro.on_time.core.AppLogic
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.defineCurrentScreen
@@ -44,7 +45,7 @@ class RunCucumberTest {
             Dispatchers.setMain(Dispatchers.Swing)
             composer?.stop()
             app?.kill()
-            composer = DesktopComposeUiTest().apply { start() }
+            composer = DesktopComposeUiTest(WindowSetup.width, WindowSetup.height).apply { start() }
         }
 
         fun startApp() {
@@ -76,7 +77,8 @@ val TestModule = module {
 
 fun DesktopComposeUiTest.start() {
     val createUi = javaClass.getDeclaredMethod("createUi").apply { isAccessible = true }
-    scene = runOnUiThread { createUi.invoke(this@start) as ComposeScene }
+    val scene = javaClass.getDeclaredField("scene").apply { isAccessible = true }
+    scene.set(this, runOnUiThread { createUi.invoke(this@start) as ComposeScene })
 }
 
 fun DesktopComposeUiTest.stop() {
