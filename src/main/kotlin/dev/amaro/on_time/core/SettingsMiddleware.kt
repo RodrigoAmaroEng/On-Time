@@ -15,7 +15,6 @@ class SettingsMiddleware: IMiddleware<AppState> {
                 if (action.configuration.isValid) {
                     saveChanges(action.configuration)
                     processor.reduce(action)
-                    processor.reduce(Actions.Navigation.GoToMain)
                 } else {
                     processor.reduce(Actions.ProvideFeedback(Feedback(TextResources.Errors.NotAllSettingsWereInformed, FeedbackType.Error)))
                 }

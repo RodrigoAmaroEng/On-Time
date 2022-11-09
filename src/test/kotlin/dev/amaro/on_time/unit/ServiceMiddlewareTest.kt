@@ -1,5 +1,6 @@
 package dev.amaro.on_time.unit
 
+import dev.amaro.on_time.Samples
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.core.Results
@@ -15,8 +16,8 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import kotlin.test.Test
 import java.net.SocketException
+import kotlin.test.Test
 
 
 class ServiceMiddlewareTest {
@@ -24,7 +25,19 @@ class ServiceMiddlewareTest {
     private val otherActions: List<Actions> = listActions(listOf(Actions.Refresh::class))
 
     @Test
-    fun `Fires when receives the refresh action`() {
+    fun `Fires when receives the refresh action and the configuration is valid`() {
+        mockkObject(ConditionsBuilder)
+        val condition = Jql.Builder().condition { assignee().isEmpty() }
+        every { ConditionsBuilder.buildFrom(any()) } returns condition
+        val connector: Connector = mockk(relaxed = true)
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = ServiceMiddleware(connector)
+        middleware.process(Actions.Refresh, AppState( configuration = Samples.configuration), processor)
+        coVerify { connector.getTasks(eq(condition)) }
+    }
+
+    @Test
+    fun `Do not fire when receives the refresh action but the configuration is invalid`() {
         mockkObject(ConditionsBuilder)
         val condition = Jql.Builder().condition { assignee().isEmpty() }
         every { ConditionsBuilder.buildFrom(any()) } returns condition
@@ -32,7 +45,7 @@ class ServiceMiddlewareTest {
         val processor: IProcessor<AppState> = mockk(relaxed = true)
         val middleware = ServiceMiddleware(connector)
         middleware.process(Actions.Refresh, AppState(), processor)
-        coVerify { connector.getTasks(eq(condition)) }
+        coVerify (exactly = 0) { connector.getTasks(eq(condition)) }
     }
 
     @Test
@@ -51,7 +64,7 @@ class ServiceMiddlewareTest {
         every { connector.getTasks(any()) } returns response
         val processor: IProcessor<AppState> = mockk(relaxed = true)
         val middleware = ServiceMiddleware(connector)
-        middleware.process(Actions.Refresh, AppState(), processor)
+        middleware.process(Actions.Refresh, AppState(configuration = Samples.configuration), processor)
         coVerify {
             processor.reduce(Actions.UpdateLastResult(Results.Processing))
             processor.reduce(Actions.QueryResults(response))
@@ -64,7 +77,7 @@ class ServiceMiddlewareTest {
         every { connector.getTasks(any()) } throws SocketException()
         val processor: IProcessor<AppState> = mockk(relaxed = true)
         val middleware = ServiceMiddleware(connector)
-        middleware.process(Actions.Refresh, AppState(), processor)
+        middleware.process(Actions.Refresh, AppState(configuration = Samples.configuration), processor)
         coVerify { processor.reduce(Actions.UpdateLastResult(Results.NetworkError)) }
     }
     @Test
@@ -73,7 +86,7 @@ class ServiceMiddlewareTest {
         every { connector.getTasks(any()) } throws SocketException()
         val processor: IProcessor<AppState> = mockk(relaxed = true)
         val middleware = ServiceMiddleware(connector)
-        middleware.process(Actions.Refresh, AppState(), processor)
+        middleware.process(Actions.Refresh, AppState(configuration = Samples.configuration), processor)
         coVerify { processor.reduce(Actions.UpdateLastResult(Results.Processing)) }
     }
 

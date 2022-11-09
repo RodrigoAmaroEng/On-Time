@@ -9,7 +9,7 @@ import java.net.SocketException
 
 class ServiceMiddleware(private val connector: Connector) : IMiddleware<AppState> {
     override fun process(action: IAction, state: AppState, processor: IProcessor<AppState>) {
-        if (action is Actions.Refresh) {
+        if (action is Actions.Refresh && state.configuration?.isValid == true) {
             try {
                 dispatchProcessing(processor)
                 val results = connector.getTasks(ConditionsBuilder.buildFrom(state))

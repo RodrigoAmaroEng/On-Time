@@ -69,8 +69,9 @@ class AppReducerTest {
     @Test
     fun `Save new configuration action`() {
         val configuration = Configuration()
-        val state = reducer.reduce(Actions.SaveConfiguration(configuration), AppState(onlyMyTasks = true))
+        val state = reducer.reduce(Actions.SaveConfiguration(configuration), AppState(onlyMyTasks = true, screen = Navigation.Configuration))
         assertThat(state.configuration).isEqualTo(configuration)
+        assertThat(state.screen).isEqualTo(Navigation.Main)
     }
 
     @Test

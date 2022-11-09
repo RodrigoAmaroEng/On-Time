@@ -11,7 +11,7 @@ class AppReducer(private val debug: Boolean = false): IReducer<AppState> {
             is Actions.QueryResults -> currentState.copy(tasks = action.tasks)
             is Actions.UpdateLastResult -> currentState.copy(lastResult = action.result)
             is Actions.StopTask -> currentState.copy(currentTask = null)
-            is Actions.SaveConfiguration -> currentState.copy(configuration = action.configuration)
+            is Actions.SaveConfiguration -> currentState.copy(configuration = action.configuration, screen = Navigation.Main)
             is Actions.Navigation.GoToSettings -> currentState.copy(screen = Navigation.Configuration)
             is Actions.Navigation.GoToMain -> currentState.copy(screen = Navigation.Main)
             is Actions.ProvideFeedback -> currentState.copy(feedback = action.feedback)

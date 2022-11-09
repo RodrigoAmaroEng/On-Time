@@ -29,7 +29,6 @@ class SettingsMiddlewareTest {
         }
         verify {
             processor.reduce(eq(action))
-            processor.reduce(eq(Actions.Navigation.GoToMain))
         }
     }
 
