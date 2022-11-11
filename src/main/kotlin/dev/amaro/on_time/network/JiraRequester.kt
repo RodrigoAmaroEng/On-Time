@@ -1,5 +1,6 @@
 package dev.amaro.on_time.network
 
+import dev.amaro.on_time.models.Configuration
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -10,11 +11,16 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 
-class JiraRequester(
-    private val host: String,
-    private val token: String
-) {
+
+// TODO: When saving the configuration, it gives an error and the screen keeps stuck on loading
+class JiraRequester(private var configuration: Configuration) {
+
     private val client: OkHttpClient = OkHttpClient().newBuilder().build()
+
+    fun update(configuration: Configuration) {
+        this.configuration = configuration
+    }
+
     @JvmSynthetic
     @PublishedApi
     internal val json = Json { ignoreUnknownKeys = true }
@@ -22,7 +28,7 @@ class JiraRequester(
     @JvmSynthetic
     @PublishedApi
     internal fun Request.Builder.create(url: String): Request.Builder =
-        this.url("https://$host$url").addHeader("Authorization", "Bearer $token")
+        this.url("https://${configuration.host}$url").addHeader("Authorization", "Bearer ${configuration.token}")
 
     @JvmSynthetic
     @PublishedApi

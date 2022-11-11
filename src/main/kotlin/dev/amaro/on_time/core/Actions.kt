@@ -13,6 +13,9 @@ sealed interface Actions : IAction {
     object Refresh : Actions
     object StopTask: Actions
     data class SaveConfiguration(val configuration: Configuration): Actions, ISideEffectAction {
+        override val sideEffect: IAction = UpdateServiceConfiguration
+    }
+    object UpdateServiceConfiguration: Actions, ISideEffectAction {
         override val sideEffect: IAction = Refresh
     }
     data class ProvideFeedback(val feedback: Feedback): Actions

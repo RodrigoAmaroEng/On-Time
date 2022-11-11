@@ -22,7 +22,7 @@ import kotlin.test.Test
 
 class ServiceMiddlewareTest {
 
-    private val otherActions: List<Actions> = listActions(listOf(Actions.Refresh::class))
+    private val otherActions: List<Actions> = listActions(listOf(Actions.Refresh::class, Actions.SaveConfiguration::class))
 
     @Test
     fun `Fires when receives the refresh action and the configuration is valid`() {
@@ -90,6 +90,23 @@ class ServiceMiddlewareTest {
         coVerify { processor.reduce(Actions.UpdateLastResult(Results.Processing)) }
     }
 
+    @Test
+    fun `If receive UpdateConfiguration action updates the connector configuration`() {
+        val connector: Connector = mockk(relaxed = true)
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = ServiceMiddleware(connector)
+        middleware.process(Actions.UpdateServiceConfiguration, AppState(configuration = Samples.configuration), processor)
+        coVerify { connector.update(Samples.configuration) }
+    }
+
+    @Test
+    fun `If receive UpdateConfiguration action but the configuration is empty, do nothing`() {
+        val connector: Connector = mockk(relaxed = true)
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = ServiceMiddleware(connector)
+        middleware.process(Actions.UpdateServiceConfiguration, AppState(), processor)
+        coVerify(exactly = 0) { connector.update(any()) }
+    }
 }
 
 

@@ -1,5 +1,6 @@
 package dev.amaro.on_time.unit
 
+import dev.amaro.on_time.Samples
 import dev.amaro.on_time.core.*
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,7 +19,8 @@ class AppLogicTest {
             Actions.UpdateLastResult(Results.Processing),
             Actions.Navigation.GoToSettings,
             Actions.Navigation.GoToMain,
-            Actions.DismissFeedback
+            Actions.DismissFeedback,
+            Actions.SaveConfiguration(Samples.configuration)
         )
         directlyProcessedActions.forEach { app.perform(it) }
         verify(exactly = directlyProcessedActions.size) {

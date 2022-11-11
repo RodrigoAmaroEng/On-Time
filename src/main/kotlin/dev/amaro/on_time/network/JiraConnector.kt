@@ -1,5 +1,6 @@
 package dev.amaro.on_time.network
 
+import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.Task
 
 
@@ -7,6 +8,10 @@ class JiraConnector(
     private val requester: JiraRequester,
     private val mapper: JiraMapper
 ) : Connector {
+
+    override fun update(configuration: Configuration) {
+        requester.update(configuration)
+    }
 
     override fun getTasks(conditions: Jql.Builder): List<Task> {
 

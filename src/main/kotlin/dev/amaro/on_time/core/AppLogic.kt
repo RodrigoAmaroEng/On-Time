@@ -17,7 +17,8 @@ class AppLogic(
                 Actions.UpdateLastResult::class,
                 Actions.Navigation.GoToSettings::class,
                 Actions.Navigation.GoToMain::class,
-                Actions.DismissFeedback::class
+                Actions.DismissFeedback::class,
+                Actions.SaveConfiguration::class
             )
         )
     ) {
@@ -26,8 +27,10 @@ class AppLogic(
 
     override fun reduce(action: IAction) {
         super.reduce(action)
-        action.takeIfInstance<ISideEffectAction>()?.sideEffect?.run {
-            perform(this)
+        var nextAction = action.takeIfInstance<ISideEffectAction>()?.sideEffect
+        while(nextAction != null) {
+            perform(nextAction)
+            nextAction = nextAction.takeIfInstance<ISideEffectAction>()?.sideEffect
         }
     }
 

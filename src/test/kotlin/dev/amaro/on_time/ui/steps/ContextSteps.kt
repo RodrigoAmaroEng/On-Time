@@ -5,6 +5,7 @@ import dev.amaro.on_time.log.LogEvent
 import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
 import dev.amaro.on_time.log.TestSQLiteStorage
+import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.network.Connector
 import dev.amaro.on_time.network.Jql
 import dev.amaro.on_time.network.Value
@@ -27,12 +28,12 @@ class ContextSteps : Step {
 
     @Given("I have never started the App")
     fun step1() {
-        initialState = initialState.copy(configuration = null)
+        overrideOnDI(Configuration())
     }
 
     @Given("I already configured the application")
     fun step2()  {
-        initialState = initialState.copy(configuration = Samples.configuration)
+        overrideOnDI(Samples.configuration)
     }
 
     @Given("there are available tasks to work")

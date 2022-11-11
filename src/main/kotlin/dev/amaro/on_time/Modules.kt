@@ -8,16 +8,15 @@ import dev.amaro.on_time.log.TaskLogger
 import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.network.*
-import dev.amaro.on_time.utilities.JiraStateMap
-import dev.amaro.on_time.utilities.Resources
+import dev.amaro.on_time.utilities.ConfigurationManager
+import dev.amaro.on_time.utilities.ConfigurationManagerImpl
 import dev.amaro.sonic.IMiddleware
 import org.koin.dsl.module
-import java.util.*
 
 object Modules {
     const val CONFIGURATION_FILE = "/local.properties"
-    val release = module {
-        single<JiraStateMap> {
+    fun generateReleaseModule(parameters: Parameters) = module {
+        single {
             buildMap {
                 put(TaskState.NOT_STARTED, JiraStateDefinition(41, listOf("ToDo", "READY FOR DEVELOPMENT")))
                 put(TaskState.WORKING, JiraStateDefinition(31, "IN PROGRESS"))
@@ -26,31 +25,30 @@ object Modules {
                 put(TaskState.DONE, JiraStateDefinition(91, "Done"))
             }
         }
-        factory { Resources.loadConfigurationFile(CONFIGURATION_FILE) }
+
+        single<ConfigurationManager> {
+            val settingsFolder = parameters.resolve(FOLDER_PARAM_KEY) ?: "."
+            ConfigurationManagerImpl(settingsFolder)
+        }
+
         factory {
-            val properties: Properties = get()
-            Configuration(
-                properties.getProperty("host"),
-                properties.getProperty("token"),
-                properties.getProperty("user")
-            )
+            val configurationManager: ConfigurationManager = get()
+            configurationManager.load()
         }
         single {
-            get<Configuration>().let {
-                JiraRequester(it.host, it.token)
-            }
+            JiraRequester(get())
         }
-//        single<Connector> { JiraConnector(get(), JiraMapper(get<JiraStateMap>(), get<Configuration>().user)) }
-        single<Connector> { VoidConnector }
+        single<Connector> { JiraConnector(get(), JiraMapper(get(), get<Configuration>().user)) }
+//        single<Connector> { VoidConnector }
         single<Storage> { SQLiteStorage() }
         single { Clock() }
         single { TaskLogger(get(), get()) }
 
         factory {
-            arrayOf<IMiddleware<AppState>>(
+            arrayOf(
                 ServiceMiddleware(get()),
                 StorageMiddleware(get()),
-                SettingsMiddleware()
+                SettingsMiddleware(get())
             )
         }
         single { params -> AppLogic(

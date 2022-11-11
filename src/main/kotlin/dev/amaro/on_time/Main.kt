@@ -19,8 +19,9 @@ object WindowSetup {
     const val height = 300
 }
 
-fun main() = application {
-    val appInstance = OnTimeApp(AppState(), Modules.release)
+fun main(vararg params: String) = application {
+    val parameters: Parameters = params.toParameters()
+    val appInstance = OnTimeApp(AppState(), Modules.generateReleaseModule(parameters))
     val app = remember {
         mutableStateOf(appInstance)
     }
@@ -35,6 +36,7 @@ fun main() = application {
         }
     }
 }
+
 @Composable
 fun OnTimeApp.defineCurrentScreen(state: AppState) {
     if (state.screen == Navigation.Main) {
@@ -43,3 +45,17 @@ fun OnTimeApp.defineCurrentScreen(state: AppState) {
         SettingsScreen(state) { perform(it) }
     }
 }
+
+typealias Parameters = Map<String, String>
+
+fun home(): String = System.getProperty("user.home")
+
+fun Array<out String>.toParameters(): Parameters {
+    return map { it.split("=") }.associate { Pair(it[0], it[1]) }
+}
+
+fun Parameters.resolve(key: String): String? {
+    return get(key)?.replace("\$HOME", home())
+}
+
+const val FOLDER_PARAM_KEY = "folder"

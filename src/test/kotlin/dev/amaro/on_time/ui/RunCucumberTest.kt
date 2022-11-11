@@ -50,7 +50,7 @@ class RunCucumberTest {
 
         fun startApp() {
             debugModules.add(TestModule)
-            app = OnTimeApp(initialState, Modules.release, *debugModules.toTypedArray())
+            app = OnTimeApp(initialState, Modules.generateReleaseModule(emptyMap()), *debugModules.toTypedArray())
             println(" # Initial State: $initialState")
             app!!.initialize()
             composer?.run{

@@ -34,7 +34,7 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
                 }
             }
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                if (state.configuration != null) {
+                if (state.configuration?.isValid == true) {
                     when (state.lastResult) {
                         Results.Idle -> {
                             if (state.tasks.isNotEmpty()) {
