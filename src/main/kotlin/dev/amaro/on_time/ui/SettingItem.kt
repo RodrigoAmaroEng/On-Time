@@ -25,10 +25,14 @@ fun SettingItem(name: String, value: String, tag: String, onChange: (String) -> 
                 modifier = Modifier.fillMaxWidth(0.3f)
                     .height(Theme.Dimens.Height.SMALL)
                     .background(MaterialTheme.colors.surface)
-                    .padding(Theme.Dimens.Margins.MEDIUM, Theme.Dimens.Margins.SMALL),
+                    .padding(Theme.Dimens.Margins.MEDIUM, Theme.Dimens.Margins.SMALL)
+                    .testTag(tag),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Text(name, style = MaterialTheme.typography.caption.copy(fontWeight = FontWeight.Bold))
+                Text(
+                    name,
+                    style = MaterialTheme.typography.caption.copy(fontWeight = FontWeight.Bold)
+                )
             }
             BasicTextField(
                 value,
@@ -36,7 +40,7 @@ fun SettingItem(name: String, value: String, tag: String, onChange: (String) -> 
                 textStyle = MaterialTheme.typography.body2,
                 modifier = Modifier.padding(Theme.Dimens.Margins.MEDIUM, Theme.Dimens.Margins.SMALL)
                     .fillMaxWidth()
-                    .testTag(tag)
+                    .testTag("${tag}_Value")
             )
         }
         Box(Modifier.fillMaxWidth().height(Theme.Dimens.BORDER).background(MaterialTheme.colors.secondaryVariant))

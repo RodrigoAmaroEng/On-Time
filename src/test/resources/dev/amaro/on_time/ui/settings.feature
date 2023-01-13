@@ -30,3 +30,20 @@ Feature: First run
     And I press the Start Configuration button
     And I press the save button
     Then it will present an error message informing that the user should provide all settings
+
+  Scenario: User can provide the projects he works on
+    When I start the App
+    And I press the Start Configuration button
+    Then it will show the Projects setting on the Settings screen
+
+  Scenario: User wants to change the settings
+    Given I already configured the application
+    When I start the App
+    And I press the Settings button
+    Then it will show Settings Screen
+
+  Scenario: Projects setting shows its value
+    Given I already configured the application
+    When I start the App
+    And I press the Settings button
+    Then the Projects settings will show "CAT,CST"

@@ -43,11 +43,13 @@ object Samples {
     const val FALSE = 0L
     const val HOST = "https://some-host/jira/"
     const val TOKEN = "some-api-token"
+    const val ONE_PROJECT = "CAT"
+    const val TWO_PROJECTS = "CAT,CST"
     const val USER =  "some.user"
     val task1 = Task(TASK_ID_1, EMPTY, TaskState.NOT_STARTED)
     val task2 = Task(TASK_ID_2, EMPTY, TaskState.NOT_STARTED)
     val task3 = Task(TASK_ID_3, EMPTY, TaskState.NOT_STARTED)
-    val configuration = Configuration(HOST, TOKEN, USER)
+    val configuration = Configuration(HOST, TOKEN, USER, TWO_PROJECTS)
 
     val workingTask1 = asWorkingTask(task1)
     fun asWorkingTask(task: Task, startedAt: LocalDateTime = LocalDateTime.now().discardSecondsAndNanos(), minutes: Int = 0) =

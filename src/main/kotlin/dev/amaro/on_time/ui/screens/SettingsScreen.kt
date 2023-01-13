@@ -63,6 +63,13 @@ fun SettingsScreen(state: AppState, onAction: (Actions) -> Unit) {
                     ) {
                         configuration.value.run { configuration.value = copy(token = it) }
                     }
+                    SettingItem(
+                        TextResources.Screens.Settings.SettingProjects,
+                        configuration.value.projects,
+                        Tags.Settings_Prop_Projects
+                    ) {
+                        configuration.value.run { configuration.value = copy(projects = it) }
+                    }
                 }
             }
         })

@@ -19,6 +19,7 @@ object TextResources {
             const val SettingHost = "Host"
             const val SettingUsername = "Username"
             const val SettingApiKey = "API Key"
+            const val SettingProjects = "Projects"
         }
     }
 }

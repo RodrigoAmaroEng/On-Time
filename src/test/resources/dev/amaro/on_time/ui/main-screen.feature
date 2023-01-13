@@ -47,8 +47,3 @@ Feature: Task listing interface - Main Screen
     And I press the Filter Assigned to Me button
     Then it will show all tasks
 
-  Scenario: User wants to change the settings
-    Given I already configured the application
-    When I start the App
-    And I press the Settings button
-    Then it will show Settings Screen

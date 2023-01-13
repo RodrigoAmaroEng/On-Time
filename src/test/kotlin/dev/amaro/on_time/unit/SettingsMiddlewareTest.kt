@@ -21,7 +21,7 @@ class SettingsMiddlewareTest {
         mockkObject(Resources)
         val configurationManager: ConfigurationManager = mockk(relaxed = true)
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val settings = Configuration(Samples.HOST, Samples.USER, Samples.TOKEN)
+        val settings = Configuration(Samples.HOST, Samples.USER, Samples.TOKEN, Samples.ONE_PROJECT)
         val action = Actions.SaveConfiguration(settings)
         val middleware = SettingsMiddleware(configurationManager)
         middleware.process(action, AppState(), processor)

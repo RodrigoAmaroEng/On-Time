@@ -13,4 +13,5 @@ object Tags {
     const val Settings_Prop_Host = "SettingsPropertyHost"
     const val Settings_Prop_User = "SettingsPropertyUser"
     const val Settings_Prop_Token = "SettingsPropertyToken"
+    const val Settings_Prop_Projects = "SettingsPropertyProjects"
 }

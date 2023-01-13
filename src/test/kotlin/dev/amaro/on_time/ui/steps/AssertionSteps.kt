@@ -157,6 +157,15 @@ class AssertionSteps : Step {
         onNodeWithText(TextResources.Errors.NotAllSettingsWereInformed).assertExists()
     }
 
+    @Then("it will show the Projects setting on the Settings screen")
+    fun step21() = onScenarioContext {
+        onNodeWithTag(Tags.Settings_Prop_Projects).assertExists()
+    }
 
+    @Then("the Projects settings will show \"CAT,CST\"")
+    fun step22() = onScenarioContext {
+        takeScreenshot("Settings")
+        onNodeWithTag(Tags.Settings_Prop_Projects + "_Value").assertTextContains("CAT,CST")
+    }
 
 }
