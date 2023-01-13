@@ -11,7 +11,7 @@ Feature: Task listing interface - Main Screen
     Then it will display the list of tasks available
     And the filter options will be visible
 
-  Scenario: User has no tasks for work
+  Scenario: User has no tasks to work
     Given I already configured the application
     And there are no available tasks to work
     When I start the App
@@ -47,3 +47,8 @@ Feature: Task listing interface - Main Screen
     And I press the Filter Assigned to Me button
     Then it will show all tasks
 
+  Scenario: User wants to change the settings
+    Given I already configured the application
+    When I start the App
+    And I press the Settings button
+    Then it will show Settings Screen

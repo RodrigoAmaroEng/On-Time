@@ -7,6 +7,7 @@ object Tags {
     const val SettingsScreen = "SettingsScreen"
     const val FilterMineButton = "FilterMineButton"
     const val SaveButton = "SaveButton"
+    const val SettingsButton = "SettingsButton"
     const val CurrentTask = "CurrentTask"
     const val QueryResults = "QueryResults"
     const val Settings_Prop_Host = "SettingsPropertyHost"

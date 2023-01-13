@@ -26,6 +26,11 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
         modifier = withTag(Tags.MainScreen),
         toolbarContent = {
             taskFilters(state, onAction)
+            SquareButton(
+                Icons.NOT_STARTED,
+                onClick = { onAction(Actions.Navigation.GoToSettings) },
+                modifier = withTag(Tags.SettingsButton)
+            )
         },
         content = {
             state.currentTask?.let {

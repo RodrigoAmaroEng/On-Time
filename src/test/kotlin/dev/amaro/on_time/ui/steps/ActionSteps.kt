@@ -67,4 +67,9 @@ class ActionSteps : Step {
         onNodeWithTag(Tags.SaveButton).performClick()
     }
 
+    @When("I press the Settings button")
+    fun step10() = onScenarioContext {
+        onNodeWithTag(Tags.SettingsButton).performClick()
+    }
+
 }
