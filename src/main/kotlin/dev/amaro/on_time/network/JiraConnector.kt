@@ -17,7 +17,6 @@ class JiraConnector(
 
         val body = conditions
             .apply {
-                and { project().eq("CST") }
                 and { field("resolution").set("Unresolved") }
                 and { field("Platform").set("Android") }
                 orderBy("priority").desc()

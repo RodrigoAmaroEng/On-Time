@@ -9,5 +9,11 @@ object ConditionsBuilder {
         } else {
             assignee().any(Value.USER, Value.EMPTY)
         }
+        if (state.configuration?.projects?.isNotBlank() == true) {
+            val projects = state.configuration.projects.split(",").toTypedArray()
+            and {
+                project().any(*projects)
+            }
+        }
     }
 }
