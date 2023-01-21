@@ -3,6 +3,8 @@ package dev.amaro.on_time.core
 import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.WorkingTask
+import dev.amaro.on_time.network.FilterDefinition
+import dev.amaro.on_time.utilities.PreFilters
 
 data class AppState(
     val lastResult: Results = Results.Idle,
@@ -11,7 +13,8 @@ data class AppState(
     val onlyMyTasks: Boolean = false,
     val configuration: Configuration? = null,
     val screen: Navigation = Navigation.Main,
-    val feedback: Feedback? = null
+    val feedback: Feedback? = null,
+    val filterDefinition: FilterDefinition? = PreFilters.ANDROID_UNRESOLVED
 )
 
 data class Feedback(

@@ -42,6 +42,13 @@ open class Jql private constructor(
             return field
         }
 
+        fun Field.from (order: SortDirection) {
+            orderDir = when(order) {
+                SortDirection.DESC -> OrderDir.DESC
+                SortDirection.ASC -> OrderDir.ASC
+            }
+        }
+
         fun Field.desc() {
             this.orderDir = OrderDir.DESC
         }
@@ -172,6 +179,14 @@ open class Condition private constructor(
 
         fun Field.set(value: String) {
             expression(Operator.EQUALS, Value.fromScalar(value))
+        }
+
+        fun Field.from (operator: ConditionOperator, value: String) {
+            when(operator) {
+                ConditionOperator.SET -> set(value)
+                ConditionOperator.EQUAL -> eq(value)
+                ConditionOperator.NOT_EQUAL -> notEq(value)
+            }
         }
 
         fun Field.eq(value: String) {

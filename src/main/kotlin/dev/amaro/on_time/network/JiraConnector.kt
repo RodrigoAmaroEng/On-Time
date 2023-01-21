@@ -16,12 +16,6 @@ class JiraConnector(
     override fun getTasks(conditions: Jql.Builder): List<Task> {
 
         val body = conditions
-            .apply {
-                and { field("resolution").set("Unresolved") }
-                and { field("Platform").set("Android") }
-                orderBy("priority").desc()
-                orderBy("updated").desc()
-            }
             .build()
             .queryString(encode = true)
 
