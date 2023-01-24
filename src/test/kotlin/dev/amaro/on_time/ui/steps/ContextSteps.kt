@@ -6,9 +6,7 @@ import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
 import dev.amaro.on_time.log.TestSQLiteStorage
 import dev.amaro.on_time.models.Configuration
-import dev.amaro.on_time.network.Connector
-import dev.amaro.on_time.network.Jql
-import dev.amaro.on_time.network.Value
+import dev.amaro.on_time.network.*
 import dev.amaro.on_time.ui.RunCucumberTest
 import io.cucumber.java.en.Given
 import io.mockk.clearMocks
@@ -39,8 +37,9 @@ class ContextSteps : Step {
     @Given("there are available tasks to work")
     fun step3() {
         val connector: Connector = mockk(relaxed = true)
-        every { connector.getTasks(allTasksFilter) } returns listOf(Samples.task1, Samples.task2, Samples.task3)
+        every { connector.getTasks(fullFilterAllTasks) } returns listOf(Samples.task1, Samples.task2, Samples.task3)
         every { connector.getTasks(myTasksFilter) } returns listOf(Samples.task1)
+        every { connector.getTasks(noProjectMyTasks) } returns listOf(Samples.task1)
         overrideOnDI(connector)
     }
 
@@ -66,7 +65,7 @@ class ContextSteps : Step {
     @Given("none of the available tasks are assigned to me")
     fun step7() {
         val connector: Connector = mockk(relaxed = true)
-        every { connector.getTasks(allTasksFilter) } returns listOf(Samples.task2, Samples.task3)
+        every { connector.getTasks(fullFilterAllTasks) } returns listOf(Samples.task2, Samples.task3)
         every { connector.getTasks(myTasksFilter) } returns emptyList()
         overrideOnDI(connector)
     }
@@ -93,7 +92,7 @@ class ContextSteps : Step {
     @Given("a task that is Unassigned")
     fun step11() {
         val connector: Connector = mockk(relaxed = true)
-        every { connector.getTasks(allTasksFilter) } returns listOf(Samples.task1)
+        every { connector.getTasks(fullFilterAllTasks) } returns listOf(Samples.task1)
         overrideOnDI(connector)
     }
 
@@ -105,12 +104,33 @@ class ContextSteps : Step {
         )
     }
 
-    private val allTasksFilter = Jql.Builder().condition {
-        assignee().any(Value.USER, Value.EMPTY)
+    private val fullFilterAllTasks = Jql.Builder().apply {
+        condition {
+            assignee().any(Value.USER, Value.EMPTY)
+        }
+        and { project().any(Value.fromScalar("CAT"), Value.fromScalar("CST")) }
+        and { field("resolution").set("Unresolved") }
+        and { field("Platform").set("Android") }
+        orderBy("updated").desc()
     }
 
-    private val myTasksFilter = Jql.Builder().condition {
-        assignee().any(Value.USER)
+    private val noProjectMyTasks = Jql.Builder().apply {
+        condition {
+            assignee().any(Value.USER)
+        }
+        and { field("resolution").set("Unresolved") }
+        and { field("Platform").set("Android") }
+        orderBy("updated").desc()
+    }
+
+    private val myTasksFilter = Jql.Builder().apply {
+        condition {
+            assignee().any(Value.USER)
+        }
+        and { project().any(Value.fromScalar("CAT"), Value.fromScalar("CST")) }
+        and { field("resolution").set("Unresolved") }
+        and { field("Platform").set("Android") }
+        orderBy("updated").desc()
     }
 
 

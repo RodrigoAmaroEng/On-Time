@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalTestApi::class)
 
 package dev.amaro.on_time.ui.steps
 
@@ -9,7 +8,6 @@ import dev.amaro.on_time.Samples
 import dev.amaro.on_time.log.LogEvent
 import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
-import dev.amaro.on_time.takeScreenshot
 import dev.amaro.on_time.ui.Tags
 import dev.amaro.on_time.ui.TextResources
 import io.cucumber.java.en.Then
@@ -19,9 +17,9 @@ import io.mockk.verify
 import org.koin.java.KoinJavaComponent.inject
 
 
+@OptIn(ExperimentalTestApi::class)
 class AssertionSteps : Step {
 
-    @OptIn(ExperimentalTestApi::class)
     @Then("it will show message explaining it needs to be configured")
     fun step1() = onScenarioContext {
         onNodeWithText(TextResources.Errors.NoConfiguration).assertExists()
@@ -144,7 +142,6 @@ class AssertionSteps : Step {
 
     @Then("it will show Settings Screen")
     fun step18() = onScenarioContext {
-        //takeScreenshot("SettingsScreen.png")
         onNodeWithTag(Tags.SettingsScreen).assertExists()
     }
     @Then("it will show the Main Screen")
@@ -164,7 +161,6 @@ class AssertionSteps : Step {
 
     @Then("the Projects settings will show \"CAT,CST\"")
     fun step22() = onScenarioContext {
-        takeScreenshot("Settings")
         onNodeWithTag(Tags.Settings_Prop_Projects + "_Value").assertTextContains("CAT,CST")
     }
 

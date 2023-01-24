@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalTestApi::class)
 
 package dev.amaro.on_time.ui.steps
 
@@ -14,6 +13,7 @@ import dev.amaro.on_time.ui.TextResources
 import io.cucumber.java.en.When
 
 
+@OptIn(ExperimentalTestApi::class)
 class ActionSteps : Step {
 
     @When("I start the App")
@@ -42,7 +42,7 @@ class ActionSteps : Step {
         onNodeWithTag(Tags.StopWorkingButton).performClick()
     }
 
-    @OptIn(ExperimentalTestApi::class)
+
     @When("I move the cursor over the task options")
     fun step6() = onScenarioContext {
         onNodeWithTag("Task-CST-123").apply {

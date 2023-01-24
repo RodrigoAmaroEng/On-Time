@@ -1,9 +1,5 @@
 package dev.amaro.on_time
 
-import androidx.compose.ui.test.ComposeUiTest
-import androidx.compose.ui.test.DesktopComposeUiTest
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.InternalTestApi
 import com.appmattus.kotlinfixture.kotlinFixture
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.models.Configuration
@@ -11,14 +7,6 @@ import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.on_time.utilities.discardSecondsAndNanos
-import org.jetbrains.skia.EncodedImageFormat
-import org.jetbrains.skia.Surface
-import java.io.IOException
-import java.nio.ByteBuffer
-import java.nio.channels.ByteChannel
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardOpenOption
 import java.time.LocalDateTime
 import kotlin.reflect.KClass
 
@@ -57,38 +45,3 @@ object Samples {
 
 }
 
-@OptIn(InternalTestApi::class, ExperimentalTestApi::class)
-fun ComposeUiTest.takeScreenshot(name: String) {
-    if (this is DesktopComposeUiTest) {
-        val surface: Surface = getFromField("surface")
-        val imageData = surface.makeImageSnapshot().encodeToData(EncodedImageFormat.PNG)
-        val buffer = ByteBuffer.wrap(imageData?.bytes)
-
-        try {
-            val path: Path = Path.of(name)
-            val channel: ByteChannel = Files.newByteChannel(
-                path,
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
-            )
-            channel.write(buffer)
-            channel.close()
-        } catch (e: IOException) {
-            println(e)
-        }
-    }
-}
-inline fun <reified T, reified R> T.getFromField(method: String) : R {
-    return reflectSearch(T::class.java) { it.getDeclaredField(method) }.apply { isAccessible = true }.get(this) as R
-}
-
-fun <T> reflectSearch(rootClazz: Class<*>, operation: (Class<*>) -> T): T {
-    var clazz : Class<*>? = rootClazz
-    while (clazz != null) {
-        try {
-            return operation(clazz)
-        } catch (e: NoSuchFieldException) {
-            clazz = clazz.superclass
-        }
-    }
-    throw NoSuchFieldException("Field d not found in class ${rootClazz.name}")
-}
