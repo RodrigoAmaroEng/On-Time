@@ -31,22 +31,36 @@ open class SQLiteStorage : ISQLiteStorage() {
 
     override fun shouldCreateTables(): Boolean = !File(DB_NAME).exists()
 
-
     override fun include(storeItem: StoreItemTask) {
-        if (storeItem.event == LogEvent.TASK_END) {
-            db.my_tasksQueries.finishTask(
-                storeItem.minutes,
-                storeItem.task.id,
-                storeItem.timeStamp.toEpochSecond(ZoneOffset.UTC)
-            )
-        } else {
-            db.my_tasksQueries.startTask(
-                storeItem.task.id,
-                storeItem.task.title,
-                storeItem.task.status.name,
-                if (storeItem.task.isMine) 1 else 0,
-                storeItem.timeStamp.toDatabase()
-            )
+        when (storeItem.event) {
+            LogEvent.TASK_END -> {
+                db.my_tasksQueries.finishTask(
+                    storeItem.minutes,
+                    storeItem.task.id,
+                    storeItem.timeStamp.toEpochSecond(ZoneOffset.UTC)
+                )
+            }
+            LogEvent.TASK_START -> {
+                db.my_tasksQueries.startTask(
+                    storeItem.task.id,
+                    storeItem.task.title,
+                    storeItem.task.status.name,
+                    if (storeItem.task.isMine) 1 else 0,
+                    storeItem.timeStamp.toDatabase()
+                )
+            }
+            LogEvent.POMODORO_START -> {
+                db.my_tasksQueries.startPomodoro(
+                    storeItem.task.id,
+                    storeItem.timeStamp.toDatabase()
+                )
+            }
+            LogEvent.POMODORO_END -> {
+                db.my_tasksQueries.stopPomodoro(
+                    storeItem.task.id,
+                    storeItem.timeStamp.toDatabase()
+                )
+            }
         }
     }
 
@@ -60,7 +74,8 @@ open class SQLiteStorage : ISQLiteStorage() {
                     it.is_mine > 0
                 ),
                 it.timestamp.toLocalDateTime(),
-                it.minutes.toInt()
+                it.minutes.toInt(),
+                it.pomodoro_timestamp?.toLocalDateTime()
             )
         }
     }

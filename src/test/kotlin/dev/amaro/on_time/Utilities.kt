@@ -25,7 +25,7 @@ object Samples {
     const val TASK_ID_2 = "CST-321"
     const val TASK_ID_3 = "CST-456"
     const val KIND_START = "S"
-    const val KIND_END = "F"
+    const val KIND_END = "E"
     const val EMPTY = ""
     const val TRUE = 1L
     const val FALSE = 0L

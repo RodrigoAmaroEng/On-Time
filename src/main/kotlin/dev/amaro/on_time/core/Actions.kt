@@ -31,6 +31,8 @@ sealed interface Actions : IAction {
     }
 
     data class StartTask(val task: Task) : Actions
+    object StopPomodoro : Actions
+    data class StartPomodoro(val task: Task) : Actions
     data class SetWorkingTask(val task: WorkingTask) : Actions
     data class SetTaskState(val task: Task, val state: TaskState) : Actions, ISideEffectAction {
         override val sideEffect: IAction = Refresh

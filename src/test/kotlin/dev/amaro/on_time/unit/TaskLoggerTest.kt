@@ -192,14 +192,80 @@ class TaskLoggerTest {
 
     @Test
     fun `Get current working task`() {
+        val time = clock.now()
+        every { clock.now() } returns time
         TestSQLiteStorage().run {
             val currentTask = TaskLogger(this, clock)
                 .apply { logStarted(task1) }
                 .getCurrentTask()
-            val expectedTask = workingTask1.copy(startedAt = clock.now())
+            val expectedTask = workingTask1.copy(startedAt = time)
             assertThat(currentTask).isEqualTo(expectedTask)
         }
     }
+
+    @Test
+    fun `Log pomodoro start`() {
+        val firstTime = clock.now().plusMinutes(1)
+        val secondTime = clock.now().plusMinutes(2)
+        TestSQLiteStorage().run {
+            val currentTask = TaskLogger(this, clock)
+                .apply {
+                    every { clock.now() } returns firstTime
+                    logStarted(task1)
+                    every { clock.now() } returns secondTime
+                    logStartedPomodoro(task1)
+                }
+                .getCurrentTask()
+            val expectedTask = workingTask1.copy(startedAt = firstTime, pomodoroStartedAt = secondTime)
+            assertThat(currentTask).isEqualTo(expectedTask)
+        }
+    }
+
+    @Test
+    fun `Log pomodoro end`() {
+        val firstTime = clock.now().plusMinutes(1)
+        val secondTime = clock.now().plusMinutes(2)
+        val thirdTime = clock.now().plusMinutes(27)
+        TestSQLiteStorage().run {
+            val currentTask = TaskLogger(this, clock)
+                .apply {
+                    every { clock.now() } returns firstTime
+                    logStarted(task1)
+                    every { clock.now() } returns secondTime
+                    logStartedPomodoro(task1)
+                    every { clock.now() } returns thirdTime
+                    logEndPomodoro(task1)
+                }
+                .getCurrentTask()
+            val expectedTask = workingTask1.copy(startedAt = firstTime)
+            assertThat(currentTask).isEqualTo(expectedTask)
+        }
+    }
+
+    @Test
+    fun `Log pomodoro start gets last pomodoro`() {
+        val firstTime = clock.now().plusMinutes(1)
+        val secondTime = clock.now().plusMinutes(2)
+        val thirdTime = clock.now().plusMinutes(27)
+        val fourthTime = clock.now().plusMinutes(32)
+        TestSQLiteStorage().run {
+            val currentTask = TaskLogger(this, clock)
+                .apply {
+                    every { clock.now() } returns firstTime
+                    logStarted(task1)
+                    every { clock.now() } returns secondTime
+                    logStartedPomodoro(task1)
+                    every { clock.now() } returns thirdTime
+                    logEndPomodoro(task1)
+                    every { clock.now() } returns fourthTime
+                    logStartedPomodoro(task1)
+                }
+                .getCurrentTask()
+            val expectedTask = workingTask1.copy(startedAt = firstTime, pomodoroStartedAt = fourthTime)
+            assertThat(currentTask).isEqualTo(expectedTask)
+        }
+    }
+
 }
 
 
