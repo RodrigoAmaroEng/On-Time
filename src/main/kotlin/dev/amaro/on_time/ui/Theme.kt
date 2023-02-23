@@ -50,6 +50,7 @@ object Theme  {
     }
     object Dimens {
         object Icons {
+            val TINY = 16.dp
             val SMALL = 24.dp
             val MEDIUM = 32.dp
             val LARGE = 48.dp

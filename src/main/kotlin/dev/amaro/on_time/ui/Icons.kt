@@ -10,4 +10,7 @@ object Icons {
     const val ON_QA = "images/ic_qa.svg"
     const val SAVE = "images/ic_save.svg"
     const val SETTINGS = "images/ic_settings.svg"
+    const val STOP = "images/ic_stop.svg"
+    const val POMODORO = "images/ic_pomodoro.svg"
+    const val ELAPSED_TIME = "images/ic_elapsed_time.svg"
 }

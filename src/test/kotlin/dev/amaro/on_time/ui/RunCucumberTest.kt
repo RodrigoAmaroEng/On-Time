@@ -10,6 +10,8 @@ import dev.amaro.on_time.WindowSetup
 import dev.amaro.on_time.core.AppLogic
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.defineCurrentScreen
+import dev.amaro.on_time.log.Storage
+import dev.amaro.on_time.log.TestSQLiteStorage
 import dev.amaro.on_time.ui.compose.*
 import dev.amaro.on_time.ui.spice.getFromField
 import dev.amaro.sonic.IMiddleware
@@ -20,6 +22,7 @@ import io.cucumber.java.Scenario
 import io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME
 import io.cucumber.plugin.event.PickleStepTestStep
 import io.cucumber.plugin.event.TestCase
+import io.mockk.spyk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.swing.Swing
@@ -43,6 +46,7 @@ class RunCucumberTest  {
 
     @OptIn(ExperimentalTestApi::class, ExperimentalCoroutinesApi::class)
     companion object {
+        val storage = spyk(TestSQLiteStorage())
         var composer: DesktopComposeUiTest? = null
         var initialState: AppState = AppState()
         val debugModules: MutableList<org.koin.core.module.Module> = mutableListOf()
@@ -62,6 +66,7 @@ class RunCucumberTest  {
 
         fun startApp() {
             debugModules.add(TestModule)
+            debugModules.add( module { single<Storage> { storage } })
             app = OnTimeApp(initialState, Modules.generateReleaseModule(emptyMap()), *debugModules.toTypedArray())
             app!!.initialize()
             composer?.run {

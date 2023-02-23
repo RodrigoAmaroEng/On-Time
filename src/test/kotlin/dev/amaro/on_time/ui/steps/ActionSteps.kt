@@ -74,4 +74,12 @@ class ActionSteps : Step {
         onNodeWithTag(Tags.SettingsButton).performClick()
     }
 
+    @When("I press the pomodoro start button")
+    fun step11() = onScenarioContext {
+        onNodeWithTag(Tags.CurrentTask)
+            .onChildren()
+            .filterToOne(hasTestTag(Tags.StartPomodoroButton))
+            .performClick()
+    }
+
 }

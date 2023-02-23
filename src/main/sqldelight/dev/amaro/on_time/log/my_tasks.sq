@@ -19,7 +19,7 @@ SELECT l.key, l.timestamp, t.title, t.status, t.is_mine, t.minutes, lp.timestamp
 FROM tasks t
 INNER JOIN logs l ON l.key = t.key AND l.kind = "S"
 LEFT JOIN logs lp ON lp.key = l.key
-    AND lp.timestamp > l.timestamp
+    AND lp.timestamp >= l.timestamp
     AND lp.kind = "PS"
     AND (SELECT COUNT(*) FROM logs lf WHERE lf.key = l.key AND lf.kind = 'PE' AND lf.timestamp > lp.timestamp ) = 0
 WHERE t.current = 1
@@ -60,4 +60,8 @@ startPomodoro {
 stopPomodoro {
     INSERT INTO logs(key, timestamp, kind)
     VALUES (:key, :timestamp, "PE");
+}
+
+deleteAllLogs {
+    DELETE FROM logs;
 }

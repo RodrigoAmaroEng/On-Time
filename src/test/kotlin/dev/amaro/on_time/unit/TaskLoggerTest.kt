@@ -49,22 +49,23 @@ class TaskLoggerTest {
 
     @Test
     fun `Log task started but was working on another one`() {
-        val currentDateTime = clock.now().plusMinutes(1)
-        every { clock.now() } returns currentDateTime
-
-        logger.logStarted(task2, workingTask1)
+        val currentDateTime = clock.now()
+        val workingTask = asWorkingTask(task1, currentDateTime)
+        every { clock.now() } returns currentDateTime.plusMinutes(1)
+        logger.logStarted(task2, workingTask)
         verify {
-            storage.include(StoreItemTask(LogEvent.TASK_END, task1, currentDateTime, 1))
-            storage.include(StoreItemTask(LogEvent.TASK_START, task2, currentDateTime, 0))
+            storage.include(StoreItemTask(LogEvent.TASK_END, task1, currentDateTime.plusMinutes(1), 1))
+            storage.include(StoreItemTask(LogEvent.TASK_START, task2, currentDateTime.plusMinutes(1), 0))
         }
     }
 
     @Test
     fun `Log task end`() {
-        val currentDateTime = clock.now().plusMinutes(1)
-        every { clock.now() } returns currentDateTime
-        logger.logEnd(workingTask1)
-        verify { storage.include(StoreItemTask(LogEvent.TASK_END, task1, currentDateTime, 1)) }
+        val currentDateTime = clock.now()
+        val workingTask = asWorkingTask(task1, currentDateTime)
+        every { clock.now() } returns currentDateTime.plusMinutes(1)
+        logger.logEnd(workingTask)
+        verify { storage.include(StoreItemTask(LogEvent.TASK_END, task1, currentDateTime.plusMinutes(1), 1)) }
     }
 
     /** DATABASE **/

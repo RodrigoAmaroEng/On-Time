@@ -86,5 +86,9 @@ class TestSQLiteStorage : SQLiteStorage() {
 
     override fun shouldCreateTables(): Boolean  = true
 
+    fun clearDatabase() {
+        db.my_tasksQueries.deleteAllLogs()
+    }
+
     val database = db
 }

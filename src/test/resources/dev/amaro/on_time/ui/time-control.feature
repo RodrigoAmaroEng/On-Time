@@ -34,3 +34,9 @@ Feature: Time Control
     And I press the task finish button
     Then I will see no current task
     And register the task end time
+
+  Scenario: Start pomodoro for current task
+    Given I have a current task
+    When I start the App
+    And I press the pomodoro start button
+    Then I will see the pomodoro timer

@@ -3,6 +3,8 @@ package dev.amaro.on_time.ui
 object Tags {
     const val MainScreen = "MainScreen"
     const val TaskFilters = "TaskFilters"
+    const val PomodoroTimer = "PomodoroTimer"
+    const val StartPomodoroButton = "StartPomodoroButton"
     const val StopWorkingButton = "StopWorkingButton"
     const val SettingsScreen = "SettingsScreen"
     const val FilterMineButton = "FilterMineButton"

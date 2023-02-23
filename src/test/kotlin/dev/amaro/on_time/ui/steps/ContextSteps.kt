@@ -2,9 +2,7 @@ package dev.amaro.on_time.ui.steps
 
 import dev.amaro.on_time.Samples
 import dev.amaro.on_time.log.LogEvent
-import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
-import dev.amaro.on_time.log.TestSQLiteStorage
 import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.network.*
 import dev.amaro.on_time.ui.RunCucumberTest
@@ -12,13 +10,12 @@ import io.cucumber.java.en.Given
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.spyk
-
 import org.koin.dsl.module
 import java.net.SocketException
 import java.time.LocalDateTime
 
 class ContextSteps : Step {
+
     @Given("the OnTime app environment")
     fun step0() {
         RunCucumberTest.createEnvironment()
@@ -77,16 +74,14 @@ class ContextSteps : Step {
 
     @Given("I have no current task")
     fun step9() {
-        val storage: Storage = spyk(TestSQLiteStorage())
-        overrideOnDI(storage)
+        RunCucumberTest.storage.clearDatabase()
     }
 
     @Given("I have a current task")
     fun step10() {
-        val storage: Storage = spyk(TestSQLiteStorage())
-        storage.include(StoreItemTask(LogEvent.TASK_START, Samples.task1, LocalDateTime.now()))
-        clearMocks(storage)
-        overrideOnDI(storage)
+        RunCucumberTest.storage.clearDatabase()
+        RunCucumberTest.storage.include(StoreItemTask(LogEvent.TASK_START, Samples.task1, LocalDateTime.now()))
+        clearMocks(RunCucumberTest.storage)
     }
 
     @Given("a task that is Unassigned")
