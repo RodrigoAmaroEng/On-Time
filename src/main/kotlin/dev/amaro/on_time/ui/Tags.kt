@@ -4,6 +4,7 @@ object Tags {
     const val MainScreen = "MainScreen"
     const val TaskFilters = "TaskFilters"
     const val PomodoroTimer = "PomodoroTimer"
+    const val BreakTimer = "BreakTimer"
     const val StartPomodoroButton = "StartPomodoroButton"
     const val StopWorkingButton = "StopWorkingButton"
     const val SettingsScreen = "SettingsScreen"

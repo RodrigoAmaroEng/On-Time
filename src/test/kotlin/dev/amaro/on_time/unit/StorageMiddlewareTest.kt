@@ -7,6 +7,7 @@ import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.core.StorageMiddleware
 import dev.amaro.on_time.listActions
+import dev.amaro.on_time.log.Clock
 import dev.amaro.on_time.log.Logger
 import dev.amaro.on_time.log.TaskLogger
 import dev.amaro.on_time.models.WorkingTask
@@ -14,6 +15,8 @@ import dev.amaro.sonic.IProcessor
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
+import java.time.LocalDateTime
 import kotlin.test.Test
 
 class StorageMiddlewareTest {
@@ -26,6 +29,7 @@ class StorageMiddlewareTest {
             Actions.StopPomodoro::class,
         )
     )
+    private val clock: Clock = mockk(relaxed = true)
 
     @Test
     fun `Refresh action returns the current task`() {
@@ -33,7 +37,7 @@ class StorageMiddlewareTest {
         val workingTask: WorkingTask = mockk(relaxed = true)
         every { logger.getCurrentTask() } returns workingTask
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         middleware.process(Actions.Refresh, AppState(), processor)
         coVerify { processor.reduce(Actions.SetWorkingTask(workingTask)) }
     }
@@ -45,7 +49,7 @@ class StorageMiddlewareTest {
         val workingTask: WorkingTask = mockk(relaxed = true)
         every { logger.getCurrentTask() } returns workingTask
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         middleware.process(Actions.StartTask(task1), AppState(), processor)
         coVerify { logger.logStarted(task1) }
     }
@@ -54,7 +58,7 @@ class StorageMiddlewareTest {
     fun `Start task action register it on logger informing previous task`() {
         val logger: TaskLogger = mockk(relaxed = true)
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         middleware.process(Actions.StartTask(task2), AppState(currentTask = workingTask1), processor)
         coVerify { logger.logStarted(task2, workingTask1) }
     }
@@ -63,7 +67,7 @@ class StorageMiddlewareTest {
     fun `Do not fire when receives any other action`() {
         val logger: TaskLogger = mockk(relaxed = true)
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         otherActions.forEach { middleware.process(it, AppState(), processor) }
         coVerify(exactly = 0) {
             logger.logStarted(any(), any())
@@ -77,7 +81,7 @@ class StorageMiddlewareTest {
     fun `Stop task action register it on logger`() {
         val logger: TaskLogger = mockk(relaxed = true)
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         middleware.process(Actions.StopTask, AppState(currentTask = workingTask1), processor)
         coVerify { logger.logEnd(workingTask1) }
     }
@@ -85,9 +89,9 @@ class StorageMiddlewareTest {
     @Test
     fun `If there's no current task should update the state`() {
         val logger: TaskLogger = mockk(relaxed = true)
-        every{ logger.getCurrentTask() } returns null
+        every { logger.getCurrentTask() } returns null
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         middleware.process(Actions.StopTask, AppState(currentTask = workingTask1), processor)
         coVerify { processor.reduce(Actions.StopTask) }
     }
@@ -97,10 +101,11 @@ class StorageMiddlewareTest {
         val logger: Logger = mockk(relaxed = true)
         every { logger.getCurrentTask() } returns workingTask1
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         middleware.process(Actions.StartPomodoro(task1), AppState(currentTask = workingTask1), processor)
         coVerify {
             logger.logStartedPomodoro(task1)
+            clock.startTimer(25L, any())
         }
     }
 
@@ -109,11 +114,12 @@ class StorageMiddlewareTest {
         val logger: Logger = mockk(relaxed = true)
         every { logger.getCurrentTask() } returns workingTask1
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         middleware.process(Actions.StartPomodoro(task2), AppState(currentTask = workingTask1), processor)
         coVerify {
             logger.logStarted(task2, workingTask1)
             logger.logStartedPomodoro(task2)
+            clock.startTimer(25L, any())
         }
     }
 
@@ -122,7 +128,7 @@ class StorageMiddlewareTest {
         val logger: Logger = mockk(relaxed = true)
         every { logger.getCurrentTask() } returns workingTask1
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         middleware.process(Actions.StartPomodoro(task2), AppState(), processor)
         coVerify {
             logger.logStarted(task2)
@@ -131,11 +137,46 @@ class StorageMiddlewareTest {
     }
 
     @Test
+    fun `When focus time ends dispatch the StopPomodoro action and start the small break timer`() {
+        val logger: Logger = mockk(relaxed = true)
+        val now = LocalDateTime.now()
+        every { clock.now() } returns now
+        every { logger.getCurrentTask() } returns workingTask1
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = StorageMiddleware(logger, clock)
+        middleware.process(Actions.StartPomodoro(task2), AppState(), processor)
+        val slot = slot<() -> Unit>()
+        coVerify { clock.startTimer(25L, capture(slot)) }
+        slot.captured()
+        coVerify {
+            processor.perform(Actions.StopPomodoro)
+            processor.perform(Actions.StopTask)
+            processor.reduce(Actions.StartBreak(now))
+            clock.startTimer(5L, any())
+        }
+    }
+
+    @Test
+    fun `When small break timer ends send the stop break action`() {
+        val logger: Logger = mockk(relaxed = true)
+        every { logger.getCurrentTask() } returns workingTask1
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = StorageMiddleware(logger, clock)
+        middleware.process(Actions.StartPomodoro(task2), AppState(), processor)
+        val callbacks = mutableListOf<() -> Unit>()
+        coVerify { clock.startTimer(25L, capture(callbacks)) }
+        callbacks.last()()
+        coVerify { clock.startTimer(5L, capture(callbacks)) }
+        callbacks.last()()
+        coVerify { processor.reduce(Actions.StopBreak) }
+    }
+
+    @Test
     fun `Stop pomodoro`() {
         val logger: Logger = mockk(relaxed = true)
         every { logger.getCurrentTask() } returns workingTask1
         val processor: IProcessor<AppState> = mockk(relaxed = true)
-        val middleware = StorageMiddleware(logger)
+        val middleware = StorageMiddleware(logger, clock)
         middleware.process(Actions.StopPomodoro, AppState(currentTask = workingTask1), processor)
         coVerify {
             logger.logEndPomodoro(workingTask1.task)

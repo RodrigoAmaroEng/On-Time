@@ -1,10 +1,7 @@
 package dev.amaro.on_time
 
 import dev.amaro.on_time.core.*
-import dev.amaro.on_time.log.Clock
-import dev.amaro.on_time.log.SQLiteStorage
-import dev.amaro.on_time.log.Storage
-import dev.amaro.on_time.log.TaskLogger
+import dev.amaro.on_time.log.*
 import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.network.*
@@ -42,12 +39,12 @@ object Modules {
 //        single<Connector> { VoidConnector }
         single<Storage> { SQLiteStorage() }
         single { Clock() }
-        single { TaskLogger(get(), get()) }
+        single<Logger> { TaskLogger(get(), get()) }
 
         factory {
             arrayOf(
                 ServiceMiddleware(get()),
-                StorageMiddleware(get()),
+                StorageMiddleware(get(), get()),
                 SettingsMiddleware(get())
             )
         }

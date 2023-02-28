@@ -11,6 +11,7 @@ import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.ui.TextResources
+import java.time.LocalDateTime
 import kotlin.test.Test
 
 class AppReducerTest {
@@ -88,4 +89,17 @@ class AppReducerTest {
         assertThat(state.feedback).isEqualTo(null)
     }
 
+    @Test
+    fun `Start the break timer`() {
+        val now = LocalDateTime.now()
+        val state = reducer.reduce(Actions.StartBreak(now), AppState())
+        assertThat(state.breakStartedAt).isEqualTo(now)
+    }
+
+    @Test
+    fun `Stop the break timer`() {
+        val now = LocalDateTime.now()
+        val state = reducer.reduce(Actions.StopBreak, AppState(breakStartedAt = now))
+        assertThat(state.breakStartedAt).isEqualTo(null)
+    }
 }

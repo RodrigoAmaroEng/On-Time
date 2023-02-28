@@ -6,6 +6,7 @@ import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.sonic.IAction
 import dev.amaro.sonic.ISideEffectAction
+import java.time.LocalDateTime
 
 sealed interface Actions : IAction {
 
@@ -32,6 +33,8 @@ sealed interface Actions : IAction {
 
     data class StartTask(val task: Task) : Actions
     object StopPomodoro : Actions
+    data class StartBreak(val at: LocalDateTime) : Actions
+    object StopBreak : Actions
     data class StartPomodoro(val task: Task) : Actions
     data class SetWorkingTask(val task: WorkingTask) : Actions
     data class SetTaskState(val task: Task, val state: TaskState) : Actions, ISideEffectAction {

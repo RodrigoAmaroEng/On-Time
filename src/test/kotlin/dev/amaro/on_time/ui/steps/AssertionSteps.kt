@@ -164,4 +164,13 @@ class AssertionSteps : Step {
         onNodeWithTag(Tags.PomodoroTimer).assertExists()
     }
 
+    @Then("I will see the Small Break timer")
+    fun step24() = onScenarioContext {
+        onNodeWithTag(Tags.BreakTimer).assertExists()
+    }
+
+    @Then("there will be no Small Break timer")
+    fun step25() = onScenarioContext {
+        onNodeWithTag(Tags.BreakTimer).assertDoesNotExist()
+    }
 }

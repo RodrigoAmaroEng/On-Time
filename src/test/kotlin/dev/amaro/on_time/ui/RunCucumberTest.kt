@@ -10,6 +10,7 @@ import dev.amaro.on_time.WindowSetup
 import dev.amaro.on_time.core.AppLogic
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.defineCurrentScreen
+import dev.amaro.on_time.log.Clock
 import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.TestSQLiteStorage
 import dev.amaro.on_time.ui.compose.*
@@ -26,6 +27,7 @@ import io.mockk.spyk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.swing.Swing
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.TestInstance
 import org.junit.platform.suite.api.ConfigurationParameter
@@ -47,6 +49,7 @@ class RunCucumberTest  {
     @OptIn(ExperimentalTestApi::class, ExperimentalCoroutinesApi::class)
     companion object {
         val storage = spyk(TestSQLiteStorage())
+        val clockScope = TestScope()
         var composer: DesktopComposeUiTest? = null
         var initialState: AppState = AppState()
         val debugModules: MutableList<org.koin.core.module.Module> = mutableListOf()
@@ -66,7 +69,10 @@ class RunCucumberTest  {
 
         fun startApp() {
             debugModules.add(TestModule)
-            debugModules.add( module { single<Storage> { storage } })
+            debugModules.add( module {
+                single<Storage> { storage }
+                single { Clock(clockScope)}
+            })
             app = OnTimeApp(initialState, Modules.generateReleaseModule(emptyMap()), *debugModules.toTypedArray())
             app!!.initialize()
             composer?.run {

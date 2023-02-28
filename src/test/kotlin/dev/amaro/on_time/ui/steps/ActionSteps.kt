@@ -11,6 +11,7 @@ import dev.amaro.on_time.ui.RunCucumberTest
 import dev.amaro.on_time.ui.Tags
 import dev.amaro.on_time.ui.TextResources
 import io.cucumber.java.en.When
+import kotlinx.coroutines.test.advanceTimeBy
 
 
 @OptIn(ExperimentalTestApi::class)
@@ -82,4 +83,8 @@ class ActionSteps : Step {
             .performClick()
     }
 
+    @When("I wait {long} minutes")
+    fun step12(minutes: Long) = onScenarioContext {
+        RunCucumberTest.clockScope.advanceTimeBy(minutes * 60 * 1000 + 50)
+    }
 }

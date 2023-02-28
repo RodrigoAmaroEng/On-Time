@@ -1,12 +1,10 @@
 package dev.amaro.on_time.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +34,15 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
             state.currentTask?.let {
                 AnimatedVisibility(true, modifier = withTag(Tags.CurrentTask)) {
                     CurrentTask(it, { onAction(it) })
+                }
+            }
+            state.breakStartedAt?.let {
+                AnimatedVisibility(true, modifier = withTag(Tags.BreakTimer)) {
+                    Row {
+                        Text("Take a break for 5 minutes")
+                        Spacer(modifier = Modifier.weight(1f))
+                        ClockDisplay(it)
+                    }
                 }
             }
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

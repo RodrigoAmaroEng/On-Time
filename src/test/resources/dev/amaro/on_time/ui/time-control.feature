@@ -40,3 +40,19 @@ Feature: Time Control
     When I start the App
     And I press the pomodoro start button
     Then I will see the pomodoro timer
+
+  Scenario: Pomodoro finishes after 25 minutes and start a Small Break timer
+    Given I have a current task
+    When I start the App
+    And I press the pomodoro start button
+    And I wait 25 minutes
+    Then I will see the Small Break timer
+    And I will see no current task
+
+  Scenario: Small Break timer finishes after 5 minutes
+    Given I have a current task
+    When I start the App
+    And I press the pomodoro start button
+    And I wait 25 minutes
+    And I wait 5 minutes
+    Then there will be no Small Break timer
