@@ -1,6 +1,7 @@
 package dev.amaro.on_time.ui
 
 object Icons {
+    const val BREAK = "images/ic_break.svg"
     const val USER_ASSIGN = "images/ic_user_assign.svg"
     const val UNASSIGNED = "images/ic_unassigned.svg"
     const val NOT_STARTED = "images/ic_not_started.svg"
