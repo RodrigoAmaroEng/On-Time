@@ -8,8 +8,6 @@ import kotlin.test.Test
 
 class AppLogicTest {
 
-
-
     @Test
     fun `Actions that are directly processed`() {
         val reducer = mockk<AppReducer>(relaxed = true)

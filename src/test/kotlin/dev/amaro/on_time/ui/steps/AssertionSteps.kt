@@ -173,4 +173,16 @@ class AssertionSteps : Step {
     fun step25() = onScenarioContext {
         onNodeWithTag(Tags.BreakTimer).assertDoesNotExist()
     }
+
+    @Then("it will show the task {word} as the current one")
+    fun step26(taskId: String) = onScenarioContext {
+        onNodeWithTag(Tags.CurrentTask).apply {
+            assert(hasAnyDescendant(hasText(taskId)))
+        }
+    }
+
+    @Then("the Resume Task button show not be visible")
+    fun step27() = onScenarioContext {
+        onNodeWithTag(Tags.ResumeTaskButton).assertDoesNotExist()
+    }
 }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun OnTimeTheme(block: @Composable () -> Unit) {
@@ -22,7 +23,8 @@ fun OnTimeTheme(block: @Composable () -> Unit) {
             background = Theme.Colors.lightGray,
             onBackground = Theme.Colors.lightBlack,
             secondary = Theme.Colors.darkBlack,
-            secondaryVariant = Theme.Colors.lightBlack
+            secondaryVariant = Theme.Colors.lightBlack,
+            onSecondary = Theme.Colors.lightGray
         )
     ) {
         block()
@@ -54,6 +56,7 @@ object Theme  {
             val SMALL = 24.dp
             val MEDIUM = 32.dp
             val LARGE = 48.dp
+            val EXTRA_LARGE = 64.dp
         }
         object Margins {
             val SMALL = 8.dp
@@ -61,6 +64,7 @@ object Theme  {
             val LARGE = 20.dp
         }
         object Spacing {
+            val TINY = 2.dp
             val SMALL = 4.dp
             val MEDIUM = 8.dp
             val LARGE = 16.dp
@@ -70,6 +74,13 @@ object Theme  {
             val REGULAR = 48.dp
             val X_REGULAR = 56.dp
             val XX_REGULAR = 64.dp
+        }
+        object Fonts {
+            val TINY = 9.sp
+            val SMALL = 12.sp
+            val MEDIUM = 14.sp
+            val LARGE = 16.sp
+            val EXTRA_LARGE = 20.sp
         }
         const val FULL = 1f
         val BORDER = 1.dp

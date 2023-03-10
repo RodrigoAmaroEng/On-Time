@@ -91,6 +91,14 @@ class ContextSteps : Step {
         overrideOnDI(connector)
     }
 
+    @Given("I have previously worked on task {word}")
+    fun step12(taskId: String) {
+        RunCucumberTest.storage.clearDatabase()
+        RunCucumberTest.storage.include(StoreItemTask(LogEvent.TASK_START, Samples.task1.copy(id = taskId), LocalDateTime.now().minusMinutes(10)))
+        RunCucumberTest.storage.include(StoreItemTask(LogEvent.TASK_END, Samples.task1.copy(id = taskId), LocalDateTime.now().minusMinutes(5)))
+        clearMocks(RunCucumberTest.storage)
+    }
+
     private inline fun <reified T> overrideOnDI(objectInstance: T) {
         RunCucumberTest.debugModules.add(
             module {

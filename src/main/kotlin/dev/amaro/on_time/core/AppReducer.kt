@@ -21,6 +21,8 @@ class AppReducer(private val debug: Boolean = false): IReducer<AppState> {
             is Actions.DismissFeedback -> currentState.copy(feedback = null)
             is Actions.StartBreak -> currentState.copy(breakStartedAt = action.at)
             is Actions.StopBreak -> currentState.copy(breakStartedAt = null)
+            is Actions.SetLastTask -> currentState.copy(lastTask = action.task)
+            is Actions.ClearLastTask -> currentState.copy(lastTask = null)
             else -> currentState
         }
         if (debug) {

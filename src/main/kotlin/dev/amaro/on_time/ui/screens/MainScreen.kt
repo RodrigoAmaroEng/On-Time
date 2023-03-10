@@ -29,11 +29,15 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
         modifier = withTag(Tags.MainScreen),
         toolbarContent = {
             taskFilters(state, onAction)
-            SquareButton(
-                Icons.SETTINGS,
-                onClick = { onAction(Actions.Navigation.GoToSettings) },
-                modifier = withTag(Tags.SettingsButton)
-            )
+            state.lastTask?.let {
+                SquareButton(
+                    Icons.RESUME,
+                    onClick = { onAction(Actions.StartTask(it)) },
+                    modifier = withTag(Tags.ResumeTaskButton),
+                    text = it.id
+                )
+            }
+
         },
         content = {
             state.currentTask?.let {

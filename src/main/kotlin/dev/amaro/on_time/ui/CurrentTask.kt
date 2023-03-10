@@ -44,12 +44,12 @@ fun CurrentTask(task: WorkingTask, onAction: (Actions) -> Unit, modifier: Modifi
         }
         SquareButton(
             Icons.POMODORO,
-            size = ButtonSize.TOOLBAR,
+            size = ButtonSize.REGULAR,
             modifier = withTag(Tags.StartPomodoroButton),
             onClick = { onAction(Actions.StartPomodoro(task.task)) })
         SquareButton(
             Icons.STOP,
-            size = ButtonSize.TOOLBAR,
+            size = ButtonSize.REGULAR,
             modifier = withTag(Tags.StopWorkingButton),
             onClick = { onAction(Actions.StopTask) })
     }

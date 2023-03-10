@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.ui.*
+import dev.amaro.on_time.utilities.withTag
 
 @Composable
 fun Screen(
@@ -20,8 +21,14 @@ fun Screen(
     OnTimeTheme {
         Surface(color = MaterialTheme.colors.background, modifier = modifier) {
             Column {
-                Toolbar {
-                    toolbarContent()
+                Toolbar (
+                    toolbarContent
+                ) {
+                    SquareButton(
+                        Icons.SETTINGS,
+                        onClick = { onAction(Actions.Navigation.GoToSettings) },
+                        modifier = withTag(Tags.SettingsButton)
+                    )
                 }
                 Column {
                     content()

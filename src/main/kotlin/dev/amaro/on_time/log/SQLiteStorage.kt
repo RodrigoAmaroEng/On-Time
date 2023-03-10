@@ -79,6 +79,17 @@ open class SQLiteStorage : ISQLiteStorage() {
             )
         }
     }
+
+    override fun getLastTask(): Task? {
+        return db.my_tasksQueries.selectLastTask().executeAsOneOrNull()?.let {
+            Task(
+                it.key,
+                it.title,
+                TaskState.valueOf(it.status),
+                it.is_mine > 0
+            )
+        }
+    }
 }
 
 class TestSQLiteStorage : SQLiteStorage() {
@@ -88,6 +99,12 @@ class TestSQLiteStorage : SQLiteStorage() {
 
     fun clearDatabase() {
         db.my_tasksQueries.deleteAllLogs()
+    }
+
+    fun dumpLogs() {
+        db.my_tasksQueries.showAllLogs().executeAsList().forEach {
+            println(it)
+        }
     }
 
     val database = db

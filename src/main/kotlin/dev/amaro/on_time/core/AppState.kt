@@ -17,6 +17,7 @@ data class AppState(
     val feedback: Feedback? = null,
     val filterDefinition: FilterDefinition? = PreFilters.ANDROID_UNRESOLVED,
     val breakStartedAt: LocalDateTime? = null,
+    val lastTask: Task? = null
 )
 
 data class Feedback(

@@ -24,4 +24,41 @@ class StorageTest {
             assertThat(currentTask?.pomodoroStartedAt).isEqualTo(firstTime)
         }
     }
+
+    @Test
+    fun `Get the last worked task`() {
+        val firstTime = LocalDateTime.now().plusMinutes(1).discardSecondsAndNanos()
+        TestSQLiteStorage().run {
+            include(StoreItemTask(LogEvent.TASK_START, Samples.task1, firstTime))
+            include(StoreItemTask(LogEvent.TASK_END, Samples.task1, firstTime.plusMinutes(1)))
+            val lastTask = getLastTask()
+            assertThat(lastTask?.id).isEqualTo(Samples.TASK_ID_1)
+            assertThat(lastTask?.title).isEqualTo(Samples.task1.title)
+        }
+    }
+
+    @Test
+    fun `Get the last worked task is null because there an open task`() {
+        val firstTime = LocalDateTime.now().plusMinutes(1).discardSecondsAndNanos()
+        TestSQLiteStorage().run {
+            include(StoreItemTask(LogEvent.TASK_START, Samples.task2, firstTime))
+            include(StoreItemTask(LogEvent.TASK_END, Samples.task2, firstTime.plusMinutes(1)))
+            include(StoreItemTask(LogEvent.TASK_START, Samples.task1, firstTime.plusMinutes(2)))
+            val lastTask = getLastTask()
+            assertThat(lastTask).isEqualTo(null)
+        }
+    }
+
+    @Test
+    fun `Get the last worked task is null because there an open task - same task context`() {
+        val firstTime = LocalDateTime.now().plusMinutes(1).discardSecondsAndNanos()
+        TestSQLiteStorage().run {
+            include(StoreItemTask(LogEvent.TASK_START, Samples.task1, firstTime))
+            include(StoreItemTask(LogEvent.TASK_END, Samples.task1, firstTime.plusMinutes(1)))
+            include(StoreItemTask(LogEvent.TASK_START, Samples.task1, firstTime.plusMinutes(2)))
+            val lastTask = getLastTask()
+            assertThat(lastTask).isEqualTo(null)
+        }
+    }
+
 }

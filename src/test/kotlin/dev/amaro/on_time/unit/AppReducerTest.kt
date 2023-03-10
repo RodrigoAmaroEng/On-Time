@@ -102,4 +102,16 @@ class AppReducerTest {
         val state = reducer.reduce(Actions.StopBreak, AppState(breakStartedAt = now))
         assertThat(state.breakStartedAt).isEqualTo(null)
     }
+
+    @Test
+    fun `Set the last task`() {
+        val state = reducer.reduce(Actions.SetLastTask(Samples.task1), AppState())
+        assertThat(state.lastTask).isEqualTo(Samples.task1)
+    }
+
+    @Test
+    fun `Clear last task`() {
+        val state = reducer.reduce(Actions.ClearLastTask, AppState(lastTask = Samples.task1))
+        assertThat(state.lastTask).isEqualTo(null)
+    }
 }

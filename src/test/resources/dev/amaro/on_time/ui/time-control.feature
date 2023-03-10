@@ -56,3 +56,11 @@ Feature: Time Control
     And I wait 25 minutes
     And I wait 5 minutes
     Then there will be no Small Break timer
+
+  Scenario: Resume the work on last task
+    Given I have no current task
+    And I have previously worked on task ABC-1234
+    When I start the App
+    And I press the Resume Task button
+    Then it will show the task ABC-1234 as the current one
+    And the Resume Task button show not be visible

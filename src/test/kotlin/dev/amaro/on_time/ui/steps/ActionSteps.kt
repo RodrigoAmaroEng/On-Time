@@ -87,4 +87,9 @@ class ActionSteps : Step {
     fun step12(minutes: Long) = onScenarioContext {
         RunCucumberTest.clockScope.advanceTimeBy(minutes * 60 * 1000 + 50)
     }
+
+    @When("I press the Resume Task button")
+    fun step13() = onScenarioContext {
+        onNodeWithTag(Tags.ResumeTaskButton).performClick()
+    }
 }

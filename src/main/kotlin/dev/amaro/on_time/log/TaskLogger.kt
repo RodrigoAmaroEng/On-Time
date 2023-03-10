@@ -32,11 +32,16 @@ class TaskLogger(private val storage: Storage, private val clock: Clock) : Logge
         val timestamp =  clock.now()
         storage.include(StoreItemTask(LogEvent.POMODORO_END, task, timestamp))
     }
+
+    override fun getLastTask(): Task? {
+        return storage.getLastTask()
+    }
 }
 interface Logger {
     fun logStarted(task: Task, previousTask: WorkingTask? = null)
     fun logEnd(task: WorkingTask)
     fun getCurrentTask(): WorkingTask?
+    fun getLastTask(): Task?
     fun logStartedPomodoro(task: Task)
     fun logEndPomodoro(task: Task)
 }

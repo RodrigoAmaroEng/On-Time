@@ -83,5 +83,6 @@ class StorageMiddleware(
         processor.reduce(
             logger.getCurrentTask()?.let { Actions.SetWorkingTask(it) } ?: Actions.StopTask
         )
+        processor.reduce(logger.getLastTask()?.let { Actions.SetLastTask(it) } ?: Actions.ClearLastTask)
     }
 }

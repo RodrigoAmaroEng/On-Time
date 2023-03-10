@@ -26,7 +26,11 @@ WHERE t.current = 1
 ORDER BY lp.timestamp DESC, l.timestamp DESC
 LIMIT 1;
 
-
+selectLastTask:
+SELECT * FROM tasks
+INNER JOIN
+(SELECT key, kind FROM logs WHERE kind IN ("S", "E") ORDER BY timestamp DESC LIMIT 1) logs
+ON logs.key = tasks.key AND logs.kind = "E";
 
 showAllLogs:
 SELECT * FROM logs;
