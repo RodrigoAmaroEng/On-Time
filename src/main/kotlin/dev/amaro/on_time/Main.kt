@@ -1,9 +1,6 @@
 package dev.amaro.on_time
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -14,7 +11,6 @@ import dev.amaro.on_time.network.stream_deck.Server
 import dev.amaro.on_time.ui.TextResources
 import dev.amaro.on_time.ui.screens.MainScreen
 import dev.amaro.on_time.ui.screens.SettingsScreen
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -32,15 +28,16 @@ fun main(vararg params: String) = application {
     val scopeForServer = rememberCoroutineScope()
     app.value.apply {
         initialize()
+        val state = getState().collectAsState().value
         Window(
             onCloseRequest = ::exitApplication,
             title = TextResources.Title,
             state = rememberWindowState(width = WindowSetup.width.dp, height = WindowSetup.height.dp),
         ) {
-            defineCurrentScreen(getState())
+            defineCurrentScreen(state)
         }
         scopeForServer.launch {
-            Server.main( { getState() }, { perform(it) })
+            Server.main( { getState().value }, { perform(it) })
         }
     }
 }

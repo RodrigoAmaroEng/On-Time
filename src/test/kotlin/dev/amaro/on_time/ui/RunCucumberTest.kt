@@ -1,5 +1,6 @@
 package dev.amaro.on_time.ui
 
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.test.DesktopComposeUiTest
@@ -78,7 +79,8 @@ class RunCucumberTest  {
             composer?.run {
                 setContent {
                     val composeApp = remember { mutableStateOf(app) }
-                    app?.defineCurrentScreen(composeApp.value!!.getState())
+                    val state = composeApp.value!!.getState().collectAsState().value
+                    app?.defineCurrentScreen(state)
                 }
                 waitForIdle()
             }

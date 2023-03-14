@@ -1,11 +1,10 @@
 package dev.amaro.on_time
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppLogic
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.models.Configuration
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -45,8 +44,7 @@ class OnTimeApp(
         appLogic.perform(actions)
     }
 
-    @Composable
-    fun getState(): AppState = appLogic.listen().collectAsState().value
+    fun getState(): MutableStateFlow<AppState> = appLogic.listen()
 }
 
 
