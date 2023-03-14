@@ -1,4 +1,4 @@
-Feature: First run
+Feature: First run and Settings
   After the app is initialized for the first time, the user needs to configure it providing the account to be
   used in order to communicate with Jira. Only then, he can see the list of tasks (if available) and interact with them.
 
