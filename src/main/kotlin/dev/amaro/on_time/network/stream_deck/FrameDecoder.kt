@@ -29,7 +29,8 @@ class JsonFrameDecoder : FrameDealer {
     }
 
     override fun parse(frame: Frame.Text): FrameAction {
-        return json.decodeFromString(Payload.serializer(), frame.readText()).type
+        val jsonObject: Map<String,String> = json.decodeFromString(frame.readText())
+        return jsonObject["type"] ?: ""
     }
 
     override suspend fun process(
@@ -38,9 +39,7 @@ class JsonFrameDecoder : FrameDealer {
         stateSelector: () -> AppState,
         onAction: (Actions) -> Unit
     ) {
-        // TODO: Improve the way we parse the frame
-        val jsonObject: Map<String,String> = json.decodeFromString(frame.readText())
-        when (jsonObject["type"]) {
+        when (parse(frame)) {
             LastTask::class.java.simpleName -> {
                 buildStateFrame(stateSelector)?.run { output(this) }
             }
