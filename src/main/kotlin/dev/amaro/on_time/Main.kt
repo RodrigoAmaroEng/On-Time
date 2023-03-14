@@ -28,16 +28,16 @@ fun main(vararg params: String) = application {
     val scopeForServer = rememberCoroutineScope()
     app.value.apply {
         initialize()
-        val state = getState().collectAsState().value
+        val state = getState()
         Window(
             onCloseRequest = ::exitApplication,
             title = TextResources.Title,
             state = rememberWindowState(width = WindowSetup.width.dp, height = WindowSetup.height.dp),
         ) {
-            defineCurrentScreen(state)
+            defineCurrentScreen(state.collectAsState().value)
         }
         scopeForServer.launch {
-            Server.main( { getState().value }, { perform(it) })
+            Server.main( { state.value }, { perform(it) })
         }
     }
 }
