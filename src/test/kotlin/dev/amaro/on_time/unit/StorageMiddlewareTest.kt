@@ -12,10 +12,7 @@ import dev.amaro.on_time.log.Logger
 import dev.amaro.on_time.log.TaskLogger
 import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.sonic.IProcessor
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
+import io.mockk.*
 import java.time.LocalDateTime
 import kotlin.test.Test
 
@@ -27,6 +24,7 @@ class StorageMiddlewareTest {
             Actions.StopTask::class,
             Actions.StartPomodoro::class,
             Actions.StopPomodoro::class,
+            Actions.ToggleTask::class
         )
     )
     private val clock: Clock = mockk(relaxed = true)
@@ -180,6 +178,40 @@ class StorageMiddlewareTest {
         middleware.process(Actions.StopPomodoro, AppState(currentTask = workingTask1), processor)
         coVerify {
             logger.logEndPomodoro(workingTask1.task)
+        }
+    }
+
+    @Test
+    fun `Toggle last task - No last task or current one`() {
+        val logger: Logger = mockk(relaxed = true)
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = StorageMiddleware(logger, clock)
+        middleware.process(Actions.ToggleTask, AppState(), processor)
+        verify(exactly = 0) {
+            processor.perform(Actions.StartTask(task1))
+            processor.perform(Actions.StopTask)
+        }
+    }
+
+    @Test
+    fun `Toggle last task - Start working on last one`() {
+        val logger: Logger = mockk(relaxed = true)
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = StorageMiddleware(logger, clock)
+        middleware.process(Actions.ToggleTask, AppState(lastTask = task1), processor)
+        verify {
+            processor.perform(Actions.StartTask(task1))
+        }
+    }
+
+    @Test
+    fun `Toggle last task - Stop current task`() {
+        val logger: Logger = mockk(relaxed = true)
+        val processor: IProcessor<AppState> = mockk(relaxed = true)
+        val middleware = StorageMiddleware(logger, clock)
+        middleware.process(Actions.ToggleTask, AppState(currentTask = workingTask1), processor)
+        verify {
+            processor.perform(Actions.StopTask)
         }
     }
 }

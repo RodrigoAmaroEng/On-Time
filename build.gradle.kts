@@ -31,6 +31,7 @@ object Deps {
     const val JUnitJupiterVersion = "5.9.2"
     const val JUnitPlatformSuiteVersion = "1.9.2"
     const val CucumberVersion = "7.11.1"
+    const val KtorVersion = "2.2.3"
 }
 
 dependencies {
@@ -42,6 +43,9 @@ dependencies {
     implementation("io.insert-koin:koin-core:3.3.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Deps.KotlinCoroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${Deps.KotlinCoroutines}")
+    implementation("io.ktor:ktor-server-core:${Deps.KtorVersion}")
+    implementation("io.ktor:ktor-server-netty:${Deps.KtorVersion}")
+    implementation("io.ktor:ktor-server-websockets:${Deps.KtorVersion}")
 
     testImplementation(kotlin("test"))
     testImplementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
@@ -57,6 +61,9 @@ dependencies {
     testImplementation("com.appmattus.fixture:fixture:1.2.0")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
+    testImplementation("io.ktor:ktor-client-core:${Deps.KtorVersion}")
+    testImplementation("io.ktor:ktor-client-cio:${Deps.KtorVersion}")
+    testImplementation("io.ktor:ktor-client-websockets:${Deps.KtorVersion}")
 }
 
 tasks {

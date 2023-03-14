@@ -17,7 +17,6 @@ class StorageMiddleware(
                 startTask(action, state)
                 true
             }
-
             is Actions.StartPomodoro -> {
                 startPomodoro(state, action, processor)
                 true
@@ -26,12 +25,18 @@ class StorageMiddleware(
                 stopPomodoro(state)
                 true
             }
-
             is Actions.StopTask -> {
                 stopTask(state)
                 true
             }
-
+            is Actions.ToggleTask -> {
+                state.currentTask?.run {
+                    processor.perform(Actions.StopTask)
+                } ?: state.lastTask?.run {
+                    processor.perform(Actions.StartTask(this))
+                }
+                false
+            }
             is Actions.Refresh -> true
             else -> false
         }
