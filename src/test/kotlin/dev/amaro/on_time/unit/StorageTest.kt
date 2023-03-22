@@ -6,7 +6,7 @@ import dev.amaro.on_time.Samples
 import dev.amaro.on_time.log.LogEvent
 import dev.amaro.on_time.log.StoreItemTask
 import dev.amaro.on_time.log.TestSQLiteStorage
-import dev.amaro.on_time.utilities.discardSecondsAndNanos
+import dev.amaro.on_time.utilities.discardNanos
 import java.time.LocalDateTime
 import kotlin.test.Test
 
@@ -14,7 +14,7 @@ class StorageTest {
 
     @Test
     fun `Start a task with pomodoro and retrieve the current task`() {
-        val firstTime = LocalDateTime.now().plusMinutes(1).discardSecondsAndNanos()
+        val firstTime = LocalDateTime.now().plusMinutes(1).discardNanos()
         TestSQLiteStorage().run {
             include(StoreItemTask(LogEvent.TASK_START, Samples.task1, firstTime))
             include(StoreItemTask(LogEvent.POMODORO_START, Samples.task1, firstTime))
@@ -27,7 +27,7 @@ class StorageTest {
 
     @Test
     fun `Get the last worked task`() {
-        val firstTime = LocalDateTime.now().plusMinutes(1).discardSecondsAndNanos()
+        val firstTime = LocalDateTime.now().plusMinutes(1).discardNanos()
         TestSQLiteStorage().run {
             include(StoreItemTask(LogEvent.TASK_START, Samples.task1, firstTime))
             include(StoreItemTask(LogEvent.TASK_END, Samples.task1, firstTime.plusMinutes(1)))
@@ -39,7 +39,7 @@ class StorageTest {
 
     @Test
     fun `Get the last worked task is null because there an open task`() {
-        val firstTime = LocalDateTime.now().plusMinutes(1).discardSecondsAndNanos()
+        val firstTime = LocalDateTime.now().plusMinutes(1).discardNanos()
         TestSQLiteStorage().run {
             include(StoreItemTask(LogEvent.TASK_START, Samples.task2, firstTime))
             include(StoreItemTask(LogEvent.TASK_END, Samples.task2, firstTime.plusMinutes(1)))
@@ -51,7 +51,7 @@ class StorageTest {
 
     @Test
     fun `Get the last worked task is null because there an open task - same task context`() {
-        val firstTime = LocalDateTime.now().plusMinutes(1).discardSecondsAndNanos()
+        val firstTime = LocalDateTime.now().plusMinutes(1).discardNanos()
         TestSQLiteStorage().run {
             include(StoreItemTask(LogEvent.TASK_START, Samples.task1, firstTime))
             include(StoreItemTask(LogEvent.TASK_END, Samples.task1, firstTime.plusMinutes(1)))

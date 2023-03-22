@@ -1,6 +1,6 @@
 package dev.amaro.on_time.log
 
-import dev.amaro.on_time.utilities.discardSecondsAndNanos
+import dev.amaro.on_time.utilities.discardNanos
 import kotlinx.coroutines.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -11,7 +11,7 @@ class Clock(private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)) 
     }
     private var timerJob: Job? = null
 
-    fun now(): LocalDateTime = LocalDateTime.now().discardSecondsAndNanos()
+    fun now(): LocalDateTime = LocalDateTime.now().discardNanos()
 
     fun nowStr(): String = now().format(DateTimeFormatter.ofPattern(FORMAT))
 

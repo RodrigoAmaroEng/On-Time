@@ -16,7 +16,7 @@ import dev.amaro.on_time.Samples.task2
 import dev.amaro.on_time.Samples.workingTask1
 import dev.amaro.on_time.log.*
 import dev.amaro.on_time.models.Task
-import dev.amaro.on_time.utilities.discardSecondsAndNanos
+import dev.amaro.on_time.utilities.discardNanos
 import dev.amaro.ontime.log.Logs
 import dev.amaro.ontime.log.Tasks
 import io.mockk.every
@@ -26,6 +26,7 @@ import io.mockk.verify
 import kotlin.test.Test
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import kotlin.test.BeforeTest
 
 class TaskLoggerTest {
 
@@ -33,9 +34,9 @@ class TaskLoggerTest {
     private val storage: Storage = mockk(relaxed = true)
     private val logger = TaskLogger(storage, clock)
 
-    @org.junit.Before
+    @BeforeTest
     fun setUp() {
-        val fixedDateTime = LocalDateTime.now().discardSecondsAndNanos()
+        val fixedDateTime = LocalDateTime.now().discardNanos()
         every { clock.now() } returns fixedDateTime
     }
 
