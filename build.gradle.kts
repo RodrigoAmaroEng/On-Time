@@ -96,5 +96,10 @@ tasks {
 compose.desktop {
     application {
         mainClass = "MainKt"
+        nativeDistributions {
+            macOS {
+                iconFile.set(project.file("src/main/resources/icon.icns"))
+            }
+        }
     }
 }

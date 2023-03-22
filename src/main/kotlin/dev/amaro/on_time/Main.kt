@@ -1,6 +1,7 @@
 package dev.amaro.on_time
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -33,11 +34,12 @@ fun main(vararg params: String) = application {
             onCloseRequest = ::exitApplication,
             title = TextResources.Title,
             state = rememberWindowState(width = WindowSetup.width.dp, height = WindowSetup.height.dp),
+            icon = painterResource("icon.iconset/icon_512x512.png"),
         ) {
             defineCurrentScreen(state.collectAsState().value)
         }
         scopeForServer.launch {
-            Server.main( { state.value }, { perform(it) })
+            Server.main( state) { perform(it) }
         }
     }
 }
