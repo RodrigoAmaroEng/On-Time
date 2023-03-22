@@ -1,6 +1,7 @@
 package dev.amaro.on_time.ui
 
 object Icons {
+    const val REFRESH = "images/ic_refresh.svg"
     const val BREAK = "images/ic_break.svg"
     const val CODE_REVIEW = "images/ic_code_review.svg"
     const val ELAPSED_TIME = "images/ic_elapsed_time.svg"
