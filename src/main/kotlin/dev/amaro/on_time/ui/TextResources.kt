@@ -12,6 +12,9 @@ object TextResources {
         const val NoTasksAvailable = "No tasks are available"
         const val NotAllSettingsWereInformed = "You need to fill in all settings to proceed"
     }
+    object Informative {
+        const val TakeABreak = "Take a break for 5 minutes"
+    }
     const val Loading = "Loading..."
     object Screens {
         object Settings {

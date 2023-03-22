@@ -8,6 +8,8 @@ interface Storage {
     fun include(storeItem : StoreItemTask)
 
     fun getOpen(): WorkingTask?
+
+    fun getLastTask(): Task?
 }
 
 data class StoreItemTask(

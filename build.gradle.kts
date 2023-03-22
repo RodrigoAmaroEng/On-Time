@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm") version "1.7.10"
     kotlin("plugin.serialization") version "1.7.10"
     id("org.jetbrains.compose") version "1.2.2"
-    id("com.squareup.sqldelight") version "1.5.3"
+    id("com.squareup.sqldelight") version "1.5.5"
 }
 
 group = "dev.amaro"
@@ -27,12 +27,12 @@ sqldelight {
 }
 
 object Deps {
-    const val Kotlin = "1.6.4"
+    const val KotlinCoroutines = "1.6.4"
     const val JUnitJupiterVersion = "5.9.2"
     const val JUnitPlatformSuiteVersion = "1.9.2"
-    const val CucumberVersion = "7.10.1"
+    const val CucumberVersion = "7.11.1"
+    const val KtorVersion = "2.2.3"
 }
-
 
 dependencies {
     implementation(compose.desktop.macos_arm64)
@@ -41,12 +41,15 @@ dependencies {
     implementation("com.squareup.sqldelight:sqlite-driver:1.5.4")
     implementation("dev.amaro:sonic:0.4.1")
     implementation("io.insert-koin:koin-core:3.3.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Deps.Kotlin}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${Deps.Kotlin}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Deps.KotlinCoroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:${Deps.KotlinCoroutines}")
+    implementation("io.ktor:ktor-server-core:${Deps.KtorVersion}")
+    implementation("io.ktor:ktor-server-netty:${Deps.KtorVersion}")
+    implementation("io.ktor:ktor-server-websockets:${Deps.KtorVersion}")
 
     testImplementation(kotlin("test"))
     testImplementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Deps.Kotlin}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Deps.KotlinCoroutines}")
     testImplementation("org.jetbrains.compose.ui:ui-test-desktop:1.1.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter:${Deps.JUnitJupiterVersion}")
@@ -58,6 +61,9 @@ dependencies {
     testImplementation("com.appmattus.fixture:fixture:1.2.0")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
+    testImplementation("io.ktor:ktor-client-core:${Deps.KtorVersion}")
+    testImplementation("io.ktor:ktor-client-cio:${Deps.KtorVersion}")
+    testImplementation("io.ktor:ktor-client-websockets:${Deps.KtorVersion}")
 }
 
 tasks {
@@ -90,5 +96,10 @@ tasks {
 compose.desktop {
     application {
         mainClass = "MainKt"
+        nativeDistributions {
+            macOS {
+                iconFile.set(project.file("src/main/resources/icon.icns"))
+            }
+        }
     }
 }

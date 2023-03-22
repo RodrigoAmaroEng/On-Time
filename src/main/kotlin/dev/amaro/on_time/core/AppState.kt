@@ -5,6 +5,7 @@ import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.on_time.network.FilterDefinition
 import dev.amaro.on_time.utilities.PreFilters
+import java.time.LocalDateTime
 
 data class AppState(
     val lastResult: Results = Results.Idle,
@@ -14,7 +15,9 @@ data class AppState(
     val configuration: Configuration? = null,
     val screen: Navigation = Navigation.Main,
     val feedback: Feedback? = null,
-    val filterDefinition: FilterDefinition? = PreFilters.ANDROID_UNRESOLVED
+    val filterDefinition: FilterDefinition? = PreFilters.ANDROID_UNRESOLVED,
+    val breakStartedAt: LocalDateTime? = null,
+    val lastTask: Task? = null
 )
 
 data class Feedback(

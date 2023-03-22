@@ -6,7 +6,7 @@ import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.models.WorkingTask
-import dev.amaro.on_time.utilities.discardSecondsAndNanos
+import dev.amaro.on_time.utilities.discardNanos
 import java.time.LocalDateTime
 import kotlin.reflect.KClass
 
@@ -25,7 +25,7 @@ object Samples {
     const val TASK_ID_2 = "CST-321"
     const val TASK_ID_3 = "CST-456"
     const val KIND_START = "S"
-    const val KIND_END = "F"
+    const val KIND_END = "E"
     const val EMPTY = ""
     const val TRUE = 1L
     const val FALSE = 0L
@@ -40,7 +40,7 @@ object Samples {
     val configuration = Configuration(HOST, TOKEN, USER, TWO_PROJECTS)
 
     val workingTask1 = asWorkingTask(task1)
-    fun asWorkingTask(task: Task, startedAt: LocalDateTime = LocalDateTime.now().discardSecondsAndNanos(), minutes: Int = 0) =
+    fun asWorkingTask(task: Task, startedAt: LocalDateTime = LocalDateTime.now().discardNanos(), minutes: Int = 0) =
         WorkingTask(task, startedAt, minutes)
 
 }

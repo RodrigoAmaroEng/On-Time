@@ -6,15 +6,14 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import dev.amaro.on_time.Samples
 import dev.amaro.on_time.log.LogEvent
-import dev.amaro.on_time.log.Storage
 import dev.amaro.on_time.log.StoreItemTask
+import dev.amaro.on_time.ui.RunCucumberTest
 import dev.amaro.on_time.ui.Tags
 import dev.amaro.on_time.ui.TextResources
 import io.cucumber.java.en.Then
 import io.mockk.CapturingSlot
 import io.mockk.slot
 import io.mockk.verify
-import org.koin.java.KoinJavaComponent.inject
 
 
 @OptIn(ExperimentalTestApi::class)
@@ -80,9 +79,8 @@ class AssertionSteps : Step {
 
     @Then("register the task start time")
     fun step10() = onScenarioContext {
-        val storage: Storage by inject(Storage::class.java)
         val slot: CapturingSlot<StoreItemTask> = slot()
-        verify { storage.include(capture(slot)) }
+        verify { RunCucumberTest.storage.include(capture(slot)) }
         assertThat(slot.captured.event).isEqualTo(LogEvent.TASK_START)
         assertThat(slot.captured.task).isEqualTo(Samples.task1)
     }
@@ -96,18 +94,16 @@ class AssertionSteps : Step {
 
     @Then("register the previous task end time")
     fun step12() = onScenarioContext {
-        val storage: Storage by inject(Storage::class.java)
         val slots = mutableListOf<StoreItemTask>()
-        verify { storage.include(capture(slots)) }
+        verify { RunCucumberTest.storage.include(capture(slots)) }
         assertThat(slots[0].event).isEqualTo(LogEvent.TASK_END)
         assertThat(slots[0].task).isEqualTo(Samples.task1)
     }
 
     @Then("register the new task start time")
     fun step13() = onScenarioContext {
-        val storage: Storage by inject(Storage::class.java)
         val slots = mutableListOf<StoreItemTask>()
-        verify { storage.include(capture(slots)) }
+        verify { RunCucumberTest.storage.include(capture(slots)) }
         assertThat(slots[1].event).isEqualTo(LogEvent.TASK_START)
         assertThat(slots[1].task).isEqualTo(Samples.task2)
     }
@@ -119,9 +115,8 @@ class AssertionSteps : Step {
 
     @Then("register the task end time")
     fun step15() = onScenarioContext {
-        val storage: Storage by inject(Storage::class.java)
         val slots = mutableListOf<StoreItemTask>()
-        verify { storage.include(capture(slots)) }
+        verify { RunCucumberTest.storage.include(capture(slots)) }
         assertThat(slots[0].event).isEqualTo(LogEvent.TASK_END)
         assertThat(slots[0].task).isEqualTo(Samples.task1)
     }
@@ -164,4 +159,30 @@ class AssertionSteps : Step {
         onNodeWithTag(Tags.Settings_Prop_Projects + "_Value").assertTextContains("CAT,CST")
     }
 
+    @Then("I will see the pomodoro timer")
+    fun step23() = onScenarioContext {
+        onNodeWithTag(Tags.PomodoroTimer).assertExists()
+    }
+
+    @Then("I will see the Small Break timer")
+    fun step24() = onScenarioContext {
+        onNodeWithTag(Tags.BreakTimer).assertExists()
+    }
+
+    @Then("there will be no Small Break timer")
+    fun step25() = onScenarioContext {
+        onNodeWithTag(Tags.BreakTimer).assertDoesNotExist()
+    }
+
+    @Then("it will show the task {word} as the current one")
+    fun step26(taskId: String) = onScenarioContext {
+        onNodeWithTag(Tags.CurrentTask).apply {
+            assert(hasAnyDescendant(hasText(taskId)))
+        }
+    }
+
+    @Then("the Resume Task button show not be visible")
+    fun step27() = onScenarioContext {
+        onNodeWithTag(Tags.ResumeTaskButton).assertDoesNotExist()
+    }
 }

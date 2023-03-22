@@ -1,17 +1,18 @@
 package dev.amaro.on_time
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.core.Navigation
+import dev.amaro.on_time.network.stream_deck.Server
 import dev.amaro.on_time.ui.TextResources
 import dev.amaro.on_time.ui.screens.MainScreen
 import dev.amaro.on_time.ui.screens.SettingsScreen
+import kotlinx.coroutines.launch
 
 
 object WindowSetup {
@@ -25,14 +26,20 @@ fun main(vararg params: String) = application {
     val app = remember {
         mutableStateOf(appInstance)
     }
+    val scopeForServer = rememberCoroutineScope()
     app.value.apply {
         initialize()
+        val state = getState()
         Window(
             onCloseRequest = ::exitApplication,
             title = TextResources.Title,
             state = rememberWindowState(width = WindowSetup.width.dp, height = WindowSetup.height.dp),
+            icon = painterResource("icon.iconset/icon_512x512.png"),
         ) {
-            defineCurrentScreen(getState())
+            defineCurrentScreen(state.collectAsState().value)
+        }
+        scopeForServer.launch {
+            Server.main( state) { perform(it) }
         }
     }
 }

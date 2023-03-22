@@ -1,19 +1,31 @@
 package dev.amaro.on_time.ui
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import dev.amaro.on_time.utilities.Constants
 import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.LocalDateTime
 
 @Composable
-fun ClockDisplay(initial: LocalDateTime) {
+fun ClockDisplay(initial: LocalDateTime, icon: String? = null, modifier: Modifier = Modifier) {
     val startedAt = remember { derivedStateOf { initial } }
-    fun elapsed(since: LocalDateTime) : String {
-        return Duration.between(since, LocalDateTime.now()).let{
+    fun elapsed(since: LocalDateTime): String {
+        return Duration.between(since, LocalDateTime.now()).let {
             "${it.toHoursFormat()}:${it.toMinutesFormat()}"
         }
     }
+
     val time = remember { mutableStateOf(elapsed(initial)) }
     LaunchedEffect(0) { // 3
         while (true) {
@@ -21,13 +33,24 @@ fun ClockDisplay(initial: LocalDateTime) {
             delay(1000)
         }
     }
-    Text(time.value)
+    Row (verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
+        icon?.let {
+            Image(
+                painter = painterResource(it),
+                Constants.EMPTY,
+                modifier = Modifier.size(Theme.Dimens.Icons.TINY),
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
+            )
+            Spacer(modifier = Modifier.width(Theme.Dimens.Margins.SMALL))
+        }
+        Text(time.value, style = MaterialTheme.typography.caption)
+    }
 }
 
-fun Duration.toHoursFormat(): String  {
-    return toHoursPart().toString().padStart(2,'0')
+fun Duration.toHoursFormat(): String {
+    return toHoursPart().toString().padStart(2, '0')
 }
 
-fun Duration.toMinutesFormat(): String  {
-    return toMinutesPart().toString().padStart(2,'0')
+fun Duration.toMinutesFormat(): String {
+    return toMinutesPart().toString().padStart(2, '0')
 }

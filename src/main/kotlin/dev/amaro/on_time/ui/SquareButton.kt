@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,7 +18,12 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import dev.amaro.on_time.utilities.Constants
 
 
@@ -27,6 +33,7 @@ fun SquareButton(
     initialState: ButtonState = ButtonState.NORMAL,
     size: ButtonSize = ButtonSize.TOOLBAR,
     modifier: Modifier = Modifier,
+    text: String? = null,
     onClick: () -> Unit = {}
 ) {
     val state = remember { mutableStateOf(initialState) }
@@ -34,8 +41,7 @@ fun SquareButton(
     Surface(color = getBackgroundColorForState(state.value), modifier = modifier) {
         Box(
             Modifier
-                .size(size.size.dp)
-                .padding(Theme.Dimens.Margins.SMALL)
+                .size(size.size)
                 .onStateChange {
                     state.value =
                         if (initialState != ButtonState.CHECKED || it == ButtonState.HOVER) it else ButtonState.CHECKED
@@ -48,8 +54,20 @@ fun SquareButton(
                 painterResource(icon),
                 Constants.EMPTY,
                 colorFilter = ColorFilter.tint(getForegroundColorForState(state.value)),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.size(size.iconSize)
             )
+            if (text != null && size != ButtonSize.ACTIONS) {
+                Text(
+                    text,
+                    style = MaterialTheme.typography.caption.copy(fontSize = size.fontSize, fontWeight = FontWeight.Medium),
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colors.surface.copy(alpha = 0.7f))
+                        .padding(0.dp, Theme.Dimens.Spacing.TINY)
+                )
+            }
         }
     }
 }
@@ -76,9 +94,10 @@ enum class ButtonState {
     CHECKED
 }
 
-enum class ButtonSize(val size: Int) {
-    TOOLBAR(48),
-    ACTIONS(32)
+enum class ButtonSize(val size: Dp, val iconSize: Dp, val fontSize: TextUnit) {
+    TOOLBAR(Theme.Dimens.Icons.EXTRA_LARGE, Theme.Dimens.Icons.LARGE, Theme.Dimens.Fonts.SMALL),
+    REGULAR(Theme.Dimens.Icons.LARGE, Theme.Dimens.Icons.MEDIUM, Theme.Dimens.Fonts.TINY),
+    ACTIONS(Theme.Dimens.Icons.MEDIUM, Theme.Dimens.Icons.SMALL, 0.sp)
 }
 
 @Composable
@@ -102,10 +121,46 @@ private fun getForegroundColorForState(state: ButtonState) = when (state) {
 fun previewButton() {
     OnTimeTheme {
         Column(Modifier.background(MaterialTheme.colors.secondary)) {
-            SquareButton(Icons.TASK_DONE, ButtonState.CHECKED)
-            SquareButton(Icons.USER_ASSIGN)
-            SquareButton(Icons.TASK_DONE, ButtonState.HOVER)
-            SquareButton(Icons.USER_ASSIGN, ButtonState.PRESSED)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "STATUS",
+                    style = MaterialTheme.typography.caption,
+                    color = MaterialTheme.colors.onSecondary,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.width(100.dp)
+                )
+                ButtonSize.values().forEach { size ->
+                    listOf("NT", "T").forEach { text->
+                        Spacer(Modifier.width(Theme.Dimens.Spacing.SMALL).background(MaterialTheme.colors.primary))
+                        Text(
+                            text = text,
+                            style = MaterialTheme.typography.caption,
+                            color = MaterialTheme.colors.onSecondary,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(size.size)
+                        )
+                    }
+                }
+            }
+            ButtonState.values().forEach { state ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = state.name,
+                        style = MaterialTheme.typography.caption,
+                        color = MaterialTheme.colors.onSecondary,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.width(100.dp)
+                    )
+
+                    ButtonSize.values().forEach { size ->
+                        listOf<String?>(null, "CAT-1234").forEach { text->
+                            Spacer(Modifier.width(Theme.Dimens.Spacing.SMALL).background(MaterialTheme.colors.primary))
+                            SquareButton(Icons.USER_ASSIGN, state, size, text = text)
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

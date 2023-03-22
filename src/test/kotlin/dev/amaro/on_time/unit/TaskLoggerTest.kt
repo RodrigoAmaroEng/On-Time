@@ -16,7 +16,7 @@ import dev.amaro.on_time.Samples.task2
 import dev.amaro.on_time.Samples.workingTask1
 import dev.amaro.on_time.log.*
 import dev.amaro.on_time.models.Task
-import dev.amaro.on_time.utilities.discardSecondsAndNanos
+import dev.amaro.on_time.utilities.discardNanos
 import dev.amaro.ontime.log.Logs
 import dev.amaro.ontime.log.Tasks
 import io.mockk.every
@@ -26,6 +26,7 @@ import io.mockk.verify
 import kotlin.test.Test
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import kotlin.test.BeforeTest
 
 class TaskLoggerTest {
 
@@ -33,9 +34,9 @@ class TaskLoggerTest {
     private val storage: Storage = mockk(relaxed = true)
     private val logger = TaskLogger(storage, clock)
 
-    @org.junit.Before
+    @BeforeTest
     fun setUp() {
-        val fixedDateTime = LocalDateTime.now().discardSecondsAndNanos()
+        val fixedDateTime = LocalDateTime.now().discardNanos()
         every { clock.now() } returns fixedDateTime
     }
 
@@ -49,22 +50,23 @@ class TaskLoggerTest {
 
     @Test
     fun `Log task started but was working on another one`() {
-        val currentDateTime = clock.now().plusMinutes(1)
-        every { clock.now() } returns currentDateTime
-
-        logger.logStarted(task2, workingTask1)
+        val currentDateTime = clock.now()
+        val workingTask = asWorkingTask(task1, currentDateTime)
+        every { clock.now() } returns currentDateTime.plusMinutes(1)
+        logger.logStarted(task2, workingTask)
         verify {
-            storage.include(StoreItemTask(LogEvent.TASK_END, task1, currentDateTime, 1))
-            storage.include(StoreItemTask(LogEvent.TASK_START, task2, currentDateTime, 0))
+            storage.include(StoreItemTask(LogEvent.TASK_END, task1, currentDateTime.plusMinutes(1), 1))
+            storage.include(StoreItemTask(LogEvent.TASK_START, task2, currentDateTime.plusMinutes(1), 0))
         }
     }
 
     @Test
     fun `Log task end`() {
-        val currentDateTime = clock.now().plusMinutes(1)
-        every { clock.now() } returns currentDateTime
-        logger.logEnd(workingTask1)
-        verify { storage.include(StoreItemTask(LogEvent.TASK_END, task1, currentDateTime, 1)) }
+        val currentDateTime = clock.now()
+        val workingTask = asWorkingTask(task1, currentDateTime)
+        every { clock.now() } returns currentDateTime.plusMinutes(1)
+        logger.logEnd(workingTask)
+        verify { storage.include(StoreItemTask(LogEvent.TASK_END, task1, currentDateTime.plusMinutes(1), 1)) }
     }
 
     /** DATABASE **/
@@ -192,14 +194,80 @@ class TaskLoggerTest {
 
     @Test
     fun `Get current working task`() {
+        val time = clock.now()
+        every { clock.now() } returns time
         TestSQLiteStorage().run {
             val currentTask = TaskLogger(this, clock)
                 .apply { logStarted(task1) }
                 .getCurrentTask()
-            val expectedTask = workingTask1.copy(startedAt = clock.now())
+            val expectedTask = workingTask1.copy(startedAt = time)
             assertThat(currentTask).isEqualTo(expectedTask)
         }
     }
+
+    @Test
+    fun `Log pomodoro start`() {
+        val firstTime = clock.now().plusMinutes(1)
+        val secondTime = clock.now().plusMinutes(2)
+        TestSQLiteStorage().run {
+            val currentTask = TaskLogger(this, clock)
+                .apply {
+                    every { clock.now() } returns firstTime
+                    logStarted(task1)
+                    every { clock.now() } returns secondTime
+                    logStartedPomodoro(task1)
+                }
+                .getCurrentTask()
+            val expectedTask = workingTask1.copy(startedAt = firstTime, pomodoroStartedAt = secondTime)
+            assertThat(currentTask).isEqualTo(expectedTask)
+        }
+    }
+
+    @Test
+    fun `Log pomodoro end`() {
+        val firstTime = clock.now().plusMinutes(1)
+        val secondTime = clock.now().plusMinutes(2)
+        val thirdTime = clock.now().plusMinutes(27)
+        TestSQLiteStorage().run {
+            val currentTask = TaskLogger(this, clock)
+                .apply {
+                    every { clock.now() } returns firstTime
+                    logStarted(task1)
+                    every { clock.now() } returns secondTime
+                    logStartedPomodoro(task1)
+                    every { clock.now() } returns thirdTime
+                    logEndPomodoro(task1)
+                }
+                .getCurrentTask()
+            val expectedTask = workingTask1.copy(startedAt = firstTime)
+            assertThat(currentTask).isEqualTo(expectedTask)
+        }
+    }
+
+    @Test
+    fun `Log pomodoro start gets last pomodoro`() {
+        val firstTime = clock.now().plusMinutes(1)
+        val secondTime = clock.now().plusMinutes(2)
+        val thirdTime = clock.now().plusMinutes(27)
+        val fourthTime = clock.now().plusMinutes(32)
+        TestSQLiteStorage().run {
+            val currentTask = TaskLogger(this, clock)
+                .apply {
+                    every { clock.now() } returns firstTime
+                    logStarted(task1)
+                    every { clock.now() } returns secondTime
+                    logStartedPomodoro(task1)
+                    every { clock.now() } returns thirdTime
+                    logEndPomodoro(task1)
+                    every { clock.now() } returns fourthTime
+                    logStartedPomodoro(task1)
+                }
+                .getCurrentTask()
+            val expectedTask = workingTask1.copy(startedAt = firstTime, pomodoroStartedAt = fourthTime)
+            assertThat(currentTask).isEqualTo(expectedTask)
+        }
+    }
+
 }
 
 

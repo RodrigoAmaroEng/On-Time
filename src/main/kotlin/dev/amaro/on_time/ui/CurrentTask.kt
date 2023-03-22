@@ -2,16 +2,15 @@ package dev.amaro.on_time.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.TaskState
 import dev.amaro.on_time.models.WorkingTask
@@ -20,24 +19,39 @@ import java.time.LocalDateTime
 
 
 @Composable
-fun CurrentTask(task: WorkingTask, onStop: () -> Unit, modifier: Modifier = Modifier) {
+fun CurrentTask(task: WorkingTask, onAction: (Actions) -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier.fillMaxWidth(Theme.Dimens.FULL)
             .background(MaterialTheme.colors.secondary),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Surface(color = MaterialTheme.colors.primary, modifier = Modifier.weight(Theme.Dimens.FULL)) {
-            Row(Modifier.padding(Theme.Dimens.Margins.MEDIUM)) {
+            Row(
+                Modifier.height(Theme.Dimens.Height.REGULAR).padding(Theme.Dimens.Margins.MEDIUM, 0.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(task.task.id)
                 Spacer(Modifier.weight(Theme.Dimens.FULL))
-                ClockDisplay(task.startedAt)
+                Column {
+                    ClockDisplay(task.startedAt, Icons.ELAPSED_TIME)
+                    task.pomodoroStartedAt?.let {
+                        Spacer(Modifier.height(Theme.Dimens.Spacing.SMALL))
+                        ClockDisplay(it, Icons.POMODORO, withTag(Tags.PomodoroTimer))
+                    }
+                }
+
             }
         }
         SquareButton(
-            Icons.TASK_DONE,
-            size = ButtonSize.ACTIONS,
+            Icons.POMODORO,
+            size = ButtonSize.REGULAR,
+            modifier = withTag(Tags.StartPomodoroButton),
+            onClick = { onAction(Actions.StartPomodoro(task.task)) })
+        SquareButton(
+            Icons.STOP,
+            size = ButtonSize.REGULAR,
             modifier = withTag(Tags.StopWorkingButton),
-            onClick = { onStop() })
+            onClick = { onAction(Actions.StopTask) })
     }
 }
 
@@ -45,13 +59,27 @@ fun CurrentTask(task: WorkingTask, onStop: () -> Unit, modifier: Modifier = Modi
 @Preview
 fun previewCurrentTask() {
     OnTimeTheme {
-        CurrentTask(
-            WorkingTask(
-                Task("ABC-123", "Some task", TaskState.NOT_STARTED, false),
-                LocalDateTime.now(),
-                10
-            ),
-            {}
-        )
+        Column {
+            CurrentTask(
+                WorkingTask(
+                    Task("ABC-123", "Some task", TaskState.NOT_STARTED, false),
+                    LocalDateTime.now(),
+                    10
+                ),
+                {},
+                Modifier
+            )
+            Spacer(Modifier.height(Theme.Dimens.Margins.MEDIUM))
+            CurrentTask(
+                WorkingTask(
+                    Task("ABC-123", "Some task", TaskState.NOT_STARTED, false),
+                    LocalDateTime.now().plusMinutes(-5),
+                    10,
+                    LocalDateTime.now().plusMinutes(-4),
+                ),
+                {},
+                Modifier
+            )
+        }
     }
 }
