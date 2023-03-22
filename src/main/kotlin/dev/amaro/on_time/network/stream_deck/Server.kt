@@ -8,6 +8,7 @@ import io.ktor.server.netty.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.Duration
 
@@ -18,7 +19,7 @@ object Server {
     private val frameDealer: FrameDealer = JsonFrameDecoder()
     private const val fakeLastTaskCommand = "{\"type\":\"LastTask\"}"
 
-    fun main(stateSelector: () -> AppState, onAction: (Actions) -> Unit) {
+    fun main(stateSelector: MutableStateFlow<AppState>, onAction: (Actions) -> Unit) {
         if (instance != null) return
         instance = embeddedServer(Netty, SERVER_PORT) {
             install(WebSockets) {
@@ -30,16 +31,25 @@ object Server {
                         frameDealer.process(
                             Frame.Text(fakeLastTaskCommand),
                             { send(frameDealer.encode(it)) },
-                            stateSelector,
+                            { stateSelector.value },
                             onAction
                         )
+                        stateSelector.debounce(100L).collect     {
+                            println(it)
+                            frameDealer.process(
+                                Frame.Text(fakeLastTaskCommand),
+                                { send(frameDealer.encode(it)) },
+                                { it },
+                                onAction
+                            )
+                        }
                     }
                     for (frame in incoming) {
                         when (frame) {
                             is Frame.Text -> frameDealer.process(
                                 frame,
                                 { send(frameDealer.encode(it)) },
-                                stateSelector,
+                                { stateSelector.value },
                                 onAction
 
                             )

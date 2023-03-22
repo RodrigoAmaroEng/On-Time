@@ -40,7 +40,7 @@ class JsonFrameDecoder : FrameDealer {
         onAction: (Actions) -> Unit
     ) {
         when (parse(frame)) {
-            LastTask::class.java.simpleName -> {
+            "LastTask" -> {
                 buildStateFrame(stateSelector)?.run { output(this) }
             }
             "Toggle" -> {
