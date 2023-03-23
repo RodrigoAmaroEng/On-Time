@@ -27,7 +27,8 @@ data class Task(
     val id: String,
     val title: String,
     val status: TaskState,
-    val isMine: Boolean = false
+    val isMine: Boolean = false,
+    val minutesWorked : Int = 0,
 ) {
     val actionsAvailable: List<ActionDef> = mutableListOf<ActionDef>()
         .apply {

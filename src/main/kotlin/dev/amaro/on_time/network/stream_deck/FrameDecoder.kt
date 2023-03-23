@@ -63,7 +63,7 @@ class JsonFrameDecoder : FrameDealer {
         return if (state.currentTask != null) {
             LastTask(state.currentTask.task.id, state.currentTask.minutesWorked, true)
         } else if (state.lastTask != null) {
-            LastTask(state.lastTask.id, 0, false)
+            LastTask(state.lastTask.id, state.lastTask.minutesWorked, false)
         } else {
             null
         }

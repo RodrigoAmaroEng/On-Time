@@ -35,7 +35,6 @@ object Server {
                             onAction
                         )
                         stateSelector.debounce(100L).collect     {
-                            println(it)
                             frameDealer.process(
                                 Frame.Text(fakeLastTaskCommand),
                                 { send(frameDealer.encode(it)) },

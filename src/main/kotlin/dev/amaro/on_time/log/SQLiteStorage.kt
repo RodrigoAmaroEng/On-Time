@@ -71,7 +71,8 @@ open class SQLiteStorage : ISQLiteStorage() {
                     it.key,
                     it.title,
                     TaskState.valueOf(it.status),
-                    it.is_mine > 0
+                    it.is_mine > 0,
+                    it.minutes.toInt()
                 ),
                 it.timestamp.toLocalDateTime(),
                 it.minutes.toInt(),
@@ -86,7 +87,8 @@ open class SQLiteStorage : ISQLiteStorage() {
                 it.key,
                 it.title,
                 TaskState.valueOf(it.status),
-                it.is_mine > 0
+                it.is_mine > 0,
+                it.minutes.toInt()
             )
         }
     }
