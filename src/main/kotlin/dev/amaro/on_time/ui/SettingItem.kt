@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun SettingItem(name: String, value: String, tag: String, onChange: (String) -> Unit) {
@@ -31,26 +30,27 @@ fun SettingItem(name: String, value: String, tag: String, onChange: (String) -> 
             ) {
                 Text(
                     name,
-                    style = MaterialTheme.typography.caption.copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onBackground,
                 )
             }
             BasicTextField(
                 value,
                 onChange,
-                textStyle = MaterialTheme.typography.body2,
+                textStyle = MaterialTheme.extension.small.copy(color = MaterialTheme.colors.onBackground),
                 modifier = Modifier.padding(Theme.Dimens.Margins.MEDIUM, Theme.Dimens.Margins.SMALL)
                     .fillMaxWidth()
                     .testTag("${tag}_Value")
             )
         }
-        Box(Modifier.fillMaxWidth().height(Theme.Dimens.BORDER).background(MaterialTheme.colors.secondaryVariant))
+        Box(Modifier.fillMaxWidth().height(Theme.Dimens.BORDER).background(MaterialTheme.extension.blackDark))
     }
 }
 
 @Composable
 @Preview
 fun SettingItemPreview() {
-    OnTimeTheme {
+    NewOnTimeTheme {
         Column {
             SettingItem("Host", "https://jira.com", "") {}
             SettingItem("Host", "https://jira.com", "") {}

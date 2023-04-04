@@ -16,4 +16,10 @@ object Icons {
     const val WORKING = "images/ic_working.svg"
     const val UNASSIGNED = "images/ic_unassigned.svg"
     const val USER_ASSIGN = "images/ic_user_assign.svg"
+    const val TASKS = "images/ic_tasks.svg"
+
+    const val STATE_TODO = "images/IconToDo.png"
+    const val STATE_WORKING = "images/IconWorking.png"
+    const val STATE_REVIEWING = "images/IconReviewing.png"
+    const val STATE_QA = "images/IconTesting.png"
 }

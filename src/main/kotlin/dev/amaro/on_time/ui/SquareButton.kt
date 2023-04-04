@@ -102,18 +102,18 @@ enum class ButtonSize(val size: Dp, val iconSize: Dp, val fontSize: TextUnit) {
 
 @Composable
 private fun getBackgroundColorForState(state: ButtonState) = when (state) {
-    ButtonState.NORMAL -> Theme.Colors.transparent
-    ButtonState.HOVER -> MaterialTheme.colors.secondaryVariant
+    ButtonState.NORMAL -> MaterialTheme.colors.surface
+    ButtonState.HOVER -> MaterialTheme.extension.whiteDark
     ButtonState.CHECKED,
-    ButtonState.PRESSED -> MaterialTheme.colors.surface
+    ButtonState.PRESSED -> MaterialTheme.colors.background
 }
 
 @Composable
 private fun getForegroundColorForState(state: ButtonState) = when (state) {
-    ButtonState.NORMAL -> MaterialTheme.colors.background
-    ButtonState.HOVER -> MaterialTheme.colors.primaryVariant
+    ButtonState.NORMAL -> MaterialTheme.colors.onSurface
+    ButtonState.HOVER -> MaterialTheme.extension.whiteOver
     ButtonState.CHECKED,
-    ButtonState.PRESSED -> MaterialTheme.colors.primary
+    ButtonState.PRESSED -> MaterialTheme.extension.blackOverPrimary
 }
 
 @Preview

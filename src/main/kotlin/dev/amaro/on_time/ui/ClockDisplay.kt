@@ -1,16 +1,15 @@
 package dev.amaro.on_time.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import dev.amaro.on_time.utilities.Constants
 import kotlinx.coroutines.delay
@@ -35,15 +34,14 @@ fun ClockDisplay(initial: LocalDateTime, icon: String? = null, modifier: Modifie
     }
     Row (verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
         icon?.let {
-            Image(
+            Icon(
                 painter = painterResource(it),
                 Constants.EMPTY,
-                modifier = Modifier.size(Theme.Dimens.Icons.TINY),
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
+                modifier = Modifier.size(Theme.Dimens.Icons.TINY)
             )
             Spacer(modifier = Modifier.width(Theme.Dimens.Margins.SMALL))
         }
-        Text(time.value, style = MaterialTheme.typography.caption)
+        Text(time.value, style = MaterialTheme.extension.small)
     }
 }
 

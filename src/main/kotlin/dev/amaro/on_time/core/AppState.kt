@@ -4,6 +4,8 @@ import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.on_time.network.FilterDefinition
+import dev.amaro.on_time.ui.Icons
+import dev.amaro.on_time.ui.Tags
 import dev.amaro.on_time.utilities.PreFilters
 import java.time.LocalDateTime
 
@@ -25,6 +27,7 @@ data class Feedback(
     val type: FeedbackType = FeedbackType.Info,
     val title: String? = null
 )
+
 enum class FeedbackType {
     Info,
     Error
@@ -37,7 +40,12 @@ sealed interface Results {
     object Processing : Results
 }
 
-sealed interface Navigation {
-    object Main : Navigation
-    object Configuration : Navigation
+enum class Navigation(
+    val title: String,
+    val icon: String,
+    val action: Actions.Navigation,
+    val tag: String
+) {
+    Main("Tasks", Icons.TASKS, Actions.Navigation.GoToMain, Tags.MainTab),
+    Configuration("Settings", Icons.SETTINGS, Actions.Navigation.GoToSettings, Tags.SettingsTab),
 }

@@ -53,7 +53,7 @@ class AssertionSteps : Step {
     fun step7() = onScenarioContext {
         onNodeWithTag(Tags.QueryResults).apply {
             assertExists()
-            onChildren().filterToOne(hasText(Samples.TASK_ID_1)).assertExists()
+            onChildren().filterToOne(hasAnyDescendant(hasText(Samples.TASK_ID_1))).assertExists()
         }
 
         onNodeWithText(Samples.TASK_ID_2).assertDoesNotExist()
@@ -64,9 +64,9 @@ class AssertionSteps : Step {
     fun step8() = onScenarioContext {
         onNodeWithTag(Tags.QueryResults).apply {
             assertExists()
-            onChildren().filterToOne(hasText(Samples.TASK_ID_1)).assertExists()
-            onChildren().filterToOne(hasText(Samples.TASK_ID_2)).assertExists()
-            onChildren().filterToOne(hasText(Samples.TASK_ID_3)).assertExists()
+            onChildren().filterToOne(hasAnyDescendant(hasText(Samples.TASK_ID_1)) ).assertExists()
+            onChildren().filterToOne(hasAnyDescendant(hasText(Samples.TASK_ID_2))).assertExists()
+            onChildren().filterToOne(hasAnyDescendant(hasText(Samples.TASK_ID_3))).assertExists()
         }
     }
 

@@ -14,13 +14,13 @@ import androidx.compose.ui.Modifier
 fun Heading(title: String) {
     Box(Modifier
         .fillMaxWidth()
-        .background(MaterialTheme.colors.secondaryVariant)
+        .background(MaterialTheme.colors.primary)
         .padding(Theme.Dimens.Margins.MEDIUM, Theme.Dimens.Margins.SMALL)
     ) {
         Text(
             text = title,
-            color = MaterialTheme.colors.background,
-            style = MaterialTheme.typography.subtitle1
+            color = MaterialTheme.colors.onPrimary,
+            style = MaterialTheme.extension.section
         )
     }
 }
@@ -28,7 +28,7 @@ fun Heading(title: String) {
 @Composable
 @Preview
 fun HeadingPreview() {
-    OnTimeTheme {
+    NewOnTimeTheme {
         Heading("Main Settings")
     }
 }

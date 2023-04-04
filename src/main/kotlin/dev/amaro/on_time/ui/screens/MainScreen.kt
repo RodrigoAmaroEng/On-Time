@@ -45,17 +45,8 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
 
         },
         content = {
-            state.currentTask?.let {
-                AnimatedVisibility(true, modifier = withTag(Tags.CurrentTask)) {
-                    CurrentTask(it, { onAction(it) })
-                }
-            }
-            state.breakStartedAt?.let {
-                AnimatedVisibility(true, modifier = withTag(Tags.BreakTimer)) {
-                    BreakAlert(it)
-                }
-            }
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+
+            Box(modifier = Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
                 if (state.configuration?.isValid == true) {
                     when (state.lastResult) {
                         Results.Idle -> {
@@ -72,6 +63,16 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
                     Messages.noConfigurationMessage {
                         onAction(Actions.Navigation.GoToSettings)
                     }
+                }
+            }
+            state.currentTask?.let {
+                AnimatedVisibility(true, modifier = withTag(Tags.CurrentTask)) {
+                    CurrentTask(it, { onAction(it) })
+                }
+            }
+            state.breakStartedAt?.let {
+                AnimatedVisibility(true, modifier = withTag(Tags.BreakTimer)) {
+                    BreakAlert(it)
                 }
             }
         }
@@ -101,6 +102,15 @@ fun previewBreakAlert() {
 }
 
 @Composable
+@Preview
+fun previewMainScreen() {
+    NewOnTimeTheme {
+        MainScreen(AppState()) {  }
+    }
+
+}
+
+@Composable
 private fun taskFilters(
     state: AppState,
     onAction: (Actions) -> Unit
@@ -121,13 +131,15 @@ private fun displayTasks(
     onAction: (Actions) -> Unit
 ) {
     LazyColumn(
-        Modifier.fillMaxSize().testTag(Tags.QueryResults),
+        Modifier.padding(Theme.Dimens.Spacing.LARGE)
+            .fillMaxSize()
+            .testTag(Tags.QueryResults),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(state.tasks) {
-            TaskUI(it,
+            TaskRow(it,
                 onSelect = { task -> onAction(Actions.StartTask(task)) },
-                onTaskAction = { action -> onAction(action) })
+            )
         }
     }
 }

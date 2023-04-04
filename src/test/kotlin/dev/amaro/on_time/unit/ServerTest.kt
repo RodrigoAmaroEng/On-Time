@@ -14,9 +14,8 @@ import io.ktor.websocket.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.test.AfterTest
@@ -30,12 +29,14 @@ class ServerTest {
     private val client = HttpClient {
         install(WebSockets)
     }
-    private val stateProvider: () -> AppState = mockk()
+
+    private val stateProvider: MutableStateFlow<AppState> = mockk()
+
     private val onActionCallback: (Actions) -> Unit = mockk(relaxed = true)
 
     @BeforeTest
     fun setUp() {
-        GlobalScope.launch { Server.main(stateProvider, onActionCallback) }
+        Server.main(stateProvider, onActionCallback)
     }
 
     @AfterTest
@@ -46,21 +47,21 @@ class ServerTest {
 
     @Test
     fun `send the status when connect - Last Task`() = runBlocking {
-        every { stateProvider() } returns AppState(lastTask = Samples.task1)
+        every { stateProvider.value } returns AppState(lastTask = Samples.task1)
         val message = connectAndPerform()
         assertThat(message).isEqualTo("{\"type\":\"LastTask\",\"key\":\"CST-123\",\"minutes\":0,\"active\":false}")
     }
 
     @Test
     fun `send the status when connect - Current Task`() = runBlocking {
-        every { stateProvider() } returns AppState(currentTask = asWorkingTask(Samples.task2, minutes = 5))
+        every { stateProvider.value } returns AppState(currentTask = asWorkingTask(Samples.task2, minutes = 5))
         val message = connectAndPerform()
         assertThat(message).isEqualTo("{\"type\":\"LastTask\",\"key\":\"CST-321\",\"minutes\":5,\"active\":true}")
     }
 
     @Test
     fun `Send toggle command makes it send the new status`() = runBlocking {
-        every { stateProvider() } returnsMany listOf(
+        every { stateProvider.value } returnsMany listOf(
                 AppState(currentTask = asWorkingTask(Samples.task2, minutes = 5)),
                 AppState(lastTask = Samples.task1)
         )
@@ -74,13 +75,16 @@ class ServerTest {
         val nextActions = actions.toMutableList()
         var keepOn = true
         delay(500)
+        println("Connecting")
         client.webSocket(method = HttpMethod.Get, host = "127.0.0.1", port = Server.SERVER_PORT, path = "/ws") {
             while (keepOn) {
                 val othersMessage = incoming.receive() as? Frame.Text ?: continue
+                println("Client received ${nextActions[0]}" )
                 messageSlot.set(othersMessage.readText())
-                when (nextActions.removeAt(0)) {
+                delay(100)
+                when (val m = nextActions.removeAt(0)) {
                     ClientAction.Exit -> keepOn = false
-                    is ClientAction.Send -> send(TOGGLE_MESSAGE)
+                    is ClientAction.Send -> send(m.message)
                 }
             }
         }
