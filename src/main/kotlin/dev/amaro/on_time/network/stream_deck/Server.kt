@@ -9,6 +9,8 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 import java.time.Duration
 
 object Server {
@@ -27,9 +29,7 @@ object Server {
             routing {
                 webSocket("/ws") {
                     process(stateSelector.value, onAction, fakeLastTaskCommand)
-                    // This is necessary to listen any status changes and send them to the Stream Deck
-                    // When we run the tests, it fails with ArrayChannel was cancelled exception
-                    // stateSelector.debounce(100L).collect { process(it, onAction, fakeLastTaskCommand) }
+                    launch { stateSelector.debounce(100L).collect { process(it, onAction, fakeLastTaskCommand) } }
                     for (frame in incoming) {
                         println("Server received: ${frameDealer.parse(frame as Frame.Text)}")
                         when (frame) {

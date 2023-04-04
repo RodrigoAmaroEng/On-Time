@@ -11,7 +11,6 @@ import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.http.*
 import io.ktor.websocket.*
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.delay
@@ -30,7 +29,7 @@ class ServerTest {
         install(WebSockets)
     }
 
-    private val stateProvider: MutableStateFlow<AppState> = mockk()
+    private val stateProvider: MutableStateFlow<AppState> = MutableStateFlow(AppState())
 
     private val onActionCallback: (Actions) -> Unit = mockk(relaxed = true)
 
@@ -47,24 +46,21 @@ class ServerTest {
 
     @Test
     fun `send the status when connect - Last Task`() = runBlocking {
-        every { stateProvider.value } returns AppState(lastTask = Samples.task1)
+        stateProvider.value = AppState(lastTask = Samples.task1)
         val message = connectAndPerform()
         assertThat(message).isEqualTo("{\"type\":\"LastTask\",\"key\":\"CST-123\",\"minutes\":0,\"active\":false}")
     }
 
     @Test
     fun `send the status when connect - Current Task`() = runBlocking {
-        every { stateProvider.value } returns AppState(currentTask = asWorkingTask(Samples.task2, minutes = 5))
+        stateProvider.value = AppState(currentTask = asWorkingTask(Samples.task2, minutes = 5))
         val message = connectAndPerform()
         assertThat(message).isEqualTo("{\"type\":\"LastTask\",\"key\":\"CST-321\",\"minutes\":5,\"active\":true}")
     }
 
     @Test
     fun `Send toggle command makes it send the new status`() = runBlocking {
-        every { stateProvider.value } returnsMany listOf(
-                AppState(currentTask = asWorkingTask(Samples.task2, minutes = 5)),
-                AppState(lastTask = Samples.task1)
-        )
+        stateProvider.value = AppState(lastTask = Samples.task1)
         val message = connectAndPerform(ClientAction.Send(TOGGLE_MESSAGE), ClientAction.Exit)
         verify { onActionCallback(Actions.ToggleTask) }
         assertThat(message).isEqualTo("{\"type\":\"LastTask\",\"key\":\"CST-123\",\"minutes\":0,\"active\":false}")
