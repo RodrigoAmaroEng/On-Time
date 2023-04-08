@@ -35,18 +35,15 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
         modifier = withTag(Tags.MainScreen),
         toolbarContent = {
             SquareButton(
-                Icons.REFRESH,
-                onClick = { onAction(Actions.Refresh) },
+                Icons.Toolbar.REFRESH,
                 modifier = withTag(Tags.RefreshButton),
-            )
+            ) { onAction(Actions.Refresh) }
             taskFilters(state, onAction)
             state.lastTask?.let {
                 SquareButton(
-                    Icons.RESUME,
-                    onClick = { onAction(Actions.StartTask(it)) },
-                    modifier = withTag(Tags.ResumeTaskButton),
-                    text = it.id
-                )
+                    Icons.Toolbar.RESUME,
+                    modifier = withTag(Tags.ResumeTaskButton)
+                ) { onAction(Actions.StartTask(it)) }
             }
 
         },
@@ -70,7 +67,7 @@ fun MainScreen(state: AppState, onAction: (Actions) -> Unit) =
                 ) {
                     Text(
                         "Search:",
-                        style = MaterialTheme.typography.body1,
+                        style = MaterialTheme.extension.section,
                         modifier = Modifier.padding(Theme.Dimens.Spacing.LARGE, 0.dp)
                     )
                     BasicTextField(
@@ -152,11 +149,10 @@ private fun taskFilters(
 ) {
     Row(withTag(Tags.TaskFilters)) {
         SquareButton(
-            Icons.USER_ASSIGN,
+            Icons.Toolbar.MY_TASKS,
             initialState = if (state.onlyMyTasks) ButtonState.CHECKED else ButtonState.NORMAL,
-            onClick = { onAction(Actions.FilterMine) },
             modifier = withTag(Tags.FilterMineButton)
-        )
+        ) { onAction(Actions.FilterMine) }
     }
 }
 

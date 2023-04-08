@@ -24,10 +24,9 @@ fun SettingsScreen(state: AppState, onAction: (Actions) -> Unit) {
         modifier = withTag(Tags.SettingsScreen),
         toolbarContent = {
             SquareButton(
-                Icons.SAVE,
-                modifier = Modifier.testTag(Tags.SaveButton),
-                onClick = { onAction(Actions.SaveConfiguration(configuration.value)) }
-            )
+                Icons.Toolbar.SAVE,
+                modifier = Modifier.testTag(Tags.SaveButton)
+            ) { onAction(Actions.SaveConfiguration(configuration.value)) }
         },
         content = {
             Surface(color = MaterialTheme.colors.background) {

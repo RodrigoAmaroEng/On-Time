@@ -50,6 +50,6 @@ enum class Navigation(
     val action: Actions.Navigation,
     val tag: String
 ) {
-    Main("Tasks", Icons.TASKS, Actions.Navigation.GoToMain, Tags.MainTab),
-    Configuration("Settings", Icons.SETTINGS, Actions.Navigation.GoToSettings, Tags.SettingsTab),
+    Main("Tasks", Icons.Tabs.MAIN, Actions.Navigation.GoToMain, Tags.MainTab),
+    Configuration("Settings", Icons.Tabs.SETTINGS, Actions.Navigation.GoToSettings, Tags.SettingsTab),
 }

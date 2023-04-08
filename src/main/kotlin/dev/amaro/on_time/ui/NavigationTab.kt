@@ -36,8 +36,8 @@ fun NavigationTab(icon: String, name: String, isActive: Boolean = false, modifie
 fun previewNavigationTab() {
     NewOnTimeTheme {
         Column {
-            NavigationTab(Icons.TASKS, "Tasks")
-            NavigationTab(Icons.TASKS, "Tasks", true)
+            NavigationTab(Icons.Tabs.MAIN, "Tasks")
+            NavigationTab(Icons.Tabs.SETTINGS, "Settings", true)
         }
 
 
