@@ -10,6 +10,7 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
 import java.time.Duration
 
@@ -28,8 +29,12 @@ object Server {
             }
             routing {
                 webSocket("/ws") {
-                    process(stateSelector.value, onAction, fakeLastTaskCommand)
-                    launch { stateSelector.debounce(100L).collect { process(it, onAction, fakeLastTaskCommand) } }
+                    launch {
+                        stateSelector
+                            .debounce(100L)
+                            .distinctUntilChangedBy { it.currentTask?.hashCode() ?: it.lastTask?.hashCode() ?: 0  }
+                            .collect { process(it, onAction, fakeLastTaskCommand) }
+                    }
                     for (frame in incoming) {
                         println("Server received: ${frameDealer.parse(frame as Frame.Text)}")
                         when (frame) {

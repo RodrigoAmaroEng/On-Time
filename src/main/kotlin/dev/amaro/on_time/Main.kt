@@ -39,7 +39,7 @@ fun main(vararg params: String) = application {
             defineCurrentScreen(state.collectAsState().value)
         }
         scopeForServer.launch {
-            Server.main( state) { perform(it) }
+            Server.main(state) { perform(it) }
         }
     }
 }

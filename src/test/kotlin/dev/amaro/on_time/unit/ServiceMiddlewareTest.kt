@@ -78,7 +78,7 @@ class ServiceMiddlewareTest {
         val processor: IProcessor<AppState> = mockk(relaxed = true)
         val middleware = ServiceMiddleware(connector)
         middleware.process(Actions.Refresh, AppState(configuration = Samples.configuration), processor)
-        coVerify { processor.reduce(Actions.UpdateLastResult(Results.NetworkError)) }
+        coVerify { processor.reduce(Actions.UpdateLastResult(Results.Errors.NetworkError)) }
     }
     @Test
     fun `Dispatch 'Processing' before making a network request`() {

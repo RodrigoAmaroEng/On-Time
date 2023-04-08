@@ -13,9 +13,10 @@ import okhttp3.Response
 
 
 // TODO: When saving the configuration, it gives an error and the screen keeps stuck on loading
-class JiraRequester(private var configuration: Configuration) {
-
+class JiraRequester(
+    private var configuration: Configuration,
     private val client: OkHttpClient = OkHttpClient().newBuilder().build()
+) {
 
     fun update(configuration: Configuration) {
         this.configuration = configuration
@@ -45,7 +46,13 @@ class JiraRequester(private var configuration: Configuration) {
             .perform()
             .body
             ?.string()
-            ?.let { json.decodeFromString(it) }
+            ?.let {
+                try {
+                    json.decodeFromString(it)
+                } catch (e: Exception) {
+                    throw JiraException(json.decodeFromString(it))
+                }
+            }
     }
 
     fun put(path: String, body: Map<String, String>): String? {

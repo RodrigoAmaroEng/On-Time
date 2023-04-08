@@ -35,6 +35,7 @@ fun Screen(
                             Modifier.padding(Theme.Dimens.Spacing.LARGE).height(32.dp)
                                 .align(Alignment.CenterHorizontally)
                         )
+                        Spacer(Modifier.height(Theme.Dimens.Height.REGULAR))
                         Navigation.values().forEach {
                             NavigationTab(it.icon, it.title, state.screen == it, withTag(it.tag)) {
                                 onAction(it.action)

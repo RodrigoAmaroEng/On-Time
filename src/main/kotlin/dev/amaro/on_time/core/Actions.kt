@@ -30,7 +30,9 @@ sealed interface Actions : IAction {
     data class QueryResults(val tasks: List<Task>) : Actions, ISideEffectAction {
         override val sideEffect: IAction = UpdateLastResult(Results.Idle)
     }
-
+    data class Search(val query: String) : Actions, ISideEffectAction {
+        override val sideEffect: IAction = Refresh
+    }
     data class StartTask(val task: Task) : Actions
     object StopPomodoro : Actions
     data class StartBreak(val at: LocalDateTime) : Actions

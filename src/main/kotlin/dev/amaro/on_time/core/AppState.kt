@@ -19,7 +19,8 @@ data class AppState(
     val feedback: Feedback? = null,
     val filterDefinition: FilterDefinition? = PreFilters.ANDROID_UNRESOLVED,
     val breakStartedAt: LocalDateTime? = null,
-    val lastTask: Task? = null
+    val lastTask: Task? = null,
+    val searchQuery: String? = null
 )
 
 data class Feedback(
@@ -36,7 +37,10 @@ enum class FeedbackType {
 
 sealed interface Results {
     object Idle : Results
-    object NetworkError : Results
+    sealed interface Errors :Results {
+        object NetworkError : Errors
+        data class ServiceError(val message: String) : Errors
+    }
     object Processing : Results
 }
 

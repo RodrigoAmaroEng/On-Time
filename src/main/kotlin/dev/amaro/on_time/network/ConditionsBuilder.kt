@@ -11,6 +11,16 @@ object ConditionsBuilder {
                 assignee().any(Value.USER, Value.EMPTY)
             }
         }
+        if (state.searchQuery?.isNotBlank() == true) {
+            and {
+                condition {
+                    field("summary").contains(state.searchQuery)
+                }
+                or {
+                    field("comment").contains(state.searchQuery)
+                }
+            }
+        }
         if (state.configuration?.projects?.isNotBlank() == true) {
             val projects = state.configuration.projects.split(",").toTypedArray()
             and {
