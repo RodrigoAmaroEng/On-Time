@@ -16,8 +16,8 @@ import kotlinx.coroutines.launch
 
 
 object WindowSetup {
-    const val width = 500
-    const val height = 300
+    const val width = 1080
+    const val height = 810
 }
 
 fun main(vararg params: String) = application {
@@ -39,7 +39,7 @@ fun main(vararg params: String) = application {
             defineCurrentScreen(state.collectAsState().value)
         }
         scopeForServer.launch {
-            Server.main( state) { perform(it) }
+            Server.main(state) { perform(it) }
         }
     }
 }

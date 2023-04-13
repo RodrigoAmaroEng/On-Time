@@ -1,7 +1,6 @@
 package dev.amaro.on_time.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -21,21 +20,22 @@ import java.time.LocalDateTime
 @Composable
 fun CurrentTask(task: WorkingTask, onAction: (Actions) -> Unit, modifier: Modifier = Modifier) {
     Row(
-        modifier.fillMaxWidth(Theme.Dimens.FULL)
-            .background(MaterialTheme.colors.secondary),
+        modifier.fillMaxWidth(Theme.Dimens.FULL),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Surface(color = MaterialTheme.colors.primary, modifier = Modifier.weight(Theme.Dimens.FULL)) {
+        Surface(color = MaterialTheme.colors.secondaryVariant, modifier = Modifier.weight(Theme.Dimens.FULL)) {
             Row(
-                Modifier.height(Theme.Dimens.Height.REGULAR).padding(Theme.Dimens.Margins.MEDIUM, 0.dp),
+                Modifier.height(Theme.Dimens.Height.XX_REGULAR).padding(Theme.Dimens.Margins.MEDIUM, 0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(task.task.id)
+                Column {
+                    Text(task.task.id, style = MaterialTheme.typography.body1)
+                    Text(task.task.title, style = MaterialTheme.extension.small)
+                }
                 Spacer(Modifier.weight(Theme.Dimens.FULL))
                 Column {
                     ClockDisplay(task.startedAt, Icons.ELAPSED_TIME)
                     task.pomodoroStartedAt?.let {
-                        Spacer(Modifier.height(Theme.Dimens.Spacing.SMALL))
                         ClockDisplay(it, Icons.POMODORO, withTag(Tags.PomodoroTimer))
                     }
                 }
@@ -44,21 +44,21 @@ fun CurrentTask(task: WorkingTask, onAction: (Actions) -> Unit, modifier: Modifi
         }
         SquareButton(
             Icons.POMODORO,
-            size = ButtonSize.REGULAR,
-            modifier = withTag(Tags.StartPomodoroButton),
-            onClick = { onAction(Actions.StartPomodoro(task.task)) })
+            size = ButtonSize.TOOLBAR,
+            modifier = withTag(Tags.StartPomodoroButton)
+        ) { onAction(Actions.StartPomodoro(task.task)) }
         SquareButton(
             Icons.STOP,
-            size = ButtonSize.REGULAR,
-            modifier = withTag(Tags.StopWorkingButton),
-            onClick = { onAction(Actions.StopTask) })
+            size = ButtonSize.TOOLBAR,
+            modifier = withTag(Tags.StopWorkingButton)
+        ) { onAction(Actions.StopTask) }
     }
 }
 
 @Composable
 @Preview
 fun previewCurrentTask() {
-    OnTimeTheme {
+    NewOnTimeTheme {
         Column {
             CurrentTask(
                 WorkingTask(

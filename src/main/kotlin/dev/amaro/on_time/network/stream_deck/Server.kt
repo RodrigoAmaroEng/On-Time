@@ -8,7 +8,9 @@ import io.ktor.server.netty.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
 import java.time.Duration
 
@@ -17,7 +19,7 @@ object Server {
     const val SERVER_PORT = 8489
     private var instance: ApplicationEngine? = null
     private val frameDealer: FrameDealer = JsonFrameDecoder()
-    private const val fakeLastTaskCommand = "{\"type\":\"LastTask\"}"
+    private val fakeLastTaskCommand = Frame.Text("{\"type\":\"LastTask\"}")
 
     fun main(stateSelector: MutableStateFlow<AppState>, onAction: (Actions) -> Unit) {
         if (instance != null) return
@@ -28,43 +30,44 @@ object Server {
             routing {
                 webSocket("/ws") {
                     launch {
-                        frameDealer.process(
-                            Frame.Text(fakeLastTaskCommand),
-                            { send(frameDealer.encode(it)) },
-                            { stateSelector.value },
-                            onAction
-                        )
-                        stateSelector.debounce(100L).collect     {
-                            frameDealer.process(
-                                Frame.Text(fakeLastTaskCommand),
-                                { send(frameDealer.encode(it)) },
-                                { it },
-                                onAction
-                            )
-                        }
+                        stateSelector
+                            .debounce(100L)
+                            .distinctUntilChangedBy { it.currentTask?.hashCode() ?: it.lastTask?.hashCode() ?: 0  }
+                            .collect { process(it, onAction, fakeLastTaskCommand) }
                     }
                     for (frame in incoming) {
+                        println("Server received: ${frameDealer.parse(frame as Frame.Text)}")
                         when (frame) {
-                            is Frame.Text -> frameDealer.process(
-                                frame,
-                                { send(frameDealer.encode(it)) },
-                                { stateSelector.value },
-                                onAction
-
-                            )
+                            is Frame.Text -> process(stateSelector.value, onAction, frame)
                             else -> send(Frame.Text("Invalid frame"))
                         }
                     }
+                    println("Disconnected")
                 }
             }
         }.apply { start(wait = false) }
+    }
+
+    private suspend fun DefaultWebSocketServerSession.process(
+        appState: AppState,
+        onAction: (Actions) -> Unit,
+        receivedFrame: Frame.Text
+    ) {
+        frameDealer.process(
+            receivedFrame,
+            {
+                println("Server sending: $it")
+                send(frameDealer.encode(it))
+            },
+            appState,
+            onAction
+        )
     }
 
     fun stop() {
         instance?.stop(0, 0)
         instance = null
     }
-
 
 
 }

@@ -4,6 +4,8 @@ import dev.amaro.on_time.models.Configuration
 import dev.amaro.on_time.models.Task
 import dev.amaro.on_time.models.WorkingTask
 import dev.amaro.on_time.network.FilterDefinition
+import dev.amaro.on_time.ui.Icons
+import dev.amaro.on_time.ui.Tags
 import dev.amaro.on_time.utilities.PreFilters
 import java.time.LocalDateTime
 
@@ -17,7 +19,8 @@ data class AppState(
     val feedback: Feedback? = null,
     val filterDefinition: FilterDefinition? = PreFilters.ANDROID_UNRESOLVED,
     val breakStartedAt: LocalDateTime? = null,
-    val lastTask: Task? = null
+    val lastTask: Task? = null,
+    val searchQuery: String? = null
 )
 
 data class Feedback(
@@ -25,6 +28,7 @@ data class Feedback(
     val type: FeedbackType = FeedbackType.Info,
     val title: String? = null
 )
+
 enum class FeedbackType {
     Info,
     Error
@@ -33,11 +37,19 @@ enum class FeedbackType {
 
 sealed interface Results {
     object Idle : Results
-    object NetworkError : Results
+    sealed interface Errors :Results {
+        object NetworkError : Errors
+        data class ServiceError(val message: String) : Errors
+    }
     object Processing : Results
 }
 
-sealed interface Navigation {
-    object Main : Navigation
-    object Configuration : Navigation
+enum class Navigation(
+    val title: String,
+    val icon: String,
+    val action: Actions.Navigation,
+    val tag: String
+) {
+    Main("Tasks", Icons.Tabs.MAIN, Actions.Navigation.GoToMain, Tags.MainTab),
+    Configuration("Settings", Icons.Tabs.SETTINGS, Actions.Navigation.GoToSettings, Tags.SettingsTab),
 }

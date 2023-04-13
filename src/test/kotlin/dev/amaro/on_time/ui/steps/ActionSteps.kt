@@ -72,7 +72,7 @@ class ActionSteps : Step {
 
     @When("I press the Settings button")
     fun step10() = onScenarioContext {
-        onNodeWithTag(Tags.SettingsButton).performClick()
+        onNodeWithTag(Tags.SettingsTab).performClick()
     }
 
     @When("I press the pomodoro start button")

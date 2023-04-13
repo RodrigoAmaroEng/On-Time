@@ -13,6 +13,7 @@ class AppLogic(
         initialState,
         middlewares.asList().plus(
             ConditionedDirectMiddleware(
+                Actions.Search::class,
                 Actions.FilterMine::class,
                 Actions.UpdateLastResult::class,
                 Actions.Navigation.GoToSettings::class,

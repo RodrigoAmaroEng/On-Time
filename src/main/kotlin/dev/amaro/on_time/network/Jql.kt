@@ -245,6 +245,10 @@ open class Condition private constructor(
             expression(Operator.CHANGED_AFTER, Value.fromDateTime(dateTime))
         }
 
+        fun Field.contains(value: String) {
+            expression(Operator.CONTAINS, Value.fromString(value))
+        }
+
         fun Field.more(value: String) {
             expression(Operator.MORE, Value.fromString(value))
         }
@@ -341,7 +345,9 @@ open class Condition private constructor(
         MORE(">"),
         MORE_OR_EQUAL(">="),
         LESS("<"),
-        LESS_THAN_OR_EQUAL("<=")
+        LESS_THAN_OR_EQUAL("<="),
+        CONTAINS("~"),
+
     }
 }
 

@@ -18,12 +18,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import dev.amaro.on_time.utilities.Constants
 
 
@@ -33,7 +30,6 @@ fun SquareButton(
     initialState: ButtonState = ButtonState.NORMAL,
     size: ButtonSize = ButtonSize.TOOLBAR,
     modifier: Modifier = Modifier,
-    text: String? = null,
     onClick: () -> Unit = {}
 ) {
     val state = remember { mutableStateOf(initialState) }
@@ -56,18 +52,6 @@ fun SquareButton(
                 colorFilter = ColorFilter.tint(getForegroundColorForState(state.value)),
                 modifier = Modifier.size(size.iconSize)
             )
-            if (text != null && size != ButtonSize.ACTIONS) {
-                Text(
-                    text,
-                    style = MaterialTheme.typography.caption.copy(fontSize = size.fontSize, fontWeight = FontWeight.Medium),
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.onSurface,
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.surface.copy(alpha = 0.7f))
-                        .padding(0.dp, Theme.Dimens.Spacing.TINY)
-                )
-            }
         }
     }
 }
@@ -94,33 +78,33 @@ enum class ButtonState {
     CHECKED
 }
 
-enum class ButtonSize(val size: Dp, val iconSize: Dp, val fontSize: TextUnit) {
-    TOOLBAR(Theme.Dimens.Icons.EXTRA_LARGE, Theme.Dimens.Icons.LARGE, Theme.Dimens.Fonts.SMALL),
-    REGULAR(Theme.Dimens.Icons.LARGE, Theme.Dimens.Icons.MEDIUM, Theme.Dimens.Fonts.TINY),
-    ACTIONS(Theme.Dimens.Icons.MEDIUM, Theme.Dimens.Icons.SMALL, 0.sp)
+enum class ButtonSize(val size: Dp, val iconSize: Dp) {
+    TOOLBAR(Theme.Dimens.Icons.EXTRA_LARGE, Theme.Dimens.Icons.LARGE),
+    REGULAR(Theme.Dimens.Icons.LARGE, Theme.Dimens.Icons.MEDIUM),
+    ACTIONS(Theme.Dimens.Icons.MEDIUM, Theme.Dimens.Icons.SMALL)
 }
 
 @Composable
 private fun getBackgroundColorForState(state: ButtonState) = when (state) {
-    ButtonState.NORMAL -> Theme.Colors.transparent
-    ButtonState.HOVER -> MaterialTheme.colors.secondaryVariant
+    ButtonState.NORMAL -> MaterialTheme.extension.blackDark
+    ButtonState.HOVER -> MaterialTheme.extension.blackBase
     ButtonState.CHECKED,
-    ButtonState.PRESSED -> MaterialTheme.colors.surface
+    ButtonState.PRESSED -> MaterialTheme.extension.blackLight
 }
 
 @Composable
 private fun getForegroundColorForState(state: ButtonState) = when (state) {
-    ButtonState.NORMAL -> MaterialTheme.colors.background
-    ButtonState.HOVER -> MaterialTheme.colors.primaryVariant
+    ButtonState.NORMAL -> MaterialTheme.colors.onSurface
+    ButtonState.HOVER -> MaterialTheme.extension.blackOver
     ButtonState.CHECKED,
-    ButtonState.PRESSED -> MaterialTheme.colors.primary
+    ButtonState.PRESSED -> MaterialTheme.extension.blackOverPrimary
 }
 
 @Preview
 @Composable
 fun previewButton() {
-    OnTimeTheme {
-        Column(Modifier.background(MaterialTheme.colors.secondary)) {
+    NewOnTimeTheme {
+        Column(Modifier.background(MaterialTheme.extension.blackDark)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "STATUS",
@@ -130,7 +114,7 @@ fun previewButton() {
                     modifier = Modifier.width(100.dp)
                 )
                 ButtonSize.values().forEach { size ->
-                    listOf("NT", "T").forEach { text->
+                    listOf("NT", "T").forEach { text ->
                         Spacer(Modifier.width(Theme.Dimens.Spacing.SMALL).background(MaterialTheme.colors.primary))
                         Text(
                             text = text,
@@ -153,9 +137,9 @@ fun previewButton() {
                     )
 
                     ButtonSize.values().forEach { size ->
-                        listOf<String?>(null, "CAT-1234").forEach { text->
+                        listOf(null, "CAT-1234").forEach { text ->
                             Spacer(Modifier.width(Theme.Dimens.Spacing.SMALL).background(MaterialTheme.colors.primary))
-                            SquareButton(Icons.USER_ASSIGN, state, size, text = text)
+                            SquareButton(Icons.Toolbar.SAVE, state, size)
                         }
                     }
                 }

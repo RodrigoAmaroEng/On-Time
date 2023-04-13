@@ -43,10 +43,17 @@ class AppReducerTest {
         val state = reducer.reduce(Actions.FilterMine, AppState(onlyMyTasks = true))
         assertThat(state.onlyMyTasks).isFalse()
     }
+
     @Test
     fun `Change last result action`() {
-        val state = reducer.reduce(Actions.UpdateLastResult(Results.NetworkError), AppState(onlyMyTasks = true))
-        assertThat(state.lastResult).isEqualTo(Results.NetworkError)
+        val state = reducer.reduce(Actions.UpdateLastResult(Results.Errors.NetworkError), AppState(onlyMyTasks = true))
+        assertThat(state.lastResult).isEqualTo(Results.Errors.NetworkError)
+    }
+
+    @Test
+    fun `Search for text action`() {
+        val state = reducer.reduce(Actions.Search("Something"), AppState(onlyMyTasks = true))
+        assertThat(state.searchQuery).isEqualTo("Something")
     }
 
     @Test

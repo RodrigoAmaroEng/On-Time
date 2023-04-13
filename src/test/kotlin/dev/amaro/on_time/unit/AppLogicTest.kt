@@ -14,6 +14,7 @@ class AppLogicTest {
         val app = AppLogic(AppState(), reducer = reducer)
         val directlyProcessedActions = listOf(
             Actions.FilterMine,
+            Actions.Search(""),
             Actions.UpdateLastResult(Results.Processing),
             Actions.Navigation.GoToSettings,
             Actions.Navigation.GoToMain,

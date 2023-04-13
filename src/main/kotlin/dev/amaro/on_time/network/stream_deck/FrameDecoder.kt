@@ -15,7 +15,7 @@ interface FrameDealer {
     suspend fun process(
         frame: Frame.Text,
         output: suspend (Payload) -> Unit,
-        stateSelector: () -> AppState,
+        stateSelector: AppState,
         onAction: (Actions) -> Unit
     )
 }
@@ -36,14 +36,16 @@ class JsonFrameDecoder : FrameDealer {
     override suspend fun process(
         frame: Frame.Text,
         output: suspend (Payload) -> Unit,
-        stateSelector: () -> AppState,
+        stateSelector: AppState,
         onAction: (Actions) -> Unit
     ) {
         when (parse(frame)) {
             "LastTask" -> {
+                println("Was a LastTask command")
                 buildStateFrame(stateSelector)?.run { output(this) }
             }
             "Toggle" -> {
+                println("Was a Toggle command")
                 onAction(Actions.ToggleTask)
                 buildStateFrame(stateSelector)?.run { output(this) }
             }
@@ -58,8 +60,7 @@ class JsonFrameDecoder : FrameDealer {
     }
 
 
-    private fun buildStateFrame(stateSelector: () -> AppState): Payload? {
-        val state = stateSelector()
+    private fun buildStateFrame(state: AppState): Payload? {
         return if (state.currentTask != null) {
             LastTask(state.currentTask.task.id, state.currentTask.minutesWorked, true)
         } else if (state.lastTask != null) {

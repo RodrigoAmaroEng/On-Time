@@ -1,18 +1,19 @@
 package dev.amaro.on_time.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import dev.amaro.on_time.utilities.Constants
+import dev.amaro.on_time.utilities.toHoursFormat
+import dev.amaro.on_time.utilities.toMinutesFormat
 import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.LocalDateTime
@@ -30,27 +31,21 @@ fun ClockDisplay(initial: LocalDateTime, icon: String? = null, modifier: Modifie
     LaunchedEffect(0) { // 3
         while (true) {
             time.value = elapsed(startedAt.value)
-            delay(1000)
+            delay(Constants.ONE_SECOND)
         }
     }
     Row (verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
         icon?.let {
-            Image(
+            Icon(
                 painter = painterResource(it),
                 Constants.EMPTY,
-                modifier = Modifier.size(Theme.Dimens.Icons.TINY),
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
+                modifier = Modifier.size(Theme.Dimens.Icons.TINY)
             )
             Spacer(modifier = Modifier.width(Theme.Dimens.Margins.SMALL))
         }
-        Text(time.value, style = MaterialTheme.typography.caption)
+        Text(time.value, style = MaterialTheme.extension.small)
     }
 }
 
-fun Duration.toHoursFormat(): String {
-    return toHoursPart().toString().padStart(2, '0')
-}
 
-fun Duration.toMinutesFormat(): String {
-    return toMinutesPart().toString().padStart(2, '0')
-}
+

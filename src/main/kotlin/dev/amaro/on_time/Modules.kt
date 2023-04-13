@@ -11,7 +11,6 @@ import dev.amaro.sonic.IMiddleware
 import org.koin.dsl.module
 
 object Modules {
-    const val CONFIGURATION_FILE = "/local.properties"
     fun generateReleaseModule(parameters: Parameters) = module {
         single {
             buildMap {
@@ -19,7 +18,6 @@ object Modules {
                 put(TaskState.WORKING, JiraStateDefinition(31, "IN PROGRESS"))
                 put(TaskState.ON_REVIEW, JiraStateDefinition(51, "IN CODE REVIEW"))
                 put(TaskState.ON_QA, JiraStateDefinition(101, listOf("READY FOR QA", "In QA")))
-                put(TaskState.DONE, JiraStateDefinition(91, "Done"))
             }
         }
 
@@ -36,7 +34,6 @@ object Modules {
             JiraRequester(get())
         }
         single<Connector> { JiraConnector(get(), JiraMapper(get(), get<Configuration>().user)) }
-//        single<Connector> { VoidConnector }
         single<Storage> { SQLiteStorage() }
         single { Clock() }
         single<Logger> { TaskLogger(get(), get()) }

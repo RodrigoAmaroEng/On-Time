@@ -3,6 +3,7 @@ package dev.amaro.on_time.utilities
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -18,3 +19,11 @@ fun Long.toLocalDateTime(): LocalDateTime =
 
 fun withTag(tag: String): Modifier =
     Modifier.semantics { testTag = tag }
+
+fun Duration.toHoursFormat(): String {
+    return toHoursPart().toString().padStart(2, '0')
+}
+
+fun Duration.toMinutesFormat(): String {
+    return toMinutesPart().toString().padStart(2, '0')
+}
