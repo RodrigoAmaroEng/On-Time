@@ -34,18 +34,4 @@ class JiraConnector(
             } ?: emptyList()
     }
 
-    override fun assign(task: Task, userName: String) {
-        requester.put(
-            "/rest/api/2/issue/${task.id}/assignee",
-            buildMap {
-                put("name", userName)
-            }
-        )
-    }
-
-    override fun changeStatus(task: Task) {
-        requester.post("/rest/api/2/issue/${task.id}/transitions", buildMap {
-            put("transition", mapper.toJiraTransition(task.status).toString())
-        })
-    }
 }

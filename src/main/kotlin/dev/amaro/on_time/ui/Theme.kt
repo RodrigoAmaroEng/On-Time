@@ -13,30 +13,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.unit.*
 
-@Composable
-fun OnTimeTheme(block: @Composable () -> Unit) {
-    MaterialTheme(
-        typography = MaterialTheme.typography.copy(
-            subtitle1 = MaterialTheme.typography.subtitle1.copy(
-                fontWeight = FontWeight.Bold
-            )
-        ),
-        colors = MaterialTheme.colors.copy(
-            surface = Theme.Colors.darkGray,
-            onSurface = Theme.Colors.lightBlack,
-            primary = Theme.Colors.darkBlue,
-            primaryVariant = Theme.Colors.lightBlue,
-            background = Theme.Colors.lightGray,
-            onBackground = Theme.Colors.lightBlack,
-            secondary = Theme.Colors.darkBlack,
-            secondaryVariant = Theme.Colors.lightBlack,
-            onSecondary = Theme.Colors.lightGray
-        )
-    ) {
-        block()
-    }
-}
-
 @Immutable
 data class ThemeExtension(
     val title: TextStyle,
@@ -63,7 +39,7 @@ data class ThemeExtension(
     val greenOver: Color,
 
     )
-val LocalThemeExtension = staticCompositionLocalOf<ThemeExtension> {
+val LocalThemeExtension = staticCompositionLocalOf {
     ThemeExtension(
         title = TextStyle.Default,
         section = TextStyle.Default,

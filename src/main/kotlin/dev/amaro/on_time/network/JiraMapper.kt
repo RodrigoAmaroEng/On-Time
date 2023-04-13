@@ -9,8 +9,6 @@ class JiraMapper(
     fun fromJiraState(name: String): TaskState =
         stateMapping.entries.firstOrNull { it.value.names.contains(name) }?.key ?: TaskState.UNDEFINED
 
-    fun toJiraTransition(state: TaskState): Int = stateMapping[state]!!.transitionCode
-
     fun isFromCurrentUser(name: String?): Boolean = name == currentUser
 }
 

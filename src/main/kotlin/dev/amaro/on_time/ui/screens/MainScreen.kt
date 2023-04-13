@@ -21,6 +21,7 @@ import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.core.Results
 import dev.amaro.on_time.ui.*
+import dev.amaro.on_time.utilities.Constants
 import dev.amaro.on_time.utilities.withTag
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -120,7 +121,7 @@ private fun BreakAlert(startedAt: LocalDateTime) {
             .padding(Theme.Dimens.Margins.MEDIUM, Theme.Dimens.Margins.SMALL),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(painterResource(Icons.BREAK), "Break", modifier = Modifier.size(Theme.Dimens.Icons.SMALL))
+        Image(painterResource(Icons.BREAK), Constants.EMPTY, modifier = Modifier.size(Theme.Dimens.Icons.SMALL))
         Spacer(modifier = Modifier.width(Theme.Dimens.Margins.SMALL))
         Text(TextResources.Informative.TakeABreak)
         Spacer(modifier = Modifier.weight(1f))

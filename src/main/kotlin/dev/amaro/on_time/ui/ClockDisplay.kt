@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import dev.amaro.on_time.utilities.Constants
+import dev.amaro.on_time.utilities.toHoursFormat
+import dev.amaro.on_time.utilities.toMinutesFormat
 import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.LocalDateTime
@@ -29,7 +31,7 @@ fun ClockDisplay(initial: LocalDateTime, icon: String? = null, modifier: Modifie
     LaunchedEffect(0) { // 3
         while (true) {
             time.value = elapsed(startedAt.value)
-            delay(1000)
+            delay(Constants.ONE_SECOND)
         }
     }
     Row (verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
@@ -45,10 +47,5 @@ fun ClockDisplay(initial: LocalDateTime, icon: String? = null, modifier: Modifie
     }
 }
 
-fun Duration.toHoursFormat(): String {
-    return toHoursPart().toString().padStart(2, '0')
-}
 
-fun Duration.toMinutesFormat(): String {
-    return toMinutesPart().toString().padStart(2, '0')
-}
+

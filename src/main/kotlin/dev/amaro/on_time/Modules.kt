@@ -34,7 +34,6 @@ object Modules {
             JiraRequester(get())
         }
         single<Connector> { JiraConnector(get(), JiraMapper(get(), get<Configuration>().user)) }
-//        single<Connector> { VoidConnector }
         single<Storage> { SQLiteStorage() }
         single { Clock() }
         single<Logger> { TaskLogger(get(), get()) }

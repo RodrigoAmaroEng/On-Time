@@ -8,11 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import dev.amaro.on_time.core.Actions
 import dev.amaro.on_time.core.AppState
 import dev.amaro.on_time.core.Navigation
 import dev.amaro.on_time.ui.*
+import dev.amaro.on_time.utilities.Constants
 import dev.amaro.on_time.utilities.withTag
 
 @Composable
@@ -26,13 +26,14 @@ fun Screen(
     NewOnTimeTheme {
         Box(modifier) {
             Row {
-
                 Surface(color = MaterialTheme.colors.primary) {
                     Column(Modifier.weight(1f).fillMaxHeight().width(IntrinsicSize.Max)) {
                         Image(
-                            painterResource("images/Logo.svg"),
-                            "",
-                            Modifier.padding(Theme.Dimens.Spacing.LARGE).height(32.dp)
+                            painterResource(Images.Logo),
+                            Constants.EMPTY,
+                            Modifier
+                                .padding(Theme.Dimens.Spacing.LARGE)
+                                .height(Theme.Dimens.Icons.MEDIUM)
                                 .align(Alignment.CenterHorizontally)
                         )
                         Spacer(Modifier.height(Theme.Dimens.Height.REGULAR))
